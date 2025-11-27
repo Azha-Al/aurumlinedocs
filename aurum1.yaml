@@ -12247,6 +12247,70 @@ paths:
                 $ref: '#/components/schemas/BadPaginationOrder'
         '401':
           description: unauthorized
+  /priceListBonus/GetList:
+    post:
+      tags:
+        - Настройки
+      summary: Установка бонусов. Получить список
+      description: |2-
+         ## Список выходных параметров: 
+
+        |Поле       | Тип               | Описание |По умолчанию в fields 
+        | ------------- |:------------------:| :-----:| :-----|
+        |id     | string    | Уникальный идентификатор услуги |да|
+        | name     | string | Наименование услуги |да|
+        | groupId  | string         |    УИД группы |да|
+        | groupName  | string         |    Наименование группы |нет|
+        |priceMin     | number   |Минимальная цена |да|
+        |priceMax     | number   |Максимальная цена |да|
+        |bonus     | number   |Бонус |да|
+
+         ## Объект order имеет следующие доступные к сортировке поля: 
+
+        |Поле               | 
+        | -------------| 
+        |id     |
+        | name     |
+        | priceMin     |
+        | priceMax     |
+        | bonus     |
+
+         ## Объект filters имеет следующие доступные к фильтрации поля: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:----------------:|:-----|
+        |id     | array of strings    | Массив уникальных идентификаторов услуг |
+        | groupId  | array of strings    | Массив уникальных идентификаторов групп |
+        | priceMinStart  | number         |   Минимальная цена от  |
+        |priceMinEnd     | number   |Минимальная цена до |
+        | priceMaxStart  | number         |  Максимальная цена от  |
+        |priceMaxEnd     | number   | Максимальная цена до |
+        | bonusStart  | number         |   Бонусы от  |
+        |bonusEnd     | number   |Бонусы до |
+        |fullText     | string   | Поиск по полю name, groupName  | 
+      operationId: priceListBonus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PriceListBonusRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriceListBonusSuccess'
+        '204':
+          description: no content
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadPaginationOrder'
+        '401':
+          description: unauthorized
 components:
   securitySchemes:
     BasicAuth:
@@ -58018,3 +58082,276 @@ components:
           numberOfConsumables:
             min: 2
             max: 3
+    PriceListBonusRequest:
+      type: object
+      properties:
+        filters:
+          type: object
+          properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
+            id:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            groupId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            priceMinStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            priceMinEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            priceMaxStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            priceMaxEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            bonusStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            bonusEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+        fields:
+          type: array
+          items:
+            type: string
+            enum:
+              - id
+              - name
+              - groupId
+              - groupName
+              - priceMin
+              - priceMax
+              - bonus
+        exclude:
+          type: array
+          items:
+            type: string
+            enum:
+              - id
+              - name
+              - groupId
+              - groupName
+              - priceMin
+              - priceMax
+              - bonus
+        order:
+          type: object
+          properties:
+            field:
+              type: string
+            direction:
+              type: string
+              enum:
+                - ASC
+                - DESC
+              default: ASC
+        pagination:
+          type: object
+          properties:
+            paginate:
+              type: boolean
+              default: true
+            perPage:
+              type: integer
+              default: 10
+      example:
+        filters:
+          bonusStart:
+            value: 2
+          bonusEnd:
+            value: 7
+        order:
+          field: id
+          direction: ASC
+        pagination:
+          paginate: true
+          perPage: 2
+    PriceListBonusSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        filters:
+          type: object
+          properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
+            id:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            groupId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            priceMinStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            priceMinEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            priceMaxStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            priceMaxEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            bonusStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            bonusEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+        order:
+          type: object
+          properties:
+            field:
+              type: string
+            direction:
+              type: string
+              example: ASC
+        pagination:
+          type: object
+          properties:
+            firstUuid:
+              type: string
+              format: uuid
+            lastUuid:
+              type: string
+              format: uuid
+            firstValue:
+              type: string
+              format: datetime
+            lastValue:
+              type: string
+              format: datetime
+            isPrev:
+              type: boolean
+            isNext:
+              type: boolean
+            perPage:
+              type: integer
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              name:
+                type: string
+              groupId:
+                type: string
+                format: uuid
+              groupName:
+                type: string
+              priceMin:
+                type: integer
+              priceMax:
+                type: integer
+              bonus:
+                type: integer
+      example:
+        success: true
+        filters:
+          fullText:
+            value: null
+            fields: null
+          id:
+            value: null
+          groupId:
+            value: null
+          documentDateEnd:
+            value: null
+          priceMinStart:
+            value: null
+          priceMinEnd:
+            value: null
+          priceMaxStart:
+            value: null
+          priceMaxEnd:
+            value: null
+          bonusStart:
+            value: 2
+          bonusEnd:
+            value: 7
+        order:
+          field: id
+          direction: ASC
+        pagination:
+          firstUuid: 97320d5e-c17b-11f0-8dda-bc24112a05f2
+          lastUuid: e980faca-c17b-11f0-8dda-bc24112a05f2
+          firstValue: 97320d5e-c17b-11f0-8dda-bc24112a05f2
+          lastValue: e980faca-c17b-11f0-8dda-bc24112a05f2
+          isPrev: false
+          isNext: true
+          perPage: 2
+        data:
+          - id: 97320d5e-c17b-11f0-8dda-bc24112a05f2
+            name: Классический массаж спины и воротниковой зоны
+            groupId: 1a498632-ab64-11f0-9e8b-bc2411fd9944
+            groupName: Эстетическая косметология
+            priceMin: 3500
+            priceMax: 3500
+            bonus: 5
