@@ -12260,7 +12260,7 @@ paths:
         |id     | string    | Уникальный идентификатор услуги |да|
         | name     | string | Наименование услуги |да|
         | groupId  | string         |    УИД группы |да|
-        | groupName  | string         |    Наименование группы |нет|
+        | groupName  | string         |    Наименование группы |да|
         |priceMin     | number   |Минимальная цена |да|
         |priceMax     | number   |Максимальная цена |да|
         |bonus     | number   |Бонус |да|
