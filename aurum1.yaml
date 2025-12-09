@@ -12247,6 +12247,38 @@ paths:
                 $ref: '#/components/schemas/BadPaginationOrder'
         '401':
           description: unauthorized
+  /technicalCard/Update:
+    post:
+      tags:
+        - Настройки
+      summary: Техкарта. Отправить в архив
+      description: |2-
+         ## Входные параметры: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id (required)     | string    | Уникальный идентификатор элемента |
+        |values     | object    | включает deletionMark |
+        |deletionMark     | boolean    | Отправить в архив | 
+      operationId: TechnicalCardUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TechnicalCardUpdateRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TechnicalCardUpdateSuccess'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadIdTypeResp2'
   /priceListBonus/GetList:
     post:
       tags:
@@ -56259,6 +56291,42 @@ components:
         values:
           deletionMark: true
     NomenclatureUpdatetSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            deletionMark:
+              type: boolean
+      example:
+        success: true
+        data:
+          deletionMark: false
+    TechnicalCardUpdateRequest:
+      type: object
+      properties:
+        id:
+          type: object
+          properties:
+            value:
+              type: array
+              items:
+                type: string
+                format: uuid
+        values:
+          type: object
+          properties:
+            deletionMark:
+              type: boolean
+      required:
+        - id
+      example:
+        id: 67928308-67fa-11ed-aab0-e4aaeadadf68
+        values:
+          deletionMark: true
+    TechnicalCardUpdateSuccess:
       type: object
       properties:
         success:
