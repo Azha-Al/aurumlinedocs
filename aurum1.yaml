@@ -3266,6 +3266,78 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadClientAnalytics'
+  /bulkCalling/client/GetList:
+    post:
+      tags:
+        - Массовый обзвон
+      summary: Получить список клиентов на обзвон
+      description: |2-
+         ## Список входных параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id  (required)    | string   | УИД документа обзвона |
+         
+         ## Список выходных параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        | clientId                  | string   | Уникальный идентификатор клиента  |
+        | clientName                | string   | ФИО клиента                       |
+        | clientPhone               | string   | Основной телефон клиента          |
+        | clientAdditionalPhone     | string   | Дополнительный телефон клиента    |
+        | clientAge                 | integer  | Возраст клиента                   |
+        | clientStatus              | integer  | Статус клиента   (0- Новый; 1- Обычный; 2- Постоянный; 3- Бартер; 4- Сложный; 5- VIP; 6- Сотрудник; 7- Не записываем )      |
+        | loyaltyCardId             | string   | Уникальный идентификатор карты лояльности |
+        | loyaltyCardName           | string   | Наименование карты лояльности     |
+        | divisionId                | string   | Уникальный идентификатор подразделения  |
+        | divisionName              | string   | Наименование подразделения       |
+        | divisionTimeZone          | integer  | Часовой пояс подразделения       |
+        | userId                    | string   | Уникальный идентификатор пользователя   |
+        | userName                  | string   | ФИО пользователя     |
+        | comment                   | string   | Комментарий          |
+
+         ## Объект order имеет следующие доступные к сортировке поля: 
+
+        |Поле               | 
+        | -------------| 
+        |clientId     |
+        | clientAge     |
+        | clientName     |
+
+         ## Объект filters имеет следующие доступные к фильтрации поля: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:----------------:|:-----|
+        | clientId    | array of strings  | Массив уникальных идентификаторов клиентов  |
+        | clientAgeStart     | integer   | Минимальный возраст клиента     |
+        | clientAgeEnd | integer  | Максимальный возраст клиента        |
+        | clientStatus | array of integers    | Массив статусов клиентов     |
+        | loyaltyCardId | array of integers   | Массив уникальных идентификаторов карт лояльности     |
+        | divisionId   | array of strings   | Массив уникальных идентификаторов подразделений       |
+        | userId     | array of strings    | Массив уникальных идентификаторов пользователей     |
+        |fullText     | object   | Поиск по полю clientName, clientPhone, divisionName, userName | 
+      operationId: bulkCallingClientList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCallingClientListRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkCalligClientListSuccess'
+        '204':
+          description: no content
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadClientAnalytics'
   /marketingSettings/GetList:
     post:
       tags:
@@ -23206,6 +23278,285 @@ components:
           completePercent:
             min: 0
             max: 100
+    BulkCallingClientListRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        filters:
+          type: object
+          properties:
+            clientId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            clientAgeStart:
+              type: object
+              properties:
+                value:
+                  type: integer
+            clientAgeEnd:
+              type: object
+              properties:
+                value:
+                  type: integer
+            clientStatus:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            loyaltyCardId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            userId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
+        fields:
+          type: array
+          items:
+            type: string
+            enum:
+              - clientId
+              - clientName
+              - clientPhone
+              - clientAdditionalPhone
+              - clientAge
+              - clientStatus
+              - loyaltyCardId
+              - loyaltyCardName
+              - divisionId
+              - divisionName
+              - divisionTimeZone
+              - userId
+              - userName
+              - comment
+        exclude:
+          type: array
+          items:
+            type: string
+            enum:
+              - clientId
+              - clientName
+              - clientPhone
+              - clientAdditionalPhone
+              - clientAge
+              - clientStatus
+              - loyaltyCardId
+              - loyaltyCardName
+              - divisionId
+              - divisionName
+              - divisionTimeZone
+              - userId
+              - userName
+              - comment
+        order:
+          type: object
+          properties:
+            field:
+              type: string
+            direction:
+              type: string
+              enum:
+                - ASC
+                - DESC
+              default: ASC
+        pagination:
+          type: object
+          properties:
+            paginate:
+              type: boolean
+              default: true
+            perPage:
+              type: integer
+              default: 10
+      required:
+       - id
+      example:
+        id: de327e2c-d1d0-11f0-8dda-bc24112a05f2
+        filters:
+          clientAgeStart:
+            value: 40
+          clientAgeEnd:
+            value: 43
+        order:
+          field: clientName
+          direction: ASC
+    BulkCalligClientListSuccess:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        filters:
+          type: object
+          properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
+            clientId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            clientAgeStart:
+              type: object
+              properties:
+                value:
+                  type: integer
+            clientAgeEnd:
+              type: object
+              properties:
+                value:
+                  type: integer
+            clientStatus:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            loyaltyCardId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            userId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+        order:
+          type: object
+          properties:
+            field:
+              type: string
+            direction:
+              type: string
+              example: ASC
+        pagination:
+          type: object
+          properties:
+            firstUuid:
+              type: string
+              format: uuid
+            lastUuid:
+              type: string
+              format: uuid
+            isPrev:
+              type: boolean
+            isNext:
+              type: boolean
+            perPage:
+              type: integer
+      example:
+        success: true
+        filters:
+          fullText:
+            value: null
+            fields: null
+          clientId:
+            value: null
+          clientAgeStart:
+            value: 40
+          clientAgeEnd:
+            value: 43
+          clientStatus:
+            value: null
+          loyaltyCardId:
+            value: null
+          divisionId:
+            value: null
+          userId:
+            value: null
+        order:
+          field: clientName
+          direction: ASC
+        data:
+          - clientId: 98278fb1-363b-11f0-afab-309c23b27327
+            clientName: Козлова Ольга Дмитриевна
+            clientPhone: +78611112233
+            clientAdditionalPhone: ""
+            clientAge: 43
+            clientStatus: 6
+            loyaltyCardId: 8779d8e4-20f1-11f0-afa9-309c23b27327
+            loyaltyCardName: Базовая
+            divisionId: 449ebb50-20f9-11f0-afa9-309c23b27327
+            divisionName: Краснодар
+            divisionTimeZone: 3
+            userId: null
+            userName: null
+            comment: ""
+          - clientId: 8cee262b-3646-11f0-afab-309c23b27327
+            clientName: Орлова Виктория Михайловна
+            clientPhone: +79045556677
+            clientAdditionalPhone: ""
+            clientAge: 41
+            clientStatus: 6
+            loyaltyCardId: 8779d8e4-20f1-11f0-afa9-309c23b27327
+            loyaltyCardName: Базовая
+            divisionId: 449ebb4a-20f9-11f0-afa9-309c23b27327
+            divisionName: МСК Тверская
+            divisionTimeZone: 3
+            userId: null
+            userName: null
+            comment: ""
     MarkPromListRequest1:
       type: object
       properties:
