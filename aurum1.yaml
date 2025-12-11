@@ -2481,6 +2481,95 @@ paths:
                 $ref: '#/components/schemas/BadPaginationOrder'
         '401':
           description: unauthorized
+  /egiszData/GetList:
+    post:
+      tags:
+        - ЕГИСЗ
+      summary: Получение списка
+      description: |2-
+         ## Список выходных параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id     | string    | Уникальный идентификатор документа |
+        | date     | string |  Дата документа |
+        | clientId  | string         |    УИД клиента |
+        | clientName  | string         |    ФИО клиента полное |
+        | clientNameAbbr  | string         |    Сокращенное ФИО клиента |
+        |clientPhone     | string   | Телефон клиента |
+        |employeeId     | string    | УИД сотрудника |
+        |employeeName     | string    | ФИО клиента полное |
+        |employeeNameAbbr     | string    | Сокращенное ФИО сотрудника |
+        |postName     | string    | Должность |
+        |divisionId     | integer    | УИД подразделения |
+        |divisionName     | string    | УИД должности |
+        |signedBySpecialist     | boolean    | Подписал врач |
+        |dateSignedBySpecialist    |string   | Дата  подписания врачом|
+        |signedByClinic     | boolean    | Подписала клиника |
+        |dateSignedByClinic    |string   | Дата  подписания клиникой|
+        |sent     | boolean   | Отправлено |
+        |dateSent     | string    | Дата отправления  |
+        |protocolType    | integer    | Тип протокола |
+        |egiszStatus    |integer  | Статус |
+        |isReadyToBeSent    | boolean    | Готово к отправке|
+
+         ## Объект order имеет следующие доступные к сортировке поля: 
+
+        |Поле               | 
+        | -------------| 
+        |date     |
+        | clientName     |
+        |clientNameAbbr     |
+        |employeeName|
+        |employeeNameAbbr      |
+        |divisionName | 
+
+         ## Объект filters имеет следующие доступные к фильтрации поля: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:----------------:|:-----|
+        | id                            | array of strings    | Массив уникальных идентификаторов протоколов |
+        | dateStart                     | string              | Дата протокола от  |
+        | dateEnd                       | string              | Дата протокола до  |
+        | clientId                      | array of strings    | Массив уникальных идентификаторов клиентов |
+        | employeeId                    | array of strings    | Массив уникальных идентификаторов сотрудников |
+        | divisionId                    | array of strings    | Массив уникальных идентификаторов подразделений |
+        | signedBySpecialist            |  boolean            | Подписал врач |
+        | dateSignedBySpecialistStart   | string              | Дата подписания специалистом от  |
+        | dateSignedBySpecialistEnd     | string              | Дата подписания специалистом до  |
+        | signedByClinic                | boolean             | Подписан клиникой |
+        | dateSignedByClinicStart       | string              | Дата подписания клиникой от |
+        | dateSignedByClinicEnd         | string              | Дата подписания клиникой до |
+        | sent                          |  boolean            | Отправлено |
+        | dateSentStart                 | string              | Дата отправки от  |
+        | dateSentEnd                   | string              | Дата отправки до  |
+        | protocolType                  | array of integers   | Массив тип протокола |
+        | isReadyToBeSent               | boolean             | Готов к отправке |
+        | egiszStatusStart              | array of integers   | Массив Статусов ЕГИСЗ |
+        |fullText     | object    | Поиск по полю clientName, clientNameAbbr, employeeName, employeeNameAbbr, divisionName  | 
+      operationId: egiszDataList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EgiszDataRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EgiszDataListSuccess'
+        '204':
+          description: no content
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadFieldsOrder'
+        '401':
+          description: unauthorized
   /promotion/GetList:
     post:
       tags:
