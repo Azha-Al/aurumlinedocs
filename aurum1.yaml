@@ -2821,7 +2821,6 @@ paths:
         |areaOfActivityId     | string    | УИД направления деятельности |
         |areaOfActivityName     | string    | Наименование направления деятельности |
         |generalPurposeMaterial    |boolean   | Материал общего назначения|
-        |freeService     | boolean   | Бесплатная услуга |  
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -2859,7 +2858,6 @@ paths:
         |balanceControl     | boolean    | Есть контроль остатков |
         |areaOfActivityId     | string    |Массив УИД направления деятельности |
         |generalPurposeMaterial    |boolean   | Материал общего назначения|
-        |freeService     | boolean   | Бесплатная услуга |
         |fullText     | string   | Поиск по полям name, article | 
       operationId: nomenclatureList
       requestBody:
@@ -21579,11 +21577,6 @@ components:
               properties:
                 value:
                   type: boolean
-            freeService:
-              type: object
-              properties:
-                value:
-                  type: boolean
             fullText:
               type: object
               properties:
@@ -21622,7 +21615,6 @@ components:
               - areaOfActivityId
               - areaOfActivityName
               - generalPurposeMaterial
-              - freeService
         exclude:
           type: array
           items:
@@ -21652,7 +21644,6 @@ components:
               - areaOfActivityId
               - areaOfActivityName
               - generalPurposeMaterial
-              - freeService
         order:
           type: object
           properties:
@@ -21817,11 +21808,6 @@ components:
               properties:
                 value:
                   type: boolean
-            freeService:
-              type: object
-              properties:
-                value:
-                  type: boolean
             fullText:
               type: object
               properties:
@@ -21905,8 +21891,6 @@ components:
                 format: datetime
               generalPurposeMaterial:
                 type: boolean
-              freeServices:
-                type: boolean
       example:
         success: true
         filters:
@@ -21961,8 +21945,6 @@ components:
             value: null
           generalPurposeMaterial:
             value: null
-          freeService:
-            value: null
         order:
           field: name
           direction: ASC
@@ -21995,7 +21977,6 @@ components:
             balanceControl: false
             areaOfActivityId: d9f327ab-9d0a-11ef-af9b-309c23b27327
             generalPurposeMaterial: false
-            freeService: false
     GenderValues:
       type: object
       properties:
