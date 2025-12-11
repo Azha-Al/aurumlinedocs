@@ -21124,6 +21124,8 @@ components:
               dateOfBirth:
                 type: string
                 format: datetime
+              age:
+                type: integer
               email:
                 type: string
               visits:
@@ -21136,6 +21138,12 @@ components:
                 type: integer
               loyaltyCardStatusName:
                 type: string
+              lastDivisionId:
+                type: string
+              lastDivisionName:
+                type: string
+              lastDivisionTimeZone:
+                type: integer
       example:
         pagination:
           firstUuid: 770f9661-8ab2-11ee-af8a-309c23b27327
@@ -21147,12 +21155,16 @@ components:
           - id: 770f9661-8ab2-11ee-af8a-309c23b27327
             name: Семидыркин Степан Валерьевич
             dateOfBirth: '1999-02-25T00:00:00'
+            age: 26
             email: 7d@mail.ru
             visits: 4
             discount: 30%
             status: 6
             communicationWay: null
             loyaltyCardStatusName: Бронзовая
+            lastDivisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
+            lastDivisionName: Кемерово_Д.Бедного
+            lastDivisionTimeZone: 7
     SelectionCountRequest:
       type: object
       properties:
