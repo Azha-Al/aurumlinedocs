@@ -2559,7 +2559,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EgiszDataListSuccess'
+                $ref: '#/components/schemas/EgiszDataSuccess'
         '204':
           description: no content
         '400':
@@ -19532,6 +19532,520 @@ components:
             doesNotReceiveReception: false
             callStatus: null
             description: Занимается аппаратной косметологией
+    EgiszDatatRequest:
+      type: object
+      properties:
+        filters:
+          type: object
+          properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
+            id:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            dateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            clientId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            employeeId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            signedBySpecialist:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            dateSignedBySpecialistStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateSignedBySpecialistEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            signedByClinic:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            dateSignedByClinicStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateSignedByClinicEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            sent:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            dateSentStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateSentEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            protocolType:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            isReadyToBeSent:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            egiszStatus:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+        fields:
+          type: array
+          items:
+            type: string
+            enum:
+              - id
+              - date
+              - clientId
+              - employeeId
+              - divisionId
+              - signedBySpecialist
+              - dateSignedBySpecialist
+              - signedByClinic
+              - dateSignedByClinic
+              - sent
+              - dateSent
+              - protocolType
+              - egiszStatus
+        exclude:
+          type: array
+          items:
+            type: string
+            enum:
+              - id
+              - date
+              - clientId
+              - employeeId
+              - divisionId
+              - signedBySpecialist
+              - dateSignedBySpecialist
+              - signedByClinic
+              - dateSignedByClinic
+              - sent
+              - dateSent
+              - protocolType
+              - egiszStatus
+        order:
+          type: object
+          properties:
+            field:
+              type: string
+            direction:
+              type: string
+              enum:
+                - ASC
+                - DESC
+              default: ASC
+        pagination:
+          type: object
+          properties:
+            paginate:
+              type: boolean
+              default: true
+            perPage:
+              type: integer
+              default: 10
+      example:
+        fields:
+          - id
+          - date
+          - clientId
+          - clientName
+          - clientNameAbbr
+          - clientPhone
+          - employeeId
+          - employeeName
+          - employeeNameAbbr
+          - postName
+          - divisionId
+          - divisionName
+          - signedBySpecialist
+          - dateSignedBySpecialist
+          - signedByClinic
+          - dateSignedByClinic
+          - sent
+          - dateSent
+          - protocolType
+          - egiszStatus
+          - isReadyToBeSent
+        order:
+          field: date
+          direction: desc
+        pagination:
+          paginate: true
+          perPage: 20
+        filters:
+          id:
+            value:
+              - 43dbc4d8-d6a2-11f0-97a3-005056c00008
+          dateStart:
+            value: '2025-10-24T00:00:00'
+          dateEnd:
+            value: '2025-12-26T00:00:00'
+          clientId:
+            value:
+              - 86c08512-cfd4-11ed-af70-309c23b27327
+          employeeId:
+            value:
+              - 96555d92-83dd-11ef-af98-309c23b27327
+          divisionId:
+            value:
+              - f8b32d50-1dbb-11ef-af91-309c23b27327
+          signedBySpecialist:
+            value: false
+          dateSignedBySpecialistStart:
+            value: '0001-01-01T00:00:00'
+          dateSignedBySpecialistEnd:
+            value: '2025-12-12T00:00:00'
+          signedByClinic:
+            value: false
+          dateSignedByClinicStart:
+            value: '0001-01-01T00:00:00'
+          dateSignedByClinicEnd:
+            value: '2025-12-12T00:00:00'
+          sent:
+            value: false
+          dateSentStart:
+            value: '0001-01-01T00:00:00'
+          dateSentEnd:
+            value: '2025-12-12T00:00:00'
+          isReadyToBeSent:
+            value: false
+          egiszStatus:
+            value:
+              - 0
+          protocolType:
+            value:
+              - 1
+          fullText:
+            value: бо
+            fields:
+              - clientName
+    EgiszDataSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        filters:
+          type: object
+          properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
+            id:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            dateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            clientId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            employeeId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            signedBySpecialist:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            dateSignedBySpecialistStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateSignedBySpecialistEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            signedByClinic:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            dateSignedByClinicStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateSignedByClinicEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            sent:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            dateSentStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateSentEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            protocolType:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            isReadyToBeSent:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            egiszStatus:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+        order:
+          type: object
+          properties:
+            field:
+              type: string
+            direction:
+              type: string
+              example: ASC
+        pagination:
+          type: object
+          properties:
+            firstUuid:
+              type: string
+              format: uuid
+            lastUuid:
+              type: string
+              format: uuid
+            isPrev:
+              type: boolean
+            isNext:
+              type: boolean
+            perPage:
+              type: integer
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              date:
+                type: string
+                format: date-time
+              clientId:
+                type: string
+                format: uuid
+              employeeId:
+                type: string
+                format: uuid
+              divisionId:
+                type: string
+                format: uuid
+              signedBySpecialist:
+                type: boolean
+              dateSignedBySpecialist:
+                type: string
+                format: date-time
+              signedByClinic:
+                type: boolean
+              dateSignedByClinic:
+                type: string
+                format: date-time
+              sent:
+                type: boolean
+              dateSent:
+                type: string
+                format: date-time
+              protocolType:
+                type: integer
+              isReadyToBeSent:
+                type: boolean
+              egiszStatus:
+                type: integer
+      example:
+        success: true
+        filters:
+          fullText:
+            value: бо
+            fields:
+              - clientName
+          id:
+            value:
+              - 43dbc4d8-d6a2-11f0-97a3-005056c00008
+          dateStart:
+            value: '2025-10-24T00:00:00'
+          dateEnd:
+            value: '2025-12-26T00:00:00'
+          clientId:
+            value:
+              - 86c08512-cfd4-11ed-af70-309c23b27327
+          employeeId:
+            value:
+              - 96555d92-83dd-11ef-af98-309c23b27327
+          divisionId:
+            value:
+              - f8b32d50-1dbb-11ef-af91-309c23b27327
+          signedBySpecialist:
+            value: false
+          dateSignedBySpecialistStart:
+            value: '0001-01-01T00:00:00'
+          dateSignedBySpecialistEnd:
+            value: '2025-12-12T00:00:00'
+          signedByClinic:
+            value: false
+          dateSignedByClinicStart:
+            value: '0001-01-01T00:00:00'
+          dateSignedByClinicEnd:
+            value: '2025-12-12T00:00:00'
+          sent:
+            value: false
+          dateSentStart:
+            value: '0001-01-01T00:00:00'
+          dateSentEnd:
+            value: '2025-12-12T00:00:00'
+          protocolType:
+            value:
+              - 1
+          isReadyToBeSent:
+            value: false
+          egiszStatus:
+            value:
+              - 0
+        order:
+          field: date
+          direction: desc
+        pagination:
+          firstUuid: 43dbc4d8-d6a2-11f0-97a3-005056c00008
+          lastUuid: 43dbc4d8-d6a2-11f0-97a3-005056c00008
+          firstValue: '2025-12-11T18:17:57'
+          lastValue: '2025-12-11T18:17:57'
+          isPrev: false
+          isNext: false
+          perPage: 1
+        data:
+          - id: 43dbc4d8-d6a2-11f0-97a3-005056c00008
+            date: '2025-12-11T18:17:57'
+            clientId: 86c08512-cfd4-11ed-af70-309c23b27327
+            clientName: Бородина Ксения Игоревна
+            clientNameAbbr: Бородина К.И.
+            clientPhone: +77888888880
+            employeeId: 96555d92-83dd-11ef-af98-309c23b27327
+            employeeName: Джигарханян Гарик Муратович
+            postName: Отоларинголог
+            employeeNameAbbr: Джигарханян Г.М.
+            divisionId: f8b32d50-1dbb-11ef-af91-309c23b27327
+            divisionName: СПБ_Авангардная
+            signedBySpecialist: false
+            dateSignedBySpecialist: '0001-01-01T00:00:00'
+            signedByClinic: false
+            dateSignedByClinic: '0001-01-01T00:00:00'
+            sent: false
+            dateSent: '0001-01-01T00:00:00'
+            protocolType: 1
+            isReadyToBeSent: false
+            egiszStatus: 0
     EmployeeFilterRequest:
       type: object
       properties:
