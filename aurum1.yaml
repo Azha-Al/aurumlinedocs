@@ -19532,7 +19532,7 @@ components:
             doesNotReceiveReception: false
             callStatus: null
             description: Занимается аппаратной косметологией
-    EgiszDatatRequest:
+    EgiszDataRequest:
       type: object
       properties:
         filters:
