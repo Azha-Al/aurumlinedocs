@@ -2777,12 +2777,15 @@ paths:
         |depositEnd     | number    | Баланс депозита до |
         |advertisingSourceId     | string    | УИД источника привлечения |
         |promotionId     | string    | УИД акции |
-        |communicationWay    |integer  | Канал общения (0- Почта, 1- WhatsApp, 2- Telegram, 3- СМС) |
+        |preferredMethodCommunication    |integer  | Канал общения (0- Почта, 1- WhatsApp, 2- Telegram, 3- СМС) |
         |timeSinceLastMailing     | integer    | Дней с последней рассылки |
         |frequencyOfVisits     | number    | Частота посещения |
         |loyaltyCardStatusId    |string  | УИД карты лояльности | 
+        |discountStart     | number    | Скидка от |
+        |discountEnd     | number    | Скидка до |
         |divisions    | array of strings | Массив УИД подразделений |
         |unfinishedCaseWith   | string  | Незаконченный случай | 
+        |refusedAnAdvertisingCall   | boolean  | Отказались от рекламного обзвона | 
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
