@@ -58723,6 +58723,8 @@ components:
         data:
           websiteUrl: https://zl42.ru/prices.html
           priceListUrl: https://zl42.ru/prices.html
+          phone: +7 (989) 595 - 95 - 95
+          additionalPhone": +7 (989) 595 - 95 - 95
     LoyaltyConstantsSuccess:
       type: object
       properties:
