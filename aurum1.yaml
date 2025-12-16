@@ -4626,6 +4626,7 @@ paths:
         |contactInfo     | array of objects    | Массив контактной информации (presentation, type) |
         |color     | string    | Цвет подразделения |
         |isHead     | boolean   | Основной филиал| 
+        |isArchived     | boolean   | В архиве|
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -4646,6 +4647,7 @@ paths:
         |timeEndStart     | string   | Время окончания работы от |
         |timeEndEnd     | string   | Время окончания работы до|
         |isHead     | boolean   | Основной филиал|
+        |isArchived     | boolean   | В архиве|
         |fullText     | string   | Поиск по полю name, region, city | 
       operationId: divisionList
       requestBody:
