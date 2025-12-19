@@ -5944,8 +5944,8 @@ paths:
   /bankingOperation/Update:
     post:
       tags:
-        - Настройки
-      summary: Номенклатура. Отправить в архив
+        - Финансы
+      summary: Удалить документ по банку
       description: |2-
          ## Входные параметры: 
 
