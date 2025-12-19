@@ -36018,7 +36018,7 @@ components:
         id: a2dd942e-dbe3-11f0-97a4-306893e16552
         values:
           deletionMark: true
-    BankingOperationSuccess:
+    BankingOperationUpdateSuccess:
       type: object
       properties:
         success:
