@@ -5966,7 +5966,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankingOperationUpdatetSuccess'
+                $ref: '#/components/schemas/BankingOperationUpdateSuccess'
         '400':
           description: bad request
           content:
