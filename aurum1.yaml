@@ -5941,6 +5941,38 @@ paths:
                 $ref: '#/components/schemas/BadRecordingFilter'
         '401':
           description: unauthorized
+  /bankingOperation/Update:
+    post:
+      tags:
+        - Настройки
+      summary: Номенклатура. Отправить в архив
+      description: |2-
+         ## Входные параметры: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id (required)     | string    | Уникальный идентификатор элемента |
+        |values     | object    | включает deletionMark |
+        |deletionMark     | boolean    | Отправить в архив | 
+      operationId: bankingOperationUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankingOperationUpdateRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankingOperationUpdatetSuccess'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadIdTypeResp2'
   /bankingOperationType/GetValues:
     post:
       tags:
@@ -35964,6 +35996,42 @@ components:
           writeOffAmountTotal: 31534.65
           openingBalanceTotal: 10011395218.99
           finalBalanceTotal: 10011759793.04
+    BankingOperationUpdateRequest:
+      type: object
+      properties:
+        id:
+          type: object
+          properties:
+            value:
+              type: array
+              items:
+                type: string
+                format: uuid
+        values:
+          type: object
+          properties:
+            deletionMark:
+              type: boolean
+      required:
+        - id
+      example:
+        id: a2dd942e-dbe3-11f0-97a4-306893e16552
+        values:
+          deletionMark: true
+    BankingOperationSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            deletionMark:
+              type: boolean
+      example:
+        success: true
+        data:
+          deletionMark: false
     OperationTypeValues1:
       type: object
       properties:
