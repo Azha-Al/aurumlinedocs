@@ -12086,7 +12086,7 @@ paths:
         |Поле       | Тип               | Описание |
         | ------------- |:------------------:| :-----|
         |allowChangingPriceInRecordings     | boolean    | Разрешить менять цену в записях |
-        | allowChangingPriceInAppointments     | boolean |  Разрешить менять цену в записях |
+        | allowChangingPriceInAppointments     | boolean |  Разрешить менять цену в приемах |
         | allowChangingPricesInRange      | integer    | Разрешить изменять цены в диапазоне |
         | maxDiscountAmount     | integer | Максимальный размер скидки |
         | maxSpecialistDiscount     | integer | Максимальная скидка специалиста |
