@@ -2850,6 +2850,7 @@ paths:
         |promotionId     | string    | УИД акции |
         |communicationWay    |integer  | Канал общения (0- Почта, 1- WhatsApp, 2- Telegram, 3- СМС) |
         |timeSinceLastMailing     | integer    | Дней с последней рассылки |
+        |timeSinceLastCall    | integer    | Дней с последнего обзвона |
         |frequencyOfVisits     | number    | Частота посещения |
         |loyaltyCardStatusId    |string  | УИД карты лояльности | 
       operationId: clientSelectionCount
@@ -22275,73 +22276,164 @@ components:
     SelectionCountRequest:
       type: object
       properties:
-        gender:
-          type: integer
-        ageStart:
-          type: integer
-        ageEnd:
-          type: integer
-        dateOfBirthStart:
-          type: string
-          format: datetime
-        dateOfBirthEnd:
-          type: string
-          format: datetime
-        status:
-          type: integer
-        professionId:
-          type: string
-          format: uuid
-        employeeId:
-          type: string
-          format: uuid
-        lovelyEmployeeId:
-          type: string
-          format: uuid
-        nomenclatureId:
-          type: string
-          format: uuid
-        nomenclatureGroupId:
-          type: string
-          format: uuid
-        averageBillStart:
-          type: number
-        averageBillEnd:
-          type: number
-        numberOfVisitsStart:
-          type: number
-        numberOfVisitsEnd:
-          type: number
-        timeSinceLastVisitStart:
-          type: number
-        timeSinceLastVisitEnd:
-          type: number
-        recordingStatus:
-          type: integer
-        depositStart:
-          type: number
-        depositEnd:
-          type: number
-        advertisingSourceId:
-          type: string
-          format: uuid
-        promotionId:
-          type: string
-          format: uuid
-        communicationWay:
-          type: integer
-        timeSinceLastMailing:
-          type: number
-        frequencyOfVisits:
-          type: number
-        loyaltyCardStatusId:
-          type: string
-          format: uuid
+        filters:
+          type: object
+          properties:
+            gender:
+              type: object
+              properties:
+                value:
+                  type: integer
+            ageStart:
+              type: object
+              properties:
+                value:
+                  type: integer
+            ageEnd:
+              type: object
+              properties:
+                value:
+                  type: integer
+            dateOfBirthStart:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: datetime
+            dateOfBirthEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: datetime
+            status:
+              type: object
+              properties:
+                value:
+                  type: integer
+            professionId:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: uuid
+            employeeId:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: uuid
+            lovelyEmployeeId:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: uuid
+            nomenclatureId:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: uuid
+            nomenclatureGroupId:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: uuid
+            averageBillStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            averageBillEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            numberOfVisitsStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            numberOfVisitsEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            timeSinceLastVisitStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            timeSinceLastVisitEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            recordingStatus:
+              type: object
+              properties:
+                value:
+                  type: integer
+            depositStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            depositEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            advertisingSourceId:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: uuid
+            promotionId:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: uuid
+            communicationWay:
+              type: object
+              properties:
+                value:
+                  type: integer
+            timeSinceLastMailing:
+              type: object
+              properties:
+                value:
+                  type: number
+            timeSinceLastCall:
+              type: object
+              properties:
+                value:
+                  type: number
+            frequencyOfVisits:
+              type: object
+              properties:
+                value:
+                  type: number
+            loyaltyCardStatusId:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: uuid
       example:
-        gender: 0
-        ageStart: 18
-        ageEnd: 35
-        averageBillStart: 50000
+        filters:
+          gender:
+            value: 0
+          ageStart:
+            value: 18
+          ageEnd:
+            value: 35
+          averageBillStart:
+            value: 50000
     ClientProfessionRequest:
       type: object
       properties:
