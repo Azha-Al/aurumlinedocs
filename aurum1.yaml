@@ -59789,6 +59789,14 @@ components:
             value: 2
           numberOfConsumablesEnd:
             value: 3
+          materials:
+            id:
+              value: null
+            countStart: 
+              value: null
+            countEnd: 
+              value: null
+          
         data:
           documentDate:
             min: '2021-11-19T12:00:00'
