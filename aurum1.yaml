@@ -2779,6 +2779,7 @@ paths:
         |promotionId     | string    | УИД акции |
         |preferredMethodCommunication    |integer  | Канал общения (0- Почта, 1- WhatsApp, 2- Telegram, 3- СМС) |
         |timeSinceLastMailing     | integer    | Дней с последней рассылки |
+        |timeSinceLastCall    | integer    | Дней с последнего обзвона |
         |frequencyOfVisits     | number    | Частота посещения |
         |loyaltyCardStatusId    |string  | УИД карты лояльности | 
         |discountStart     | number    | Скидка от |
@@ -2973,7 +2974,7 @@ paths:
         | ------------- |:------------------:| :-----|
         |id     | string    | Уникальный идентификатор номенклатуры |
         | name     | string |  Наименование номенклатуры |
-        | article  |  string         |    Артикул |
+        | article  |  string         |    Артикул/Штрихкод |
         |isGroup     | boolean   | Группа номенклатуры |
         | type  | integer         |   Вид номенклатуры (0- курс услуг, 1- материал, 2- товар, 3- услуга, 4- все)  |
         |time     | integer    | Время проведения |
@@ -12445,7 +12446,7 @@ paths:
         | serviceId  | string         |    УИД услуги |да|
         | serviceName  | string         |    Наименование услуги |нет|
         |numberOfConsumables     | number   |Количество расходников |да|
-
+        |materials     | array of objects   |Массив объектов включает id, name, count |нет|
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -12464,6 +12465,7 @@ paths:
         | serviceId     | array of strings |  Массив уникальных идентификаторов услуг |
         | numberOfConsumablesStart  | number         |   Количесвто расходников от  |
         |numberOfConsumablesEnd     | number   |Количесвто расходников до |
+        |materials     | object   |Включает id, countStart, countEnd |
         |fullText     | string   | Поиск по полю serviceName | 
       operationId: technicalCardList
       requestBody:
@@ -12505,6 +12507,7 @@ paths:
         | serviceId     | array of strings |  Массив уникальных идентификаторов услуг |
         | numberOfConsumablesStart  | number         |   Количесвто расходников от  |
         |numberOfConsumablesEnd     | number   |Количесвто расходников до |
+        |materials     | object   |Включает id, countStart, countEnd |
       operationId: technicalCardFilter
       requestBody:
         content:
@@ -22157,6 +22160,11 @@ components:
                 value:
                   type: integer
             timeSinceLastMailing:
+              type: object
+              properties:
+                value:
+                  type: number
+            timeSinceLastCall:
               type: object
               properties:
                 value:
@@ -59326,6 +59334,27 @@ components:
               properties:
                 value:
                   type: number
+            materials:
+              type: object
+              properties:
+                id:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                countStart:
+                  type: object
+                  properties:
+                    value:
+                      type: number
+                countEnd:
+                  type: object
+                  properties:
+                    value:
+                      type: number
         fields:
           type: array
           items:
@@ -59335,6 +59364,7 @@ components:
               - documentDate
               - serviceId
               - serviceName
+              - materials
               - numberOfConsumables
         exclude:
           type: array
@@ -59345,6 +59375,7 @@ components:
               - documentDate
               - serviceId
               - serviceName
+              - materials
               - numberOfConsumables
         order:
           type: object
@@ -59372,6 +59403,10 @@ components:
             value: 2
           numberOfConsumablesEnd:
             value: 3
+          materials:
+            id: 
+              value:
+                - 67928302-67fa-11ed-aab0-e4aaeadadf68
         order:
           field: documentDate
           direction: ASC
@@ -59435,6 +59470,27 @@ components:
               properties:
                 value:
                   type: number
+            materials:
+              type: object
+              properties:
+                id:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                countStart:
+                  type: object
+                  properties:
+                    value:
+                      type: number
+                countEnd:
+                  type: object
+                  properties:
+                    value:
+                      type: number
         order:
           type: object
           properties:
@@ -59482,6 +59538,15 @@ components:
                 type: string
               numberOfConsumables:
                 type: integer
+              materials:
+                type: array
+                items:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  count:
+                    type: number
       example:
         success: true
         filters:
@@ -59500,6 +59565,14 @@ components:
             value: 2
           numberOfConsumablesEnd:
             value: 3
+          materials:
+            id:
+              value:
+                - 67928302-67fa-11ed-aab0-e4aaeadadf68
+            countStart: 
+              value: null
+            countEnd: 
+              value: null
         order:
           field: documentDate
           direction: ASC
@@ -59512,11 +59585,15 @@ components:
           isNext: true
           perPage: 2
         data:
-          - id: 67928308-67fa-11ed-aab0-e4aaeadadf68
-            documentDate: '2021-11-19T12:00:00'
-            serviceId: 2ea69562-22e9-11e8-81f7-50e5493beef9
-            serviceName: Лазерная депиляция
-            numberOfConsumables: 2
+          - id: "69ed242f-94e4-11ee-af8a-309c23b27327"
+            documentDate: "2023-12-07T12:38:45"
+            serviceId: "69ed242e-94e4-11ee-af8a-309c23b27327"
+            serviceName: "Прием (осмотр, консультация) врача-дерматовенеролога первичный"
+            numberOfConsumables: 3
+            materials: 
+              - id: "67928302-67fa-11ed-aab0-e4aaeadadf68"
+                name: "Шапочка медицинская"
+                count: 1
     TechnicalCardFilterRequest:
       type: object
       properties:
@@ -59572,6 +59649,27 @@ components:
               properties:
                 value:
                   type: number
+            materials:
+              type: object
+              properties:
+                id:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                countStart:
+                  type: object
+                  properties:
+                    value:
+                      type: number
+                countEnd:
+                  type: object
+                  properties:
+                    value:
+                      type: number
       example:
         filters:
           numberOfConsumablesStart:
@@ -59635,6 +59733,27 @@ components:
               properties:
                 value:
                   type: number
+            materials:
+              type: object
+              properties:
+                id:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                countStart:
+                  type: object
+                  properties:
+                    value:
+                      type: number
+                countEnd:
+                  type: object
+                  properties:
+                    value:
+                      type: number
         data:
           type: object
           properties:
