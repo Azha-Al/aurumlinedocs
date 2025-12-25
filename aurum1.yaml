@@ -2589,7 +2589,7 @@ paths:
                 $ref: '#/components/schemas/BadFieldsOrder'
         '401':
           description: unauthorized
-  eqiszData/GetRangeFilterValues:
+  /eqiszData/GetRangeFilterValues:
     post:
       tags:
         - ЕГИСЗ
