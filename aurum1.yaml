@@ -1839,6 +1839,7 @@ paths:
         |clientStatusImageRef     | string    |URL картинки статуса клиента |
         |employeePostId     | string    | УИД должности сотрудника |
         |employeePostName     | string    | наименование должности сотрудника | 
+        |totalDuration     | number    | Длительность запис | 
         |services     |  array of object   |  |
         |serviceCourses     | array of object    |  |
         |materials     | array of object    |  | 
@@ -2143,6 +2144,21 @@ paths:
                 $ref: '#/components/schemas/BadAnalytics'
         '401':
           description: unauthorized
+  /recording/cancelReason/GetValues:
+    post:
+      tags:
+        - Записи
+      summary: Получить список значений причин отмены
+      operationId: recordingCancelValues
+      requestBody:
+        content: {}
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingCancelValues'
   /employee/GetList:
     post:
       tags:
@@ -2455,6 +2471,7 @@ paths:
         |Поле       | Тип               | Описание |
         | ------------- |:----------------:|:-----|
         |id     | array of strings    | Массив уникальных идентификаторов должностей |
+        |actualDivisionId     |  string    | Уникальный идентификатор подразделения, в котором сотрудник работает с текущего момента хотя бы один раз |
         | postInTheShedule     |boolean |  Отражать в расписании |
         | onlineRegistrationAllowed  | boolean      |  Доступно для онлайн- записи  |
         |fullText     | string   | Поиск по полям name | 
@@ -19163,6 +19180,38 @@ components:
                 serviceCourseName: Курс плазмолифтинга
                 duration: 50
                 sessionLeft: 5
+    RecordingCancelValues:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              number:
+                type: integer
+      example:
+        data:
+          - name: "Клиент передумал"
+            number: 0
+          - name: "Клиент заболел"
+            number: 1
+          - name: "Клиент переехал"
+            number: 2
+          - name: "Специалист отменил"
+            number: 3
+          - name: "Специалист заболел"
+            number: 4
+          - name: "Специалист опоздал"
+            number: 5
+          - name: "Ошибочная запись"
+            number: 6
+          - name: "Другая причина"
+            number: 7
+          - name: "Отмена проведения"
+            number: 8
     BadAnalytics:
       type: object
       properties:
@@ -21355,6 +21404,11 @@ components:
         filters:
           type: object
           properties:
+            actualDivisionId:
+              type: object
+              properties:
+                value:
+                  type: string
             fullText:
               type: object
               properties:
@@ -21428,6 +21482,11 @@ components:
         filters:
           type: object
           properties:
+            actualDivisionId:
+              type: object
+              properties:
+                value:
+                  type: string
             fullText:
               type: object
               properties:
@@ -21487,6 +21546,8 @@ components:
       example:
         success: true
         filters:
+          actualDivisionId:
+            value: null
           fullText:
             value: null
             fields: null
