@@ -1839,7 +1839,7 @@ paths:
         |clientStatusImageRef     | string    |URL картинки статуса клиента |
         |employeePostId     | string    | УИД должности сотрудника |
         |employeePostName     | string    | наименование должности сотрудника | 
-        |totalDuration     | number    | Длительность запис | 
+        |totalDuration     | number    | Длительность записи | 
         |services     |  array of object   |  |
         |serviceCourses     | array of object    |  |
         |materials     | array of object    |  | 
@@ -1880,6 +1880,8 @@ paths:
         |discountSumStart     | number    | Сумма скидки от  |
         |discountSumEnd     | number    | Сумма скидки до |
         |employeePostId     | array of strings    | Массив уникальных идентификаторов должностей |
+        |totalDurationStart     | number    | Длительность записи от| 
+        |totalDurationEnd     | number    | Длительность записи до| 
         |services     |  object   | Включает serviceId, equipmentId  |
         |serviceCourses     |  object    |Включает serviceCourseId|
         |materials     |  object    | Включает materialId |
@@ -17525,6 +17527,16 @@ components:
               properties:
                 value:
                   type: number
+            totalDurationStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalDurationEnd:
+              type: object
+              properties:
+                value:
+                  type: number
             employeePostId:
               type: object
               properties:
@@ -17601,6 +17613,7 @@ components:
               - divisionName
               - clientName
               - clientNameAbbr
+              - totalDuration
               - clientPhone
               - clientStatus
               - clientStatusImageRef
@@ -17637,6 +17650,7 @@ components:
               - divisionName
               - clientName
               - clientNameAbbr
+              - totalDuration
               - clientPhone
               - clientStatus
               - clientStatusImageRef
@@ -17798,6 +17812,16 @@ components:
               properties:
                 value:
                   type: number
+            totalDurationStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalDurationEnd:
+              type: object
+              properties:
+                value:
+                  type: number
             status:
               type: object
               properties:
@@ -17835,6 +17859,16 @@ components:
                 value:
                   type: number
             discountSumEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalDurationStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalDurationEnd:
               type: object
               properties:
                 value:
@@ -17933,6 +17967,8 @@ components:
                     type: string
                   clientPhone:
                     type: string
+                  totalDuration:
+                    type: number
                   services:
                     type: array
                     items:
@@ -18044,6 +18080,10 @@ components:
           discountSumStart:
             value: null
           discountSumEnd:
+            value: null
+          totalDurationStart:
+            value: null
+          totalDurationEnd:
             value: null
           employeePostId:
             value: null
@@ -19091,6 +19131,8 @@ components:
                 format: uuid
               discountSum:
                 type: number
+              totalDuration:
+                type: number
               services:
                 type: array
                 items:
@@ -19159,6 +19201,7 @@ components:
             accrueBonuses: false
             specialistRedirectedId: 00000000-0000-0000-0000-000000000000
             discountSum: 4500
+            totalDuration: 20
             services:
               - serviceId: c18708bb-1658-11ee-af78-309c23b27327
                 serviceName: Лазерное омоложение
