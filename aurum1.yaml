@@ -17812,16 +17812,6 @@ components:
               properties:
                 value:
                   type: number
-            totalDurationStart:
-              type: object
-              properties:
-                value:
-                  type: number
-            totalDurationEnd:
-              type: object
-              properties:
-                value:
-                  type: number
             status:
               type: object
               properties:
