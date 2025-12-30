@@ -1168,7 +1168,7 @@ paths:
     post:
       tags:
         - Клиенты
-      summary: Аналитика клиента
+      summary:  клиента
       description: |-
         ## Список выходных параметров: 
 
@@ -10323,6 +10323,110 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequiredInt'
+  /cashFlowStatement/GetList:
+    post:
+      tags:
+        - Аналитика
+      summary: Пункт Отчет. БДДС
+      description: |2-
+          ## Список входных параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        | dataStart   | string  | Дата начала периода         |
+        | dataEnd     | string  | Дата окончания периода      |
+        | periodicity | integer | Периодичность (0 - месяц, 1 - квартал, 2 - полугодие, 3 - год)      |
+         
+         ## Список выходных параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        | count       | number  | Всего               |
+        | financialCostCenterId       | string  | УИД ЦФЗ (центр финансовых зачетов)                |
+        | financialCostCenterName     | string  | Наименование ЦФЗ         |
+        | lineOfBusiness             | integer | Вид деятельности (0- Операционная деятельность, 1- Финансовая деятельность, 2- Инвестиционная деятельность, 3- Транзит )                           |
+        | typeOfCashFlow             | integer | Тип денежного потока  (0- Потсупления, 1- Выплаты, 2- Транзит)                     |
+        | directionOfActivityId      | string  | УИД группы номенклатуры               |
+        | directionOfActivityName    | string  | Наименование группы номенклатуры          |
+        | cashItemId                 | string  | УИД статьи движения денежных средств                 |
+        | cashItemName               | string  | Название статьи движения денежных средств           |
+        | total                      | number  | Общая сумма                                |
+        | {periodicity}_{year}               | number  | Сумма за periodicity по указанному периоду         |
+
+          ## Объект order имеет следующие доступные к сортировке поля: 
+
+        |Поле               | 
+        | -------------| 
+        |toOptimal|
+
+         ## Объект filters имеет следующие доступные к фильтрации поля: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:----------------:|:-----|
+        | financialCostCenterId      | array of strings  | УИД ЦФЗ (центр финансовых зачетов)          |
+        | financialCostCenterName    | string  | Наименование ЦФЗ                            |
+        | lineOfBusinessStart        | integer | Вид деятельности от                         |
+        | lineOfBusinessEnd          | integer  | Вид деятельности до                         |
+        | typeOfCashFlowStart        | integer  | Тип денежного потока от                     |
+        | typeOfCashFlowEnd          | integer  | Тип денежного потока до                     |
+        | directionOfActivityId      | array of strings  | УИД группы номенклатуры                     |
+        | directionOfActivityName    | string  | Наименование группы номенклатуры            |
+        | cashItemId                 | array of strings  | УИД статьи движения денежных средств        |
+        | cashItemName               | string  | Название статьи движения денежных средств   |
+        | totalStart                 | number  | Общая сумма от                              |
+        | totalEnd                   | number  | Общая сумма до                              |
+        |fullText     | string   | Поиск по полю ? | 
+      operationId: cashFlowStatement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CashFlowStatementReq'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashFlowStatementSuc'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadAnalytics'
+        '401':
+          description: unauthorized
+  /typeOfCashFlow/GetValues:
+    post:
+      tags:
+        - Аналитика
+      summary: БДДС. Тип денежного потока
+      operationId: typeOfCashFlow
+      requestBody:
+        content: {}
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypeOfCashFlowValues'
+  /lineOfBusiness/GetValues:
+    post:
+      tags:
+        - Аналитика
+      summary: БДДС. Вид деятельности
+      operationId: lineOfBusiness
+      requestBody:
+        content: {}
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LineOfBusinessValues'
   /analytics/employee/GetRating:
     post:
       tags:
@@ -53991,6 +54095,48 @@ components:
                   items:
                     type: string
                     example: The required parameter 'interval' is not specified
+    TypeOfCashFlowValues:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              number:
+                type: integer
+      example:
+        data:
+          - name: Поступления
+            number: 0
+          - name: Выплаты
+            number: 1
+          - name: Транзит
+            number: 2
+    LineOfBusinessValues:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              number:
+                type: integer
+      example:
+        data:
+          - name: Операционная деятельность
+            number: 0
+          - name: Финансовая деятельность
+            number: 1
+          - name: Инвестиционная деятельность
+            number: 2
+          - name: Транзит
+            number: 3
     PersonalCabSuccesss:
       type: object
       properties:
