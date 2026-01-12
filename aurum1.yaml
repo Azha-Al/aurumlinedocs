@@ -3991,7 +3991,7 @@ paths:
       tags:
         - Маркетинг
       summary: Получение списка значений типов сертификатов
-      operationId: certificateKinds
+      operationId: certificateTypes
       requestBody:
         content: {}
       responses:
