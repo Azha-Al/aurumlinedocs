@@ -3889,6 +3889,7 @@ paths:
         |certificate     | string    | Номер сертификата |
         | sum     | number |  Номинал |
         |certificateKind      | integer    | Вид сертификата (0- Подарочный, 1- Бонусный) |
+        |certificateType      | integer    | Тип сертификата (0- Электронный, 1- Физический) |
         | status     | integer | Статус сертификата (0- Зарегистрирован, 1- Продан, 2- Активирован, 3- Возвращен, 4- Подарен) |
         | lastDocumentId     | string | Ссылка на последний документ |
         | lastDocumentName     | string | Представление последнего документа |
@@ -3915,6 +3916,7 @@ paths:
         | sumStart     | number | Номинал от |
         | sumEnd     | number | Номинал до |
         | certificateKind     | array of integers |Вид сертификата (0- Подарочный, 1- Бонусный) |
+        |certificateType      | array of integers    | Тип сертификата (0- Электронный, 1- Физический) |
         | status       | array of integers |Массив статусов сертификатов |
         | lastDocumentDateStart       | string | Дата последнего документа от  |
         | lastDocumentDateEnd       | string | Дата последнего документа до  |
@@ -3950,6 +3952,7 @@ paths:
         | sumStart     | number | Номинал от |
         | sumEnd     | number | Номинал до |
         | certificateKind     | array of integers |Вид сертификата (0- Подарочный, 1- Бонусный) |
+        |certificateType      | array of integers    | Тип сертификата (0- Электронный, 1- Физический) |
         | status       | array of integers |Массив статусов сертификатов |
         | lastDocumentDateStart       | string | Дата последнего документа от  |
         | lastDocumentDateEnd       | string | Дата последнего документа до  |  
@@ -3983,6 +3986,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CertificateKinds1'
+  /certificateTypes/GetValues:
+    post:
+      tags:
+        - Маркетинг
+      summary: Получение списка значений типов сертификатов
+      operationId: certificateKinds
+      requestBody:
+        content: {}
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateTypes'
   /certificateStatuses/GetValues:
     post:
       tags:
@@ -4219,10 +4237,10 @@ paths:
         | documentDate     | string |  Дата документа |
         |divisionId      | string    | УИД подразделения |
         | divisionName     | string | Наименование подразделения |
-        | sum     | number | Общий номинал |
+        | sum     | number | Номинал |
         | userId     | string | УИД ответственного |
         | userName     | string | Наименование ответственного |
-        | count     | number | Количество  | 
+        | certificateNumber     | string | Номер сертификата  | 
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -4233,7 +4251,6 @@ paths:
         |divisionId     |
         |userId      |
         |sum      |
-        |count      | 
 
          ## Объект filters имеет следующие доступные к фильтрации поля: 
 
@@ -4246,11 +4263,10 @@ paths:
         | divisionName     |  string | Наименование подрахделения |
         | userId     | array of strings | Массив УИД ответсвенного  |
         | userName     |  string | Наименование ответственного |
-        | sumStart     | number | Общая сумма от  |
-        | sumEnd     | number | Общая сумма до  |
-        | countStart     | number | Количество от  |
-        | countEnd     | number | Количество до  |
-        |fullText     | string   | Поиск по полю divisionName, userName    | 
+        | sumStart     | number | Сумма от  |
+        | sumEnd     | number | Сумма до  |
+        | certificateNumber     | string | Номер сертификата  |
+        |fullText     | string   | Поиск по полю divisionName, userName, certificateNumber    | 
       operationId: certificateSellingList
       requestBody:
         content:
@@ -4287,8 +4303,6 @@ paths:
         | userName     |  string | Наименование ответственного |
         | sumStart     | number | Общая сумма от  |
         | sumEnd     | number | Общая сумма до  |
-        | countStart     | number | Количество от  |
-        | countEnd     | number | Количество до  | 
       operationId: certificateSellingFilter
       requestBody:
         content:
@@ -26720,6 +26734,13 @@ components:
                   type: array
                   items:
                     type: integer
+            certificateType:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
             status:
               type: object
               properties:
@@ -26745,6 +26766,7 @@ components:
               - certificate
               - sum
               - certificateKind
+              - certificateType
               - status
               - lastDocumentId
               - lastDocumentName
@@ -26758,6 +26780,7 @@ components:
               - certificate
               - sum
               - certificateKind
+              - certificateType
               - status
               - lastDocumentId
               - lastDocumentName
@@ -26826,6 +26849,13 @@ components:
                 value:
                   type: number
             certificateKind:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            certificateType:
               type: object
               properties:
                 value:
@@ -26910,6 +26940,8 @@ components:
             value: 500
           certificateKind:
             value: null
+          certificateType:
+            value: null
           status:
             value: null
           lastDocumentDateStart:
@@ -26931,6 +26963,7 @@ components:
           - certificate: '4536'
             sum: 444
             certificateKind: 0
+            certificateType: 1
             status: 0
             lastDocumentId: 7e2c4c88-7431-11f0-afb1-309c23b27327
             lastDocumentName: Регистрация сертификатов 000000009 dated 08.08.2025 11:27:17
@@ -26965,6 +26998,13 @@ components:
                 value:
                   type: number
             certificateKind:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            certificateType:
               type: object
               properties:
                 value:
@@ -27029,6 +27069,13 @@ components:
                   type: array
                   items:
                     type: integer
+            certificateType:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
             status:
               type: object
               properties:
@@ -27074,6 +27121,8 @@ components:
           sumEnd:
             value: 500
           certificateKind:
+            value: null
+          certificateType:
             value: null
           status:
             value: null
@@ -27130,6 +27179,24 @@ components:
             number: 3
           - name: Подарен
             number: 4
+    CertificateTypes:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              number:
+                type: integer
+      example:
+        data:
+          - name: Электронный
+            number: 0
+          - name: Физический
+            number: 1
     CertificateRegistrationListRequest1:
       type: object
       properties:
