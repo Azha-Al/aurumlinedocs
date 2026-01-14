@@ -12843,6 +12843,111 @@ paths:
                 $ref: '#/components/schemas/BadPaginationOrder'
         '401':
           description: unauthorized
+  settingPrices/GetList:
+    post:
+      tags:
+        - Настройки
+      summary: Установка цен. Получить список
+      description: |2-
+         ## Список выходных параметров: 
+
+        |Поле       | Тип               | Описание |По умолчанию в fields 
+        | ------------- |:------------------:| :-----:| :-----|
+        | id                                | string  | Уникальный идентификатор               | Да                   |
+        | date                              | string  | Дата                                   | Да                   |
+        | divisionId                          | string  | УИД подразделения                      | Да                   |
+        | divisionName                      | string  | Название подразделения                 | Нет                  |
+        | responsibleId                       | string  | УИД ответственного                     | Да                   |
+        | responsibleNameAbbr               | string  | ФИО сокращенное ответственного         | Нет                  |
+        | cancellationDate                  | string  | Дата отмены                            | Да                   |
+        | responsibleForCancellationId        | string  | УИД ответственного за отмену           | Да                   |
+        | responsibleForCancellationNameAbbr | string | ФИО сокращенное ответственного за отмену | Нет                | 
+
+         ## Объект order имеет следующие доступные к сортировке поля: 
+
+        |Поле               | 
+        | -------------| 
+        |id     |
+        | date     |
+        | cancellationDate     |
+
+         ## Объект filters имеет следующие доступные к фильтрации поля: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:----------------:|:-----|
+        | id                             | array of strings   | Массив уникальных идентификаторов             |
+        | dateStart                      | string             | Дата начала периода                           |
+        | dateEnd                        | string             | Дата окончания периода                        |
+        | divisionId                     | array of strings   | Массив уникальных идентификаторов подразделений |
+        | responsibleId                  | array of strings   | Массив уникальных идентификаторов ответственных |
+        | cancellationDateStart          | string             | Дата отмены от                                |
+        | cancellationDateEnd            | string             | Дата отмены до                                |
+        | responsibleForCancellationId   | array of strings   | Массив уникальных идентификаторов ответственных за отмену |
+        |fullText     | string   | Поиск по полю divisionName, responsibleNameAbbr, responsibleForCancellationNameAbbr  | 
+      operationId: settingPricesList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettingPricesListRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingPricesListSuccess'
+        '204':
+          description: no content
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadPaginationOrder'
+        '401':
+          description: unauthorized
+  settingPrices/GetRangeFilterValues:
+    post:
+      tags:
+        - Настройки
+      summary: Установка цен. Получить фильтры
+      description: |2-
+
+         ## Объект filters имеет следующие доступные к фильтрации поля: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:----------------:|:-----|
+        | id                             | array of strings   | Массив уникальных идентификаторов             |
+        | dateStart                      | string             | Дата начала периода                           |
+        | dateEnd                        | string             | Дата окончания периода                        |
+        | divisionId                     | array of strings   | Массив уникальных идентификаторов подразделений |
+        | responsibleId                  | array of strings   | Массив уникальных идентификаторов ответственных |
+        | cancellationDateStart          | string             | Дата отмены от                                |
+        | cancellationDateEnd            | string             | Дата отмены до                                |
+        | responsibleForCancellationId   | array of strings   | Массив уникальных идентификаторов ответственных за отмену |
+        |fullText     | string   | Поиск по полю divisionName, responsibleNameAbbr, responsibleForCancellationNameAbbr  | 
+      operationId: settingPricesFilters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettingPricesFiltersRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingPricesFiltersSuccess'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadPaginationOrder'
+        '401':
+          description: unauthorized
 components:
   securitySchemes:
     BasicAuth:
@@ -60986,3 +61091,484 @@ components:
             priceMin: 3500
             priceMax: 3500
             bonus: 5
+    SettingPricesListRequest:
+      type: object
+      properties:
+        filters:
+          type: object
+          properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
+            id:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            dateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            dateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            responsibleId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            cancellationDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            cancellationDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            responsibleForCancellationId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+        fields:
+          type: array
+          items:
+            type: string
+            enum:
+              - id
+              - date
+              - divisionId
+              - divisionName
+              - responsibleId
+              - responsibleNameAbbr
+              - cancellationDate
+              - responsibleForCancellationId
+              - responsibleForCancellationNameAbbr
+        exclude:
+          type: array
+          items:
+            type: string
+            enum:
+              - id
+              - date
+              - divisionId
+              - divisionName
+              - responsibleId
+              - responsibleNameAbbr
+              - cancellationDate
+              - responsibleForCancellationId
+              - responsibleForCancellationNameAbbr
+        order:
+          type: object
+          properties:
+            field:
+              type: string
+              enum:
+                - id
+                - date
+                - cancellationDate
+            direction:
+              type: string
+              enum:
+                - ASC
+                - DESC
+        pagination:
+          type: object
+          properties:
+            paginate:
+              type: boolean
+              default: true
+            perPage:
+              type: integer
+              default: 10
+      example:
+        filters:
+          dateStart:
+            value: '2023-06-14T20:19:56'
+          divisionId:
+            value:
+              - 66b6a3b8-7769-11e8-9b21-50e5493beef9
+        fields:
+          - id
+          - date
+          - divisionId
+          - divisionName
+          - responsibleId
+          - responsibleNameAbbr
+          - cancellationDate
+          - responsibleForCancellationId
+          - responsibleForCancellationNameAbbr
+        order:
+          field: date
+          direction: DESC
+    SettingPricesListSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        filters:
+          type: object
+          properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
+            id:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            dateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            dateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            responsibleId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            cancellationDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            cancellationDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            responsibleForCancellationId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+        order:
+          type: object
+          properties:
+            field:
+              type: string
+            direction:
+              type: string
+              enum:
+                - ASC
+                - DESC
+        pagination:
+            type: object
+            properties:
+              firstUuid:
+                type: string
+                format: uuid
+              lastUuid:
+                type: string
+                format: uuid
+              firstValue:
+                type: string
+                format: datetime
+              lastValue:
+                type: string
+                format: datetime
+              isPrev:
+                type: boolean
+              isNext:
+                type: boolean
+              perPage:
+                type: integer
+        count:
+          type: integer
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              date:
+                type: string
+                format: date-time
+              divisionId:
+                type: string
+              divisionName:
+                type: string
+              responsibleId:
+                type: string
+              responsibleNameAbbr:
+                type: string
+              cancellationDate:
+                type: string
+                format: date-time
+              responsibleForCancellationId:
+                type: string
+              responsibleForCancellationNameAbbr:
+                type: string
+      example:
+        success: true
+        filters:
+          fullText:
+            value: null
+            fields: null
+          id:
+            value: null
+          dateStart:
+            value: '2023-06-14T20:19:56'
+          dateEnd:
+            value: null
+          divisionId:
+            value:
+              - 66b6a3b8-7769-11e8-9b21-50e5493beef9
+          responsibleId:
+            value: null
+          cancellationDateStart:
+            value: null
+          cancellationDateEnd:
+            value: null
+          responsibleForCancellationId:
+            value: null
+        order:
+          field: date
+          direction: DESC
+        count: 95
+        data:
+          - id: 3ce6924e-a80f-11f0-afc7-309c23b27327
+            date: '2025-10-13T11:33:05'
+            divisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
+            divisionName: Кемерово_Д.Бедного
+            responsibleId: 682b0dae-76d2-11ed-af67-309c23b27327
+            responsibleNameAbbr: Администратор
+            cancellationDate: '0001-01-01T00:00:00'
+            responsibleForCancellationId: "00000000-0000-0000-0000-000000000000"
+            responsibleForCancellationNameAbbr: Администратор
+    SettingPricesFiltersRequest:
+      type: object
+      properties:
+        filters:
+          type: object
+          properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
+            id:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            dateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            dateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            responsibleId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            cancellationDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            cancellationDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            responsibleForCancellationId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+        example:
+          filters:
+          dateStart:
+            value: '2023-06-14T20:19:56'
+          divisionId:
+            value:
+              - 66b6a3b8-7769-11e8-9b21-50e5493beef9
+    SettingPricesFiltersSuccess:
+      type: object
+      properties:
+        filters:
+          type: object
+          properties:
+            id:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            dateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            dateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            responsibleId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            cancellationDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            cancellationDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            responsibleForCancellationId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+        data:
+          type: object
+          properties:
+            date:
+              type: object
+              properties:
+                min:
+                  type: string
+                  format: date-time
+                max:
+                  type: string
+                  format: date-time
+            cancellationDate:
+              type: object
+              properties:
+                min:
+                  type: string
+                  format: date-time
+                max:
+                  type: string
+                  format: date-time
+      example:
+        filters:
+          id:
+            value: null
+          dateStart:
+            value: '2023-06-14T20:19:56'
+          dateEnd:
+            value: null
+          divisionId:
+            value:
+              - 66b6a3b8-7769-11e8-9b21-50e5493beef9
+          responsibleId:
+            value: null
+          cancellationDateStart:
+            value: null
+          cancellationDateEnd:
+            value: null
+          responsibleForCancellationId:
+            value: null
+        data:
+          date:
+            min: '2023-06-14T20:19:56'
+            max: '2025-10-13T11:33:05'
+          cancellationDate:
+            min: '0001-01-01T00:00:00'
+            max: '2025-03-25T17:29:57'
