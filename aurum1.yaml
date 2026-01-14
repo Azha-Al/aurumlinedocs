@@ -10347,31 +10347,33 @@ paths:
 
         |Поле       | Тип               | Описание |
         | ------------- |:------------------:| :-----|
-        | dataStart   | string  | Дата начала периода         |
-        | dataEnd     | string  | Дата окончания периода      |
-        | periodicity | integer | Периодичность (0 - месяц, 1 - квартал, 2 - полугодие, 3 - год)      |
+        | dataStart (required)  | string  | Дата начала периода         |
+        | dataEnd (required)    | string  | Дата окончания периода      |
+        | periodicity (required)| integer | Периодичность (0 - месяц, 1 - квартал, 2 - полугодие, 3 - год)      |
          
          ## Список выходных параметров: 
 
-        |Поле       | Тип               | Описание |
-        | ------------- |:------------------:| :-----|
-        | count       | number  | Всего               |
-        | financialCostCenterId       | string  | УИД ЦФЗ (центр финансовых зачетов)                |
-        | financialCostCenterName     | string  | Наименование ЦФЗ         |
-        | lineOfBusiness             | integer | Вид деятельности (0- Операционная деятельность, 1- Финансовая деятельность, 2- Инвестиционная деятельность, 3- Транзит )                           |
-        | typeOfCashFlow             | integer | Тип денежного потока  (0- Потсупления, 1- Выплаты, 2- Транзит)                     |
-        | directionOfActivityId      | string  | УИД группы номенклатуры               |
-        | directionOfActivityName    | string  | Наименование группы номенклатуры          |
-        | cashItemId                 | string  | УИД статьи движения денежных средств                 |
-        | cashItemName               | string  | Название статьи движения денежных средств           |
-        | total                      | number  | Общая сумма                                |
-        | {periodicity}_{year}               | number  | Сумма за periodicity по указанному периоду         |
+        |Поле       | Тип               | Описание | По умолчанию в fields |
+        | ------------- |:------------------:| :-----:| :-----|
+        | financialCostCenterId       | string  | УИД ЦФЗ (центр финансовых зачетов)                | Да|
+        | financialCostCenterName     | string  | Наименование ЦФЗ         | Да|
+        | lineOfBusiness             | integer | Вид деятельности (0- Операционная деятельность, 1- Финансовая деятельность, 2- Инвестиционная деятельность, 3- Транзит )  | Да|
+        | typeOfCashFlow             | integer | Вид движения  (0- Потсупления, 1- Выплаты, 2- Транзит)                     |Да |
+        | directionOfActivityId      | string  | УИД группы номенклатуры               | Да|
+        | directionOfActivityName    | string  | Наименование группы номенклатуры          | Да|
+        | cashItemId                 | string  | УИД статьи движения денежных средств                 | Да|
+        | cashItemName               | string  | Название статьи движения денежных средств           | Да|
+        | total                      | number  | Общая сумма                                | Да|
+        | {periodicity}_{year}               | number  | Сумма за выбранный periodicity по указанному периоду (dateStart- dateEnd)        | Да|
 
           ## Объект order имеет следующие доступные к сортировке поля: 
 
         |Поле               | 
         | -------------| 
-        |toOptimal|
+        |lineOfBusiness|
+        |typeOfCashFlow|
+        |financialCostCenterId|
+        |directionOfActivityId|
 
          ## Объект filters имеет следующие доступные к фильтрации поля: 
 
@@ -10389,7 +10391,6 @@ paths:
         | cashItemName               | string  | Название статьи движения денежных средств   |
         | totalStart                 | number  | Общая сумма от                              |
         | totalEnd                   | number  | Общая сумма до                              |
-        |fullText     | string   | Поиск по полю ? | 
       operationId: cashFlowStatement
       requestBody:
         content:
@@ -54241,6 +54242,356 @@ components:
                   items:
                     type: string
                     example: The required parameter 'interval' is not specified
+    CashFlowStatementReq:
+      type: object
+      properties:
+        dataStart:
+          type: string
+          format: date-time
+        dataEnd:
+          type: string
+          format: date-time
+        periodicity:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+        filters:
+          type: object
+          properties:
+            financialCostCenterId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            financialCostCenterName:
+              type: object
+              properties:
+                value:
+                  type: string
+            lineOfBusinessStart:
+              type: object
+              properties:
+                value:
+                  type: integer
+            lineOfBusinessEnd:
+              type: object
+              properties:
+                value:
+                  type: integer
+            typeOfCashFlowStart:
+              type: object
+              properties:
+                value:
+                  type: integer
+            typeOfCashFlowEnd:
+              type: object
+              properties:
+                value:
+                  type: integer
+            directionOfActivityId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            directionOfActivityName:
+              type: object
+              properties:
+                value:
+                  type: string
+            cashItemId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            cashItemName:
+              type: object
+              properties:
+                value:
+                  type: string
+            totalStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+        fields:
+          type: array
+          items:
+            type: string
+            enum:
+              - financialCostCenterId
+              - financialCostCenterName
+              - lineOfBusiness
+              - typeOfCashFlow
+              - directionOfActivityId
+              - directionOfActivityName
+              - cashItemId
+              - cashItemName
+              - total
+        exclude:
+          type: array
+          items:
+            type: string
+            enum:
+              - financialCostCenterId
+              - financialCostCenterName
+              - lineOfBusiness
+              - typeOfCashFlow
+              - directionOfActivityId
+              - directionOfActivityName
+              - cashItemId
+              - cashItemName
+              - total
+        order:
+          type: object
+          properties:
+            field:
+              type: string
+              enum:
+                - lineOfBusiness
+                - typeOfCashFlow
+                - financialCostCenterId
+                - directionOfActivityId
+            direction:
+              type: string
+              enum:
+                - ASC
+                - DESC
+        pagination:
+          type: object
+          properties:
+            paginate:
+              type: boolean
+              default: true
+            perPage:
+              type: integer
+              default: 10
+      example:
+        dataStart: '2021-01-01T00:00:00'
+        dataEnd: '2025-12-31T00:00:00'
+        periodicity: 0
+    CashFlowStatementSuc:
+      type: object
+      properties:
+        success:
+          type: boolean
+        filters:
+          type: object
+          properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
+            financialCostCenterId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            financialCostCenterName:
+              type: object
+              properties:
+                value:
+                  type: string
+            lineOfBusinessStart:
+              type: object
+              properties:
+                value:
+                  type: integer
+            lineOfBusinessEnd:
+              type: object
+              properties:
+                value:
+                  type: integer
+            typeOfCashFlowStart:
+              type: object
+              properties:
+                value:
+                  type: integer
+            typeOfCashFlowEnd:
+              type: object
+              properties:
+                value:
+                  type: integer
+            directionOfActivityId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            directionOfActivityName:
+              type: object
+              properties:
+                value:
+                  type: string
+            cashItemId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            cashItemName:
+              type: object
+              properties:
+                value:
+                  type: string
+            totalStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+        order:
+          type: object
+          properties:
+            field:
+              type: string
+            direction:
+              type: string
+              example: ASC
+        pagination:
+          type: object
+          properties:
+            firstUuid:
+              type: string
+              format: uuid
+            lastUuid:
+              type: string
+              format: uuid
+            isPrev:
+              type: boolean
+            isNext:
+              type: boolean
+            perPage:
+              type: integer
+        count:
+          type: integer
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              financialCostCenterId:
+                type: string
+              financialCostCenterName:
+                type: string
+              lineOfBusiness:
+                type: integer
+              typeOfCashFlow:
+                type: integer
+              directionOfActivityId:
+                type: string
+              directionOfActivityName:
+                type: string
+              cashItemId:
+                type: string
+              cashItemName:
+                type: string
+              total:
+                type: number
+      example:
+        success: true
+        filters:
+          fullText:
+            value: null
+            fields: null
+          financialCostCenterId:
+            value: null
+          financialCostCenterName:
+            value: null
+          lineOfBusinessStart:
+            value: null
+          lineOfBusinessEnd:
+            value: null
+          typeOfCashFlowStart:
+            value: null
+          typeOfCashFlowEnd:
+            value: null
+          directionOfActivityId:
+            value: null
+          directionOfActivityName:
+            value: null
+          cashItemId:
+            value: null
+          cashItemName:
+            value: null
+          totalStart:
+            value: null
+          totalEnd:
+            value: null
+        count: 60
+        data:
+          - financialCostCenterId: 9db448e1-bf5a-11ee-af8c-309c23b27327
+            financialCostCenterName: "'К-СОФТ. Эмулятор для работы контрольно-кассовой техники 54 ФЗ.'"
+            lineOfBusiness: 0
+            typeOfCashFlow: 0
+            directionOfActivityId: "00000000-0000-0000-0000-000000000000"
+            directionOfActivityName: ""
+            cashItemId: cb218ba7-ddcc-11ed-af73-309c23b27327
+            cashItemName: Лазерная эпиляция
+            total: 10279.5
+            May_2023: 0
+            October_2023: 0
+            August_2023: 0
+            February_2024: 10279.5
+            May_2024: 0
+            December_2023: 0
+            September_2023: 0
+            July_2024: 0
+            November_2023: 0
+            January_2024: 0
+            March_2024: 0
+            October_2024: 0
+            December_2024: 0
+            December_2025: 0
+          - financialCostCenterId: 9db448e1-bf5a-11ee-af8c-309c23b27327
+            financialCostCenterName: "'К-СОФТ. Эмулятор для работы контрольно-кассовой техники 54 ФЗ.'"
+            lineOfBusiness: 0
+            typeOfCashFlow: 0
+            directionOfActivityId: 4dfc9285-ddf5-11ed-af73-309c23b27327
+            directionOfActivityName: АВАНСЫ ПОЛУЧЕННЫЕ
+            cashItemId: 5db4773c-ddc9-11ed-af73-309c23b27327
+            cashItemName: Авансы полученные
+            total: 11856
+            May_2023: 0
+            October_2023: 0
+            August_2023: 0
+            February_2024: 11856
+            May_2024: 0
+            December_2023: 0
+            September_2023: 0
+            July_2024: 0
+            November_2023: 0
+            January_2024: 0
+            March_2024: 0
+            October_2024: 0
+            December_2024: 0
+            December_2025: 0
     TypeOfCashFlowValues:
       type: object
       properties:
