@@ -12724,6 +12724,13 @@ paths:
                       - serviceName
                       - numberOfConsumables
                       - materials
+                  example:
+                    - id
+                    - documentDate
+                    - serviceId
+                    - serviceName
+                    - numberOfConsumables
+                    - materials
               required:
                 - id
       responses:
