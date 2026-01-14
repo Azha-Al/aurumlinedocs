@@ -12713,6 +12713,15 @@ paths:
                   type: string
                   format: uuid
                   example: 69ed242f-94e4-11ee-af8a-309c23b27327
+                fields:
+                  type: array
+                  items:
+                    - id 
+                    - documentDate 
+                    - serviceId 
+                    - serviceName 
+                    - numberOfConsumables 
+                    - materials
               required:
                 - id
       responses:
