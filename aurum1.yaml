@@ -2996,6 +2996,8 @@ paths:
         | name     | string |  Наименование номенклатуры |
         | article  |  string         |    Артикул/Штрихкод |
         |isGroup     | boolean   | Группа номенклатуры |
+        |groupId     | string   | УИД группы номенклатуры |
+        |groupName     | string   | Наименовнаие группы номенклатуры |
         | type  | integer         |   Вид номенклатуры (0- курс услуг, 1- материал, 2- товар, 3- услуга, 4- все)  |
         |time     | integer    | Время проведения |
         |numberOfSessions     | number    | Количество сеансов  |
@@ -7363,6 +7365,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadClientAnalytics'
+  /salaryCondition/Update:
+    post:
+      tags:
+        - Зарплата
+      summary: Условия начисления. Обновить 
+      description: |2-
+        ## Входные параметры: 
+        
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id (required) | string    | Уникальный идентификатор элемента |
+        |values     | object    | Включает поля для обновления | 
+
+        ## Поля для обновления:
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |deletionMark     | boolean    | Отправить в архив | 
+      operationId: salaryConditionUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalaryConditionUpdateRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalaryConditionUpdateSuccess'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadIdTypeResp2'
   /salaryKPI/GetList:
     post:
       tags:
@@ -7412,6 +7450,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadClientAnalytics'
+  /salaryKPI/Update:
+    post:
+      tags:
+        - Зарплата
+      summary: Обновить KPI по зарплате
+      description: |2-
+        ## Входные параметры: 
+        
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id (required) | string    | Уникальный идентификатор элемента |
+        |values     | object    | Включает поля для обновления |
+
+        ## Поля для обновления:
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |deletionMark     | boolean    | Отправить в архив |  
+      operationId: salaryKPIUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalaryKPIUpdateRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalaryKPIUpdateSuccess'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadIdTypeResp2'
   /calculationAlgorithm/GetList:
     post:
       tags:
@@ -7500,6 +7574,42 @@ paths:
                 $ref: '#/components/schemas/BadClientAnalytics'
         '401':
           description: unauthorized
+  /calculationAlgorithm/Update:
+    post:
+      tags:
+        - Зарплата
+      summary: Обновить алгоритм расчета
+      description: |2-
+        ## Входные параметры: 
+        
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id (required) | string    | Уникальный идентификатор элемента |
+        |values     | object    | Включает поля для обновления | 
+
+        ## Поля для обновления:
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |deletionMark     | boolean    | Отправить в архив |  
+      operationId: calculationAlgorithmUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalculationAlgorithmUpdateRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculationAlgorithmUpdateSuccess'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadIdTypeResp2'
   /oneTimeCharges/GetList:
     post:
       tags:
@@ -12843,7 +12953,7 @@ paths:
                 $ref: '#/components/schemas/BadPaginationOrder'
         '401':
           description: unauthorized
-  settingPrices/GetList:
+  /settingPrices/GetList:
     post:
       tags:
         - Настройки
@@ -12907,7 +13017,7 @@ paths:
                 $ref: '#/components/schemas/BadPaginationOrder'
         '401':
           description: unauthorized
-  settingPrices/GetRangeFilterValues:
+  /settingPrices/GetRangeFilterValues:
     post:
       tags:
         - Настройки
@@ -36582,7 +36692,7 @@ components:
       example:
         success: true
         data:
-          deletionMark: false
+          deletionMark: true
     OperationTypeValues1:
       type: object
       properties:
@@ -44234,6 +44344,114 @@ components:
             amountWithheld:
               min: -1000
               max: 8194.7
+    SalaryConditionUpdateRequest:
+      type: object
+      properties:
+        id:
+          type: object
+          properties:
+            value:
+              type: array
+              items:
+                type: string
+                format: uuid
+        values:
+          type: object
+          properties:
+            deletionMark:
+              type: boolean
+      required:
+        - id
+      example:
+        id: ece0e6f8-fffb-11ef-afa2-309c23b27327
+        values:
+          deletionMark: true
+    SalaryConditionUpdateSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            deletionMark:
+              type: boolean
+      example:
+        success: true
+        data:
+          deletionMark: true
+    SalaryKPIUpdateRequest:
+      type: object
+      properties:
+        id:
+          type: object
+          properties:
+            value:
+              type: array
+              items:
+                type: string
+                format: uuid
+        values:
+          type: object
+          properties:
+            deletionMark:
+              type: boolean
+      required:
+        - id
+      example:
+        id: 49e176c7-2a5e-11f0-afab-309c23b27327
+        values:
+          deletionMark: true
+    SalaryKPIUpdateSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            deletionMark:
+              type: boolean
+      example:
+        success: true
+        data:
+          deletionMark: true
+    CalculationAlgorithmUpdateRequest:
+      type: object
+      properties:
+        id:
+          type: object
+          properties:
+            value:
+              type: array
+              items:
+                type: string
+                format: uuid
+        values:
+          type: object
+          properties:
+            deletionMark:
+              type: boolean
+      required:
+        - id
+      example:
+        id: c4a74ca96-45f8-11f0-afab-309c23b27327
+        values:
+          deletionMark: true
+    CalculationAlgorithmUpdateSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            deletionMark:
+              type: boolean
+      example:
+        success: true
+        data:
+          deletionMark: true
     ServiceListRequest:
       type: object
       properties:
@@ -58724,7 +58942,7 @@ components:
       example:
         success: true
         data:
-          deletionMark: false
+          deletionMark: true
     TechnicalCardUpdateRequest:
       type: object
       properties:
@@ -58760,7 +58978,7 @@ components:
       example:
         success: true
         data:
-          deletionMark: false
+          deletionMark: true
     RouteListRequest:
       type: object
       properties:
