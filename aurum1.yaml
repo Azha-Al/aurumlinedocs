@@ -12667,6 +12667,67 @@ paths:
                 $ref: '#/components/schemas/BadPaginationOrder'
         '401':
           description: unauthorized
+  /technicalCard/GetById:
+    post:
+      tags:
+        - Настройки
+      summary: Техкарта. Получить данные по документу
+      description: |2-
+         ## Входные параметры: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id (required)     | string    | Уникальный идентификатор документа |
+
+         ## Список выходных параметров: 
+
+        | Поле                    | Тип     | Описание                           | По умолчанию |
+        |-------------------------|---------|------------------------------------|--------------|
+        | id                      | string  | УИД документа                      | Да           |
+        | documentDate            | string  | Дата документа                     | Да           |
+        | serviceId               | string  | УИД услуги                         | Да           |
+        | serviceName             | string  | Наименование услуги                | Нет          |
+        | numberOfConsumables     | number  | Количество расходников             | Да           |
+        | materials               | array of objects  | Массив объектов расходных материалов                     | Нет          |
+
+        ## Структура materials:
+        
+        | Поле                   | Тип     | Описание                           |
+        |------------------------|---------|------------------------------------|
+        | id                     | string  | УИД материала                      |
+        | name                   | string  | Наименование материала             |
+        | count                  | number  | Количество материала               |
+        | groupId                | string  | УИД группы материала             |
+        | groupName              | string  | Наименование группы материала    |
+        | unitOfMeasurementId    | string  | УИД ед. изм. материала             |
+        | unitOfMeasurementName  | string  | Наименование ед. изм. материала    |
+        | costPrice              | number  | Себестоимость материала            |
+      operationId: TechnicalCardById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: 69ed242f-94e4-11ee-af8a-309c23b27327
+              required:
+                - id
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TechnicalCardByIdSuccess'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadIdTypeResp2'
   /technicalCard/Update:
     post:
       tags:
@@ -60203,6 +60264,86 @@ components:
           numberOfConsumables:
             min: 2
             max: 3
+    TechnicalCardByIdSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              documentDate:
+                type: string
+                format: datetime
+              serviceId:
+                type: string
+                format: uuid
+              serviceName:
+                type: string
+              numberOfConsumables:
+                type: number
+              materials:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    name:
+                      type: string
+                    count:
+                      type: number
+                    groupId:
+                      type: string
+                      format: uuid
+                    groupName:
+                      type: string
+                    unitOfMeasurementId:
+                      type: string
+                      format: uuid
+                    unitOfMeasurementName:
+                      type: string
+                    costPrice:
+                      type: number
+      example:
+        success: true
+        count: 1
+        data:
+          - id: 69ed242f-94e4-11ee-af8a-309c23b27327
+            documentDate: '2023-12-07T12:38:45'
+            serviceId: 69ed242e-94e4-11ee-af8a-309c23b27327
+            serviceName: Прием (осмотр, консультация) врача-дерматовенеролога первичный
+            numberOfConsumables: 3
+            materials:
+              - id: 67928302-67fa-11ed-aab0-e4aaeadadf68
+                name: Шапочка медицинская
+                count: 1
+                groupId: 679282fa-67fa-11ed-aab0-e4aaeadadf68
+                groupName: Стерильные материалы
+                unitOfMeasurementId: c923bd63-1663-11ee-af78-309c23b27327
+                unitOfMeasurementName: шт
+                costPrice: 5.79530201
+              - id: 67928305-67fa-11ed-aab0-e4aaeadadf68
+                name: Бахилы желтые (100 шт./упак)
+                count: 1
+                groupId: 959124aa-a831-11e8-ad4c-50e5493beef9
+                groupName: Товары
+                unitOfMeasurementId: c923bd63-1663-11ee-af78-309c23b27327
+                unitOfMeasurementName: шт
+                costPrice: 10.14095358
+              - id: 0d30165f-097c-11ee-af75-309c23b27327
+                name: Шприц 10 мл одноразовый
+                count: 2
+                groupId: 679282fa-67fa-11ed-aab0-e4aaeadadf68
+                groupName: Стерильные материалы
+                unitOfMeasurementId: c923bd63-1663-11ee-af78-309c23b27327
+                unitOfMeasurementName: шт
+                costPrice: 50
     PriceListBonusRequest:
       type: object
       properties:
