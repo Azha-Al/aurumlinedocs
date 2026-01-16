@@ -1999,7 +1999,7 @@ paths:
         | ------------- |:------------------:| :-----|
         |id (required)    | string   | УИД записи |
         | status (required)    | integer   |Статус записи, на который изменяем (0- Онлайн-запись, 1- Предварительная, 2- Подтверждена, 3- Клиент пришел, 4- Отменена, 5- Удалена, 6- Выполнена, 7- Оплачена, 8- Требует переноса) |
-        |cancelReason     | integer    | Причина отмены записи (0- клиент передумал, 1- специалист заболел, 2- ошибочная запись, 3- клиент заболел, 4- клиент переехал, 5- отмена проведения, 6- другая причина, 7- специалист отменил, 8- специалист опоздал ) |
+        |cancelReason     | integer    | Причина отмены записи (0- клиент передумал, 1- специалист заболел, 2- ошибочная запись, 3- клиент заболел, 4- клиент переехал, 5- отмена проведения, 6- другая причина, 7- специалист отменил, 8- специалист опоздал, 9- услуга скрыта из прайса ) |
       operationId: recordChangeStatus
       requestBody:
         content:
@@ -2161,6 +2161,57 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecordingCancelValues'
+  /nomenclature/CheckRecords:
+    post:
+      tags:
+        - Записи
+      summary: Проверка наличия записей по услуге/курсу услуг
+      description: |-
+        ## Список входных параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id  (required)    | string   | УИД номенклатуры |
+        |divisionId (required)   | string    | УИД филиала |
+        |periodStart (required)   | string   | Дата с которой скрыть услуг/курс услуги |
+      operationId: nomenclatureCheck
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                id:
+                  type: string
+                  format: uuid
+                  example: eff3a22f-6e65-11ee-af8a-309c23b27327
+                divisionId:
+                  type: string
+                  format: uuid
+                  example: d8ac51ca-03cc-11f0-afa4-309c23b27327
+                periodStart:
+                  type: string
+                  format: datetime
+                  example: 2026-02-18T00:00:00
+              required:
+                - id
+                - divisionId
+                - periodStart
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NomenclatureCheckSuccess'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadAnalytics'
+        '401':
+          description: unauthorized
   /employee/GetList:
     post:
       tags:
@@ -5607,6 +5658,8 @@ paths:
                 $ref: '#/components/schemas/BadServices'
         '401':
           description: unauthorized
+  /price/HideItem:
+    /price/HideItem
   /salling/GetList:
     post:
       tags:
@@ -19658,6 +19711,23 @@ components:
             number: 7
           - name: "Отмена проведения"
             number: 8
+    NomenclatureCheckSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        recordsFound:
+          type: boolean
+        ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+      example:
+        success: true
+        recordsFound: true
+        ids:
+          - 039c019f-f2c1-11f0-97a4-306893e16552
     BadAnalytics:
       type: object
       properties:
