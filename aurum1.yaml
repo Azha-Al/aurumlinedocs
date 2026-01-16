@@ -1331,7 +1331,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientUpdateSuccess'
+                anyOf:
+                  - allOf:
+                      - $ref: '#/components/schemas/ClientUpdateSuccess'
+                  - allOf:
+                      - $ref: '#/components/schemas/ClientUpdateFalse'
         '400':
           description: bad request
           content:
@@ -15873,6 +15877,43 @@ components:
           phone: +7 (984) 656 - 26 - 58
           email: semen@mail.ru
           photo: https://getaurum.ru/api/hs/v1/image/GetByRef?id=70f3149d-973f-11e9-a461-902b344d515b&type=Справочник.Клиенты&field=Фото
+    ClientUpdateFalse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            details:
+              type: object
+              properties:
+                description:
+                  type: string
+                clients:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+      example:
+        success: false
+        error:
+          message: "Клиент не уникален"
+          details:
+            description: "Ещё раз проверьте данные: телефон, дополнительный телефон, ИНН, СНИЛС, ФИО и дата рождения, серия и номер паспорта у клиентов:"
+            clients:
+              - id: 1caa8ef0-2d4b-11ee-af7a-309c23b27327
+                name: "Мухоморов Платон Кондратьевич"
+              - id: 98117266-8549-11ee-af8a-309c23b27327
+                name: "Дергачев Платон Валентинович"
     BadClientUpdate:
       type: object
       properties:
