@@ -1331,7 +1331,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
+                oneOf:
                   - $ref: '#/components/schemas/ClientUpdateSuccess'
                   - $ref: '#/components/schemas/ClientUpdateFalse'
         '400':
