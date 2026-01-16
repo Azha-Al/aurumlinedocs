@@ -985,6 +985,7 @@ paths:
         |favoriteDivisionId     | string    | УИД любимого подразделения  |
         |favoriteDivisionName     | string    | Наименование любимого подразделения |
         |photoRef     | string    | URL фотографии клиента |  
+        |deletionMark     | boolean    | Перенос в архив |
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -1030,6 +1031,7 @@ paths:
         |lastVisitEnd     | string    | Дата последнего визита до |
         |pushNotifications     | boolean    | Разрешение на отправку уведомлений |
         |favoriteDivisionId     | string    | УИД любимого подразделения  | 
+        |deletionMark     | boolean    | Перенос в архив |
       operationId: clientList
       requestBody:
         content:
@@ -1143,6 +1145,7 @@ paths:
         |bonusesEnd     | number    | Бонусы до |
         |lastVisitStart     | string    | Дата последнего визита от |
         |lastVisitEnd     | string    | Дата последнего визита до |
+        |deletionMark     | boolean    | Перенос в архив |
       operationId: clientFilterValues
       requestBody:
         content:
@@ -1267,6 +1270,7 @@ paths:
         |lastVisit    | string    | Дата последнего визита  |
         |loyaltyCardStatusName    | string    | Уровень карты лояльности |
         |loyaltyCardStatusImageRef    | string    | URL карты лояльности | 
+        |deletionMark     | boolean    | Перенос в архив |
       operationId: clientById
       requestBody:
         content:
@@ -14011,6 +14015,8 @@ components:
               properties:
                 value:
                   type: string
+            delitionMark:
+                type: boolean
         fields:
           type: array
           items:
@@ -14291,6 +14297,8 @@ components:
               properties:
                 value:
                   type: string
+            delitionMark:
+              type: boolean
         order:
           type: object
           properties:
