@@ -2161,6 +2161,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecordingCancelValues'
+  /recording/ChangeStatuses:
+    post:
+      tags:
+        - Записи
+      summary: Массовое изменение статуса у записей
+      description: |-
+        ## Список входных параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |ids (required)    | string   | УИД записи |
+        | status (required)    | integer   |Статус записи, на который изменяем (0- Онлайн-запись, 1- Предварительная, 2- Подтверждена, 3- Клиент пришел, 4- Отменена, 5- Удалена, 6- Выполнена, 7- Оплачена, 8- Требует переноса) |
+        |cancelReason     | integer    | Причина отмены записи (0- клиент передумал, 1- специалист заболел, 2- ошибочная запись, 3- клиент заболел, 4- клиент переехал, 5- отмена проведения, 6- другая причина, 7- специалист отменил, 8- специалист опоздал, 9- услуга скрыта из прайса ) |
+      operationId: recordChangeStatuses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                    example: 039c019f-f2c1-11f0-97a4-306893e16552
+                status:
+                  type: integer
+                  example: 4
+                cancelReason:
+                  type: integer
+                  example: 9
+              required:
+                - id
+                - status
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadChangeStatus'
+        '401':
+          description: unauthorized
   /nomenclature/CheckRecords:
     post:
       tags:
@@ -5659,7 +5705,60 @@ paths:
         '401':
           description: unauthorized
   /price/HideItem:
-    /price/HideItem
+    post:
+      tags:
+        - Прайс-лист
+      summary: ПСкрыть номенклатуру из прайс-листа
+      description: |-
+        ## Список входных параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id  (required)    | string   | УИД номенклатуры |
+        |divisionId (required)   | string    | УИД филиала |
+        |date (required)   | string   | Дата с которой скрыть услуг/курс услуги |
+      operationId: nomenclatureHide
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                id:
+                  type: string
+                  format: uuid
+                  example: eff3a22f-6e65-11ee-af8a-309c23b27327
+                divisionId:
+                  type: string
+                  format: uuid
+                  example: d8ac51ca-03cc-11f0-afa4-309c23b27327
+                date:
+                  type: string
+                  format: datetime
+                  example: 2026-02-18T00:00:00
+              required:
+                - id
+                - divisionId
+                - date
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadAnalytics'
+        '401':
+          description: unauthorized
   /salling/GetList:
     post:
       tags:
@@ -12079,15 +12178,20 @@ paths:
     post:
       tags:
         - Настройки
-      summary: Номенклатура. Отправить в архив
+      summary: Номенклатура. Обновление данных
       description: |2-
          ## Входные параметры: 
 
         |Поле       | Тип               | Описание |
         | ------------- |:------------------:| :-----|
         |id (required)     | string    | Уникальный идентификатор элемента |
-        |values     | object    | включает deletionMark |
+        |values     | object    | Включает поля для обновления | 
+
+        ## Поля для обновления:
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
         |deletionMark     | boolean    | Отправить в архив | 
+        |onlineRegistrationAllowed     | boolean    | Доступно к онлайн-записи |
       operationId: NomenclatureUpdate
       requestBody:
         content:
@@ -58993,6 +59097,8 @@ components:
           properties:
             deletionMark:
               type: boolean
+            onlineRegistrationAllowed:
+              type: boolean
       required:
         - id
       example:
@@ -59009,10 +59115,13 @@ components:
           properties:
             deletionMark:
               type: boolean
+            onlineRegistrationAllowed:
+              type: boolean
       example:
         success: true
         data:
           deletionMark: true
+          onlineRegistrationAllowed: false
     TechnicalCardUpdateRequest:
       type: object
       properties:
