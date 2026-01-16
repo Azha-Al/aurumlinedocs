@@ -1331,11 +1331,9 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - allOf:
-                      - $ref: '#/components/schemas/ClientUpdateSuccess'
-                  - allOf:
-                      - $ref: '#/components/schemas/ClientUpdateFalse'
+                allOf:
+                  - $ref: '#/components/schemas/ClientUpdateSuccess'
+                  - $ref: '#/components/schemas/ClientUpdateFalse'
         '400':
           description: bad request
           content:
