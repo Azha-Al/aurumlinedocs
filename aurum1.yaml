@@ -5212,8 +5212,10 @@ paths:
         |groupName     | string   | Наименование группы услуг |
         |duration     | number    | Время проведения |
         |onlineRegistrationAllowed     | boolean    | Доступно для онлайн записи |
-        | price     | number |  Цена |
-        | discount  | number         |   Скидка|
+        | priceMin     | number |  Цена минимальная|
+        | priceMax     | number |  Цена максимальная |
+        | discountMin  | number         |   Скидка минимальная|
+        | discountMax  | number         |   Скидка максимальная|
         |employees     | boolean   | Есть сотрудники |
         |equipment     | boolean    | Есть оборудование | 
 
@@ -5457,7 +5459,8 @@ paths:
         | name     | string |  Наименование товаров |
         | groupId  | string         |    Уникальный идентификатор группы |
         |groupName     | string   | Наименование группы товаров |
-        | price     | number |  Цена |
+        | priceMin     | number |  Цена минимальная|
+        | priceMax     | number |  Цена максимальная |
         | stock  | number         |   Остаток| 
 
          ## Объект order имеет следующие доступные к сортировке поля: 
@@ -5587,8 +5590,10 @@ paths:
         |groupName     | string   | Наименование группы услуг |
         |visitQuantity     | number    | Количество сеансов |
         |duration     | number    | Время проведения |
-        | price     | number |  Цена |
-        | discount  | number         |   Скидка|
+        | priceMin     | number |  Цена минимальная|
+        | priceMax     | number |  Цена максимальная |
+        | discountMin  | number         |   Скидка минимальная|
+        | discountMax  | number         |   Скидка максимальная|
         |specialist     | boolean   | Есть сотрудники |
         |equipment     | boolean    | Есть оборудование | 
 
@@ -5708,6 +5713,72 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadServices'
+        '401':
+          description: unauthorized
+  /nomenclature/price/GetList:
+    post:
+      tags:
+        - Прайс-лист
+      summary: Получить цены номенклатуры по филиалам
+      description: |2-
+         ## Входные параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id  (required)   | string    | Уникальный идентификатор номенклатуры |
+
+         ## Список выходных параметров:
+
+        | Поле         | Тип     | Описание                    | По умолчанию в fields |
+        |--------------|---------|-----------------------------|-----------------------|
+        | divisionId   | string  | УИД подразделения           | Да                   |
+        | divisionName | string  | Название подразделения      | Нет                   |
+        | price        | number  | Цена                        | Да                   |
+        | corpPrice    | number  | Корпоративная цена          | Да                   |
+        | settingDate  | string  | Дата установки              | Да                   |
+
+         ## Объект order имеет следующие доступные к сортировке поля: 
+
+        |Поле               | 
+        | -------------| 
+        |divisionName     |
+        |price     |
+        | corpPrice     |  
+        |settingDate     |
+
+         ## Объект filters имеет следующие доступные к фильтрации поля: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:----------------:|:-----|
+        | divisionId         | array of strings  | УИД подразделения           |
+        | priceStart         | number  | Цена от                     |
+        | priceEnd           | number  | Цена до                     |
+        | corpPriceStart     | number  | Корпоративная цена от       |
+        | corpPriceEnd       | number  | Корпоративная цена до       |
+        | settingDateStart   | string  | Дата установки от           |
+        | settingDateEnd     | string  | Дата установки до           |
+        |fullText            | object   | Поиск по полю divisionName| 
+      operationId: nomenclaturePriceList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NomenclaturePriceListRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NomenclaturePriceListSuccess'
+        '204':
+          description: no content
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRecordingFilter'
         '401':
           description: unauthorized
   /price/HideItem:
@@ -13821,6 +13892,238 @@ components:
                 periodEnd: '2025-06-25T17:10:00'
               - periodStart: '2025-06-25T17:00:00'
                 periodEnd: '2025-06-25T17:40:00'
+    NomenclaturePriceListRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        filters:
+          type: object
+          properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            priceStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            priceEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            corpPriceStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            corpPriceEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            settingDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            settingDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+        fields:
+          type: array
+          items:
+            type: string
+            enum:
+              - divisionId
+              - divisionName
+              - price
+              - corpPrice
+              - settingDate
+        exclude:
+          type: array
+          items:
+            type: string
+            enum:
+              - divisionId
+              - divisionName
+              - price
+              - corpPrice
+              - settingDate
+        order:
+          type: object
+          properties:
+            field:
+              type: string
+              enum:
+                - divisionName
+                - price
+                - corpPrice
+                - settingDate
+            direction:
+              type: string
+              enum:
+                - ASC
+                - DESC
+        pagination:
+          type: object
+          properties:
+            paginate:
+              type: boolean
+              default: true
+            perPage:
+              type: integer
+              default: 10
+      required:
+        - id
+      example:
+        id: 70f314a4-973f-11e9-a461-902b344d515b
+        fields:
+          - divisionId
+          - divisionName
+          - price
+          - corpPrice
+          - settingDate
+    NomenclaturePriceListSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        filters:
+          type: object
+          properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            priceStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            priceEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            corpPriceStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            corpPriceEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            settingDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+            settingDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+                  format: date-time
+        count:
+          type: integer
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              divisionId:
+                type: string
+              divisionName:
+                type: string
+              price:
+                type: number
+              corpPrice:
+                type: number
+              settingDate:
+                type: string
+                format: date-time
+      example:
+        success: true
+        filters:
+          fullText:
+            value: null
+            fields: null
+          divisionId:
+            value: null
+          priceStart:
+            value: null
+          priceEnd:
+            value: null
+          corpPriceStart:
+            value: null
+          corpPriceEnd:
+            value: null
+          settingDateStart:
+            value: null
+          settingDateEnd:
+            value: null
+        count: 5
+        data:
+          - divisionId: 9457b499-7765-11e8-9b21-50e5493beef9
+            divisionName: Кемерово_Ленинградский
+            price: 4
+            corpPrice: 100
+            settingDate: '2024-10-30T18:28:11'
+          - divisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
+            divisionName: Кемерово_Д.Бедного
+            price: 300
+            corpPrice: 600
+            settingDate: '2024-10-29T17:35:43'
+          - divisionId: a1cb30b4-98bf-11ed-af69-309c23b27327
+            divisionName: МСК_Ак.Александрова
+            price: 1000
+            corpPrice: 200
+            settingDate: '2023-01-01T12:00:00'
+          - divisionId: 1578a086-6429-11ee-af85-309c23b27327
+            divisionName: СПБ_Гл.Зеленина
+            price: 1660
+            corpPrice: 530
+            settingDate: '2024-02-15T12:00:00'
+          - divisionId: f8b32d50-1dbb-11ef-af91-309c23b27327
+            divisionName: СПБ_Авангардная
+            price: 2400
+            corpPrice: 1200
+            settingDate: '2026-01-15T11:21:40'
     ClientListRequest:
       type: object
       properties:
