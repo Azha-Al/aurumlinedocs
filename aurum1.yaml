@@ -1894,6 +1894,8 @@ paths:
         |Поле       | Тип               | Описание |
         | ------------- |:------------------:| :-----|
         |id     | array of strings    | Массив уникальных идентификаторов записей |
+        | documentDateStart     | string |  Дата создания запсии от |
+        | documentDateEnd  | string         |    Дата создания записи до |
         | dateStart     | string |  Дата приема от |
         | dateEnd  | string         |    Дата приема до |
         |timeStartStart     | string   | Начало приема от |
