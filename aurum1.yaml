@@ -22109,19 +22109,19 @@ components:
               bonusTypeId: "00000000-0000-0000-0000-000000000000"
               bonusTypeName: ""
               treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
-            serviceCourses:
-              - serviceCourseId: 76405ca4-983a-11ef-af9b-309c23b27327
-                serviceCourseName: Курс антицеллюлитного массажа с ароматическими маслами
-                duration: 40
-                sessionsLeft: 5
-                equipmentId: "00000000-0000-0000-0000-000000000000"
-                equipmentName: null
-                serviceCourseRegistrationId: 0d4518f4-0407-11f1-97a4-306893e16552
-                treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
-            materials:
-              - materialId: 67928306-67fa-11ed-aab0-e4aaeadadf68
-                materialName: "Простынь медицинская"
-                norm: 2
+          serviceCourses:
+            - serviceCourseId: 76405ca4-983a-11ef-af9b-309c23b27327
+              serviceCourseName: Курс антицеллюлитного массажа с ароматическими маслами
+              duration: 40
+              sessionsLeft: 5
+              equipmentId: "00000000-0000-0000-0000-000000000000"
+              equipmentName: null
+              serviceCourseRegistrationId: 0d4518f4-0407-11f1-97a4-306893e16552
+              treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
+          materials:
+            - materialId: 67928306-67fa-11ed-aab0-e4aaeadadf68
+              materialName: "Простынь медицинская"
+              norm: 2
     RecordingCancelValues:
       type: object
       properties:
