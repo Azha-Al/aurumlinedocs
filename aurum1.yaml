@@ -18,6 +18,7 @@ info:
      Входные параметры для получения списков: 
      * filters
      * operation 
+     * uniqueField
      * fields 
      * exclude 
      * order 
@@ -25,7 +26,9 @@ info:
 
       Допустимые поля для передачи в **filters** и **order** зависят от получаемого списка. Указаны у каждого метода индивидуально. 
 
-      Параметр **"operation"** определяет, как комбинируются условия фильтрации при выполнении запроса.
+      Входной параметр **uniqueField** предназаначен для получения всех уникальных значений по указываемому полю. В случае указания "uniqueField" в теле ответа возвращается "uniqueValues" вместо "data".
+
+      Параметр **operation** определяет, как комбинируются условия фильтрации при выполнении запроса.
 
       Значения параметра:
 
@@ -247,8 +250,8 @@ paths:
   /client/Create:
     post:
       tags:
-        - Авторизация
-      summary: Регистрация клиента
+        - Клиенты
+      summary: Создать нового клиента
       operationId: CreateClient
       requestBody:
         content:
@@ -269,21 +272,15 @@ paths:
                   type: string
                   format: datetime
                   example: '1982-05-18T00:00:00'
-                secretKey:
-                  type: string
-                  format: uuid
-                  example: f6dc01b2-58d3-4eb3-a42a-771f99ca826c
       responses:
-        '200':
+        '201':
           description: successful operation
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/CreateClient'
-                  - $ref: '#/components/schemas/CreateClientKey'
+                $ref: '#/components/schemas/CreateClient'
         '400':
-          description: too many requests
+          description: bad request
           content:
             application/json:
               schema:
@@ -297,10 +294,24 @@ paths:
                     properties:
                       message:
                         type: string
-                        example: Phone number already exists
-                      code:
-                        type: string
-                        example: registration_phone_duplicate
+                        example: Клиент не уникален
+                      details:
+                        type: object
+                        properties:
+                          description:
+                            type: string
+                            example: "Ещё раз проверьте данные: телефон, дополнительный телефон, ФИО:"
+                          clients:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  example: "4ecbd3d7-a1d3-11ef-af9b-309c23b27327"
+                                name:
+                                  type: string
+                                  example: Фадеева Ольга Геннадьевна
   /auth/ResetAccessCode:
     post:
       tags:
@@ -1855,29 +1866,47 @@ paths:
         |serviceCourses     | array of object    |  |
         |materials     | array of object    |  | 
 
-        ## Массив services имеет следующие поля: 
+         ## Массив services имеет следующие поля: 
 
         | Поле                         | Тип                | Описание                               |
         |------------------------------|--------------------|----------------------------------------|
-        | serviceId                    | string   |  УИД услуг                       |
-        | equipmentId                  | string   |  УИД оборудования                |
-        | discountTypeId               | string   |  УИД типов скидок                |
-        | bonusTypeId                  | string  |  УИД типов бонусов               |
-        | treatmentPlanStageId         | string   |  УИД этапов плана лечения        |
-        | originalDiscount         | number  | Первоначальная скидка                |
-        | originalPrice         | number  | Первоначальная цена                 |
+        | serviceId              | string  | УИД услуги                             |
+        | serviceName            | string  | Название услуги                        |
+        | count                  | number  | Количество                             |
+        | price                  | number  | Цена                                   |
+        | originalPrice          | number  | Первоначальная цена                    |
+        | sum                    | number  | Сумма                                  |
+        | discountSum            | number  | Сумма скидки                           |
+        | totalSum               | number  | Итоговая сумма                         |
+        | duration               | number  | Продолжительность                      |
+        | discount               | number  | Скидка                                 |
+        | discountFix            | number  | Фиксированная скидка                   |
+        | bonus                  | number  | Бонус                                  |
+        | bonusSum               | number  | Сумма бонуса                           |
+        | bonusFix               | number  | Фиксированный бонус                    |
+        | equipmentId            | string  | УИД оборудования                       |
+        | equipmentName          | string  | Название оборудования                  |
+        | discountTypeId         | string  | УИД типа скидки                        |
+        | discountTypeName       | string  | Название типа скидки                   |
+        | bonusTypeId            | string  | УИД типа бонуса                        |
+        | bonusTypeName          | string  | Название типа бонуса                   |
+        | treatmentPlanStageId   | string  | УИД этапа плана лечения                |
 
-        ## Массив serviceCourses имеет следующие поля: 
+         ## Массив serviceCourses имеет следующие поля: 
         
         | Поле                         | Тип                | Описание                               |
         |------------------------------|--------------------|----------------------------------------|
-        | serviceCourseId              | string   |  УИД курсов услуг                |
-        | equipmentId                  | string  |  УИД оборудования                |
-        | serviceCourseRegistrationId  | string   |  УИД регистраций курсов услуг    |
-        | treatmentPlanStageId         | string  |  УИД этапов плана лечения        |
+        | serviceCourseId              | string  | УИД курса услуг                        |
+        | serviceCourseName            | string  | Название курса услуг                   |
+        | duration                     | number  | Продолжительность                      |
+        | sessionsLeft                 | number  | Осталось сессий                        |
+        | equipmentId                  | string  | УИД оборудования                       |
+        | equipmentName                | string  | Название оборудования                  |
+        | serviceCourseRegistrationId  | string  | УИД регистрации курса услуг            |
+        | treatmentPlanStageId         | string  | УИД этапа плана лечения                |
 
-        ## Массив materials имеет следующие поля: 
-        
+         ## Массив materials имеет следующие поля: 
+
         | Поле                         | Тип                | Описание                               |
         |------------------------------|--------------------|----------------------------------------|
         | materialId   | string  | УИД материала                 |
@@ -1902,6 +1931,8 @@ paths:
         | documentDateEnd  | string         |    Дата создания записи до |
         | dateStart     | string |  Дата приема от |
         | dateEnd  | string         |    Дата приема до |
+        | documentChangeDateStart     | string |  Дата изменения запсии от |
+        | documentChangeDateEnd  | string         |    Дата изменения записи до |
         |timeStartStart     | string   | Начало приема от |
         |timeStartEnd     | string    | Начало приема до |
         |timeEndStart     | string    | Окончание приема от |
@@ -1913,20 +1944,25 @@ paths:
         |divisionId     | array of strings    | Массив уникальных идентификаторов подразделений |
         |clientId     | array of strings     | Массив уникальных идентификаторов клиентов |
         |employeeId     | array of strings    | Массив уникальных идентификаторов сотрудников |
+        |doesNotReceiveReception     | boolean    | Сотрудник не ведет прием в программе |
         |documentSumStart     | number    | Сумма документа от |
         |documentSumEnd     |number   | Сумма документа до |
         |status     |  array of integers  | Массив порядков перечислений (статус записи) |
+        |statusReason     |  array of integers  | Массив порядков перечислений (причина отмены записи) |
         |bonusesAccruedStart     | number    | Бонусов начислено от |
         |bonusesAccruedEnd    | number    | Бонусов начислено до |
         |accrueBonuses     | boolean    | Начислять бонусы |
         |specialistRedirectedId     | array of strings    | Массив уникальных идентификаторов сотрудников |
         |discountSumStart     | number    | Сумма скидки от  |
         |discountSumEnd     | number    | Сумма скидки до |
+        |clientStatus     |  array of integers  | Массив порядков перечислений (статус клиента) |
         |employeePostId     | array of strings    | Массив уникальных идентификаторов должностей |
         |totalDurationStart     | number    | Длительность записи от| 
         |totalDurationEnd     | number    | Длительность записи до| 
+        |responsibleForCreationId     | array of strings    | Массив уникальных идентификаторов ответственных за создание |
+        |responsibleForChangeId     | array of strings    | Массив уникальных идентификаторов ответственных за изменение |
         |services     |  object   | Включает serviceId, equipmentId, discountTypeId, bonusTypeId, treatmentPlanStageId  |
-        |serviceCourses     |  object    |Включает serviceCourseId, serviceCourseRegistrationId, treatmentPlanStageId|
+        |serviceCourses     |  object    |Включает serviceCourseId, equipmentId, serviceCourseRegistrationId, treatmentPlanStageId|
         |materials     |  object    | Включает materialId |
         |fullText     | string    | Поиск по полям clientName, employeeName, divisionName  | 
       operationId: recordingList
@@ -1990,25 +2026,44 @@ paths:
         |Поле       | Тип               | Описание |
         | ------------- |:------------------:| :-----|
         |id     | array of strings    | Массив уникальных идентификаторов записей |
+        | documentDateStart     | string |  Дата создания запсии от |
+        | documentDateEnd  | string         |    Дата создания записи до |
         | dateStart     | string |  Дата приема от |
         | dateEnd  | string         |    Дата приема до |
+        | documentChangeDateStart     | string |  Дата изменения запсии от |
+        | documentChangeDateEnd  | string         |    Дата изменения записи до |
         |timeStartStart     | string   | Начало приема от |
         |timeStartEnd     | string    | Начало приема до |
         |timeEndStart     | string    | Окончание приема от |
-        |timeEndEnd     | string    | Окончание приема до |
+        |timeEndEnd     | string     | окончание приема до |
+        |receptionTimeStartStart     | string   | Дата и время начала приема от |
+        |receptionTimeStartEnd     | string    | Дата и время начала приема до |
+        |receptionTimeEndStart     | string    | Дата и время окончания приема от |
+        |receptionTimeEndEnd     | string     | Дата и время окончания приема до |
         |divisionId     | array of strings    | Массив уникальных идентификаторов подразделений |
-        |clientId     | array of strings    | Массив уникальных идентификаторов клиентов |
-        |employeetId     | array of strings    | Массив уникальных идентификаторов сотрудников |
+        |clientId     | array of strings     | Массив уникальных идентификаторов клиентов |
+        |employeeId     | array of strings    | Массив уникальных идентификаторов сотрудников |
+        |doesNotReceiveReception     | boolean    | Сотрудник не ведет прием в программе |
         |documentSumStart     | number    | Сумма документа от |
-        |documentSumEnd     |number   | Сумма документа до|
-        | status     | array of integers   | Массив порядков перечислений (0- Онлайн-запись, 1- Предварительная, 2- Подтверждена, 3- Клиент пришел, 4- Отменена, 5- Удалена, 6- Выполнена, 7- Оплачена, 8- Требует переноса) |
+        |documentSumEnd     |number   | Сумма документа до |
+        |status     |  array of integers  | Массив порядков перечислений (статус записи) |
+        |statusReason     |  array of integers  | Массив порядков перечислений (причина отмены записи) |
         |bonusesAccruedStart     | number    | Бонусов начислено от |
         |bonusesAccruedEnd    | number    | Бонусов начислено до |
         |accrueBonuses     | boolean    | Начислять бонусы |
-        |specialistRedirectedId     | array of strings   | Массив уникальных идентификаторов сотрудников |
-        |discountSumStart     | number    | Сумма скидки от |
+        |specialistRedirectedId     | array of strings    | Массив уникальных идентификаторов сотрудников |
+        |discountSumStart     | number    | Сумма скидки от  |
         |discountSumEnd     | number    | Сумма скидки до |
+        |clientStatus     |  array of integers  | Массив порядков перечислений (статус клиента) |
         |employeePostId     | array of strings    | Массив уникальных идентификаторов должностей |
+        |totalDurationStart     | number    | Длительность записи от| 
+        |totalDurationEnd     | number    | Длительность записи до| 
+        |responsibleForCreationId     | array of strings    | Массив уникальных идентификаторов ответственных за создание |
+        |responsibleForChangeId     | array of strings    | Массив уникальных идентификаторов ответственных за изменение |
+        |services     |  object   | Включает serviceId, equipmentId, discountTypeId, bonusTypeId, treatmentPlanStageId  |
+        |serviceCourses     |  object    |Включает serviceCourseId, equipmentId, serviceCourseRegistrationId, treatmentPlanStageId|
+        |materials     |  object    | Включает materialId |
+        |fullText     | string    | Поиск по полям clientName, employeeName, divisionName  | 
       operationId: recordFilterValues
       requestBody:
         content:
@@ -2022,6 +2077,76 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecordingFilterSuccess'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRecordingFilter'
+        '401':
+          description: unauthorized
+  /recording/GetTotalValues:
+    post:
+      tags:
+        - Записи
+      summary: Получить итоговые значения
+      description: |-
+        ## Объект filters имеет следующие поля: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id     | array of strings    | Массив уникальных идентификаторов записей |
+        | documentDateStart     | string |  Дата создания запсии от |
+        | documentDateEnd  | string         |    Дата создания записи до |
+        | dateStart     | string |  Дата приема от |
+        | dateEnd  | string         |    Дата приема до |
+        | documentChangeDateStart     | string |  Дата изменения запсии от |
+        | documentChangeDateEnd  | string         |    Дата изменения записи до |
+        |timeStartStart     | string   | Начало приема от |
+        |timeStartEnd     | string    | Начало приема до |
+        |timeEndStart     | string    | Окончание приема от |
+        |timeEndEnd     | string     | окончание приема до |
+        |receptionTimeStartStart     | string   | Дата и время начала приема от |
+        |receptionTimeStartEnd     | string    | Дата и время начала приема до |
+        |receptionTimeEndStart     | string    | Дата и время окончания приема от |
+        |receptionTimeEndEnd     | string     | Дата и время окончания приема до |
+        |divisionId     | array of strings    | Массив уникальных идентификаторов подразделений |
+        |clientId     | array of strings     | Массив уникальных идентификаторов клиентов |
+        |employeeId     | array of strings    | Массив уникальных идентификаторов сотрудников |
+        |doesNotReceiveReception     | boolean    | Сотрудник не ведет прием в программе |
+        |documentSumStart     | number    | Сумма документа от |
+        |documentSumEnd     |number   | Сумма документа до |
+        |status     |  array of integers  | Массив порядков перечислений (статус записи) |
+        |statusReason     |  array of integers  | Массив порядков перечислений (причина отмены записи) |
+        |bonusesAccruedStart     | number    | Бонусов начислено от |
+        |bonusesAccruedEnd    | number    | Бонусов начислено до |
+        |accrueBonuses     | boolean    | Начислять бонусы |
+        |specialistRedirectedId     | array of strings    | Массив уникальных идентификаторов сотрудников |
+        |discountSumStart     | number    | Сумма скидки от  |
+        |discountSumEnd     | number    | Сумма скидки до |
+        |clientStatus     |  array of integers  | Массив порядков перечислений (статус клиента) |
+        |employeePostId     | array of strings    | Массив уникальных идентификаторов должностей |
+        |totalDurationStart     | number    | Длительность записи от| 
+        |totalDurationEnd     | number    | Длительность записи до| 
+        |responsibleForCreationId     | array of strings    | Массив уникальных идентификаторов ответственных за создание |
+        |responsibleForChangeId     | array of strings    | Массив уникальных идентификаторов ответственных за изменение |
+        |services     |  object   | Включает serviceId, equipmentId, discountTypeId, bonusTypeId, treatmentPlanStageId  |
+        |serviceCourses     |  object    |Включает serviceCourseId, equipmentId, serviceCourseRegistrationId, treatmentPlanStageId|
+        |materials     |  object    | Включает materialId |
+        |fullText     | string    | Поиск по полям clientName, employeeName, divisionName  | 
+      operationId: recordTotalValues
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordingTotalRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingTotalSuccess'
         '400':
           description: bad request
           content:
@@ -2171,13 +2296,15 @@ paths:
         |id     | string    | Уникальный идентификатор записи |
         | documentDate     | string |  Дата создания документа |
         | date     | string |  Дата приема |
+        | documentChangeDate     | string |  Дата изменения документа |
         | timeStart  | string         |    Начало приема |
         |timeEnd     | string   | Окончание приема |
         | receptionTimeStart  | string         |    Дата и время начала приема |
         |receptionTimeEnd     | string   | Дата и время окончания приема |
         |divisionId     | string    | УИД подразделения |
         |clientId     | string    | УИД клиента |
-        |employeeId     | boolean    | УИД сотрудника |
+        |employeeId     | string    | УИД сотрудника |
+        |doesNotReceiveReception     | boolean    | Сотрудник не ведет прием в программе |
         |documentSum     | number    | Cумма документа |
         |status     | integer    | Текущий статус записи (0- Онлайн-запись, 1- Предварительная, 2- Подтверждена, 3- Клиент пришел, 4- Отменена, 5- Удалена, 6- Выполнена, 7- Оплачена, 8- Требует переноса) |
         |statusReason     | integer    | **Причина отмены** (Status(4): 0- Клиент передумал, 1- Специалист заболел, 2- Ошибочная запись, 3- Клиент заболел, 4- Клиент переехал, 5- Отмена проведения, 6- Другая причина, 7- Специалист отменил, 8- Специалист опоздал). **Причина переноса** ( Status(8): 0- Перенос оборудования, 1- Оборудование в ремонте, 2- Специалист уволен, 3- Онлайн перенос, 4- Изменение графика, 5- Списание оборудования )  |
@@ -2187,7 +2314,8 @@ paths:
         |accrueBonuses     |  string  | Начислять бонусы |
         |specialistRedirectedId     | string    | УИД специалист перенаправил |
         |discountSum    | number    | Сумма скидки |
-        |services     | string    | Услуги строкой |
+        |servicesPerLine     | string    | Услуги строкой |
+        |equipmentPerLine     | string    | Оборудование строкой |
         |massCallId     | string    | УИД докмуента откуда совершили запись |
         |employeeName     | string    | Наименование сотрудника  |
         |employeeNameAbbr     | string    | Фамилия И. О. сотрудника  |
@@ -2212,22 +2340,40 @@ paths:
 
         | Поле                         | Тип                | Описание                               |
         |------------------------------|--------------------|----------------------------------------|
-        | serviceId                    | string   |  УИД услуг                       |
-        | equipmentId                  | string   |  УИД оборудования                |
-        | discountTypeId               | string   |  УИД типов скидок                |
-        | bonusTypeId                  | string  |  УИД типов бонусов               |
-        | treatmentPlanStageId         | string   |  УИД этапов плана лечения        |
-        | originalDiscount         | number  | Первоначальная скидка                |
-        | originalPrice         | number  | Первоначальная цена                 |
+        | serviceId              | string  | УИД услуги                             |
+        | serviceName            | string  | Название услуги                        |
+        | count                  | number  | Количество                             |
+        | price                  | number  | Цена                                   |
+        | originalPrice          | number  | Первоначальная цена                    |
+        | sum                    | number  | Сумма                                  |
+        | discountSum            | number  | Сумма скидки                           |
+        | totalSum               | number  | Итоговая сумма                         |
+        | duration               | number  | Продолжительность                      |
+        | discount               | number  | Скидка                                 |
+        | discountFix            | number  | Фиксированная скидка                   |
+        | bonus                  | number  | Бонус                                  |
+        | bonusSum               | number  | Сумма бонуса                           |
+        | bonusFix               | number  | Фиксированный бонус                    |
+        | equipmentId            | string  | УИД оборудования                       |
+        | equipmentName          | string  | Название оборудования                  |
+        | discountTypeId         | string  | УИД типа скидки                        |
+        | discountTypeName       | string  | Название типа скидки                   |
+        | bonusTypeId            | string  | УИД типа бонуса                        |
+        | bonusTypeName          | string  | Название типа бонуса                   |
+        | treatmentPlanStageId   | string  | УИД этапа плана лечения                |
 
         ## Массив serviceCourses имеет следующие поля: 
         
         | Поле                         | Тип                | Описание                               |
         |------------------------------|--------------------|----------------------------------------|
-        | serviceCourseId              | string   |  УИД курсов услуг                |
-        | equipmentId                  | string  |  УИД оборудования                |
-        | serviceCourseRegistrationId  | string   |  УИД регистраций курсов услуг    |
-        | treatmentPlanStageId         | string  |  УИД этапов плана лечения        |
+        | serviceCourseId              | string  | УИД курса услуг                        |
+        | serviceCourseName            | string  | Название курса услуг                   |
+        | duration                     | number  | Продолжительность                      |
+        | sessionsLeft                 | number  | Осталось сессий                        |
+        | equipmentId                  | string  | УИД оборудования                       |
+        | equipmentName                | string  | Название оборудования                  |
+        | serviceCourseRegistrationId  | string  | УИД регистрации курса услуг            |
+        | treatmentPlanStageId         | string  | УИД этапа плана лечения                |
 
         ## Массив materials имеет следующие поля: 
 
@@ -2324,6 +2470,39 @@ paths:
                 $ref: '#/components/schemas/BadChangeStatus'
         '401':
           description: unauthorized
+  /recording/GetRelatedDocuments:
+    post:
+      tags:
+        - Записи
+      summary: Получить данные по связанным документам
+      description: |-
+        ## Список входных параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |id (required)    | string   | УИД записи |
+      operationId: recordRelatedDocs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: f3330468-0cb6-11f1-97a4-306893e16552
+              required:
+                - id
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingRelatedDocs'
+        '401':
+          description: unauthorized
   /nomenclature/CheckRecords:
     post:
       tags:
@@ -2405,6 +2584,8 @@ paths:
         |servicesProvided    | array of object   | Оказываемые услуги |
         |averageRating    | number    | Средняя оценка|
         |numberOfRatings    | number   | Количество оценок |
+        |clientId  | string   | УИД клиента  | 
+        |clientName  | string   | ФИО клиента | 
         |description  | string   | Описание | 
         |nearRecordDate  | string   | Число ближайщей записи |  
 
@@ -2580,6 +2761,8 @@ paths:
         |averageRating     | number    |Средняя оценка сотрудника |
         |numberOfRatings    |number   | Количество оценок сотрудника|
         |photoRef     | string    | URL фото сотрудника|
+        |clientId  | string   | УИД клиента  | 
+        |clientName  | string   | ФИО клиента |
         |description  | string    | Описание сотрудника |
         |servicesProvided    | array of object   | Оказываемые услуги | 
       operationId: employeeById
@@ -3229,6 +3412,7 @@ paths:
         |equipmentUsed     | boolean    | Используется оборудование |
         |onlineRegistrationAllowed     | boolean    | Доступно для онлайн записи |
         |daysLeftUntilExpirationDate     | number    | Дни для конца срока годности |
+        |expirationDateControl     | boolean    | Истек срок годности |
         |balanceControl     | boolean    | Есть контроль остатков |
         |areaOfActivityId     | string    | УИД направления деятельности |
         |areaOfActivityName     | string    | Наименование направления деятельности |
@@ -3267,6 +3451,7 @@ paths:
         |onlineRegistrationAllowed     | boolean    | Доступно для онлайн записи |
         |daysLeftUntilExpirationDateStart     | number    | Дни для конца срока годности от |
         |daysLeftUntilExpirationDateEnd     | number    | Дни для конца срока годности до |
+        |expirationDateControl     | boolean    | Истек срок годности |
         |balanceControl     | boolean    | Есть контроль остатков |
         |areaOfActivityId     | string    |Массив УИД направления деятельности |
         |generalPurposeMaterial    |boolean   | Материал общего назначения|
@@ -3745,6 +3930,39 @@ paths:
                 $ref: '#/components/schemas/BulkCalligClientListSuccess'
         '204':
           description: no content
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadClientAnalytics'
+  /bulkCalling/client/GetRangeFilterValues:
+    post:
+      tags:
+        - Массовый обзвон
+      summary: Получить значеняи фильтров
+      description: |2-
+
+         ## Объект filters имеет следующие доступные к фильтрации поля: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:----------------:|:-----|
+        | id    | string  | УИД документа  |
+        | clientNumberStart  | integer   | Порядковый номер клиента в списке от|
+        | clientNumberEnd   | integer   | Порядковый номер клиента в списке до|
+      operationId: bulkCallingClientFilters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCallingClientFiltersRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkCalligClientFiltersSuccess'
         '400':
           description: bad request
           content:
@@ -5708,19 +5926,21 @@ paths:
 
          ## Список выходных параметров:
 
-        | Поле         | Тип     | Описание                    | По умолчанию в fields |
-        |--------------|---------|-----------------------------|-----------------------|
-        | goodId                 | string   | УИД товара                    | Да       |
-        | goodName               | string   | Название товара               | Да       |
-        | price                  | number   | Цена                          | Да       |
-        | discount               | number   | Скидка                        | Да       |
-        | bonus                  | number   | Бонус                         | Да       |
-        | discountType           | string   | Тип скидки                    | Да       |
-        | discountTypeId         | string   | УИД типа скидки              | Да       |
-        | discountTypeName       | string   | Название типа скидки         | Да       |
-        | bonusTypeId            | string   | УИД типа бонуса              | Да       |
-        | bonusTypeName          | string   | Название типа бонуса         | Да       |
-        | treatmentPlanStageId   | string   | УИД этапа плана лечения      | Да       |
+        | Поле         | Тип     | Описание                    | 
+        |--------------|---------|-----------------------------|
+        | goodId                 | string  | УИД товара                             |
+        | goodName               | string  | Название товара                        |
+        | price                  | number  | Цена                                   |
+        | discount               | number  | Скидка                                 |
+        | discountFix            | number  | Фиксированная скидка                   |
+        | bonus                  | number  | Бонус                                  |
+        | bonusFix               | number  | Фиксированный бонус                    |
+        | discountType           | integer | Тип скидки (0- процент, 1- фиксированная сумма) |
+        | discountTypeId         | string  | УИД типа скидки                        |
+        | discountTypeName       | string  | Название типа скидки                   |
+        | bonusTypeId            | string  | УИД типа бонуса                        |
+        | bonusTypeName          | string  | Название типа бонуса                   |
+        | treatmentPlanStageId   | string  | УИД этапа плана лечения                | 
  
       operationId: goodsSelectionDetails
       requestBody:
@@ -5738,8 +5958,7 @@ paths:
                   items:
                     type: string
                     format: uuid
-                    example:
-                      - 7509cb70-8193-11ef-af98-309c23b27327
+                    example: 7509cb70-8193-11ef-af98-309c23b27327
               required:
                 - divisionId
                 - goods
@@ -6035,7 +6254,7 @@ paths:
          ## Pagination.
          В данном методе для пагинации определены три ключевых поля: registrarId, nomenclatureId, certificateNumber. Для получения следующей/предыдущей порции данных в теле запроса необходимо задать lastUuid/firstUuid, lastUuid2/firstUuid2, lastUuid3/firstUuid3. 
 
-        ## Список выходных параметров: 
+         ## Список выходных параметров: 
 
         |Поле       | Тип               | Описание |
         | ------------- |:------------------:| :-----|
@@ -6051,6 +6270,8 @@ paths:
         | clientStatusImageRef  | string         |  URL картинки статуса клиента |
         |responsibleId     | string   | УИД ответственного |
         |responsibleName     | string    | Наименование ответственного |
+        |responsiblePostId     | string   | УИД должности ответственного |
+        |responsiblePostName     | string    | Наименование должности ответственного |
         |salesAmount     | number   | Сумма продажи |
         |paymentAmount     | number    | Сумма оплаты | 
 
@@ -6073,6 +6294,7 @@ paths:
         | clientId     | array of strings |  Массив УИД клиента |
         | clientStatus     | array of integers |  Массив статусов клиентов |
         |responsibleId     | array of strings   | Массив УИД ответственного |
+        |responsiblePostId     | array of strings   | Массив УИД должности ответственного |
         | salesAmountStart    |number |  Сумма продажи от |
         | salesAmountEnd  | number         |  Сумма продажи до  |
         | paymentAmountStart  | number         |   Сумма оплаты от|
@@ -6223,11 +6445,33 @@ paths:
         | deletionMark          | boolean | Признак удаления    | Да|
         | isPaid                | boolean | Признак оплаты      | Да   |
         | goods    | array of object   | Информация по товару | Нет|
-        | treatmentPlanStageId   | string  | УИД этапа плана лечения       | Нет   |
-        | discountTypeId         | string  | УИД типа скидки              | Нет    |
-        | bonusTypeId            | string  | УИД типа бонуса              | Нет    |
-        | discountTypeName       | string  | Название типа скидки         | Нет    |
-        | bonusTypeName          | string  | Название типа бонуса         | Нет    |    
+
+          ## Массив goods содержит следующие поля:
+
+        | Поле                     | Тип     | Описание                               |
+        |--------------------------|---------|----------------------------------------|
+        | goodId                   | string  | УИД товара                             |
+        | goodName                 | string  | Название товара                        |
+        | expirationDate           | string  | Срок годности                          |
+        | unitOfMeasurementId      | string  | УИД единицы измерения                  |
+        | unitOfMeasurementName    | string  | Название единицы измерения             |
+        | count                    | number  | Количество                             |
+        | costPrice                | boolean | Себестоимость                          |
+        | price                    | number  | Цена                                   |
+        | sum                      | number  | Сумма                                  |
+        | totalSum                 | number  | Итоговая сумма                         |
+        | discount                 | number  | Скидка                                 |
+        | discountSum              | number  | Сумма скидки                           |
+        | discountFix              | number  | Фиксированная скидка                   |
+        | bonus                    | number  | Бонус                                  |
+        | bonusSum                 | number  | Сумма бонуса                           |
+        | bonusFix                 | number  | Фиксированный бонус                    |
+        | availableBalance         | number  | Доступный остаток                      |
+        | treatmentPlanStageId     | string  | УИД этапа плана лечения                |
+        | discountTypeId           | string  | УИД типа скидки                        |
+        | bonusTypeId              | string  | УИД типа бонуса                        |
+        | discountTypeName         | string  | Название типа скидки                   |
+        | bonusTypeName            | string  | Название типа бонуса                   |    
       operationId: saleOfGoodsById
       requestBody:
         content:
@@ -6989,11 +7233,8 @@ paths:
         |clientStatus     | integer    | Статус клиента (0- Новый; 1- Обычный; 2- Постоянный; 3- Бартер; 4- Сложный; 5- VIP; 6- Сотрудник; 7- Не записываем ) |
         |clientStatusImageRef     | string    |URL картинки статуса клиента |
         |operationType     | integer   | Тип операции (0- Оплата услуг, 1- Оплата сертификата, 2- Оплата товаров, 3- Оплата курса услуг, 4- Внесение депозита, 5- Возврат депозита, 6- Возврат клиенту, 7- Оплата от клиента) |
-        |employeeId     | string    | УИД сотрудника |
-        |employeeName     | string    | Наименование сотрудника  |
-        |employeeNameAbbr     | string    | Фамилия И. О. сотрудника  |
-        |postId     | string    | УИД должности сотрудника |
-        |postName     | string    | наименование должности сотрудника |
+        |responsibleId     | string    | УИД ответсвенного |
+        |responsibleName     | string    | Наименование ответсвенного  |
         |totalAmount     | number   | Общая сумма |
         |amountInCash     | number    | Сумма наличными  |
         |cardAmount     | number    | Сумма по карте |
@@ -7714,6 +7955,7 @@ paths:
         | salary     | number |  Оклад |
         | payForTheChange     | number |  Оплата за смену |
         | payForExtraHours     | number |  Оплата за доп. часы | 
+        | deletionMark     | boolean |  Удален |
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -7842,6 +8084,7 @@ paths:
         | KPIName     | string |  Название KPI |
         | period     | integer |  Период (0- Ежемесячный, 1- Ежедневный) |
         | KPIData     | array of objects |  **Показатель выполнения** (0- Выручка, 1- Количество событий, 2- Средний чек), **Событие** (0- Записи, 1- Приемы, 2- Продааж товаров, 3- Продажа курсов), **Значение** | 
+        | deletionMark     | boolean |  Удален |
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -7929,7 +8172,8 @@ paths:
         | salaryСonditionName     | string |  Стандартное условие |
         | salaryConditionId     | string |  УИД стандартного условия |
         | numberOfEmployees     | number |  Количество сотрудников |
-        | calculationAlgorithmData     | array of objects |  Включает должности  | 
+        | calculationAlgorithmData     | array of objects |  Включает должности  |
+        | deletionMark     | boolean |  Удален | 
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -8055,6 +8299,7 @@ paths:
         | responsibleId     | string | УИД ответственного |
         | date     | string |  Дата |
         | documentType     | string |  Вид документа | 
+        | deletionMark     | boolean |  Удален |
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -8159,6 +8404,7 @@ paths:
         | employeeName | string |  Наименование сотрудника |
         | amount       | number |  Сумма | 
         | amountWithheld | number |  Удержано |
+        | deletionMark       | boolean |  Удален | 
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -8309,7 +8555,6 @@ paths:
         |divisionName     | string    | Наименование подразделения |
         |takingMedications     | string    | Прием препаратов |
         |conductedExaminationTreatment     | string    | Проведенное обследование и лечение |
-        |redirectPercentage     | number    | Процент за перенаправление |
         |specialistDiscountPercentage     | number    | Процент скидки специалиста |
         |previouslyPerformedProcedures     | string    | Ранее проведенные процедуры |
         |recommendations     | string    | Рекомендации |
@@ -8322,33 +8567,51 @@ paths:
         |specialistDiscountSum     | number    | Сумма скидки специалиста |
         |turnoutFrom     | string    | Явка на прием с |
         |turnoutFor     | string    | Явка на прием по |
-        |onPayment     | boolean    | По оплате |
         |warehouseId     | string    | УИД склада |
         |paidFor | boolean | Прием оплачен  | 
-        | services                     | object             | Услуги                                 |
-        | serviceCourses               | object             | Курсы услуг                            |
+        | services                     | array of objects      | Услуги                                 |
+        | serviceCourses               | array of objects      | Курсы услуг                            |
         
-        ## Объект services имеет следующие поля: 
+        ## Массив services имеет следующие поля: 
 
         | Поле                         | Тип                | Описание                               |
         |------------------------------|--------------------|----------------------------------------|
-        | serviceId                    | string   |  УИД услуг                       |
-        | equipmentId                  | string   |  УИД оборудования                |
-        | discountTypeId               | string   |  УИД типов скидок                |
-        | bonusTypeId                  | string   |  УИД типов бонусов               |
-        | treatmentPlanStageId         | string   |  УИД этапов плана лечения        |
-        | originalDiscount         | number  | Первоначальная скидка                |
-        | originalPrice         | number  | Первоначальная цена                 |
+        | serviceId              | string  | УИД услуги                             |
+        | serviceName            | string  | Название услуги                        |
+        | count                  | number  | Количество                             |
+        | price                  | number  | Цена                                   |
+        | originalPrice          | number  | Первоначальная цена                    |
+        | sum                    | number  | Сумма                                  |
+        | discountSum            | number  | Сумма скидки                           |
+        | totalSum               | number  | Итоговая сумма                         |
+        | duration               | number  | Продолжительность                      |
+        | discount               | number  | Скидка                                 |
+        | discountFix            | number  | Фиксированная скидка                   |
+        | originalDiscount       | number  | Первоначальная скидка                  |
+        | bonus                  | number  | Бонус                                  |
+        | bonusSum               | number  | Сумма бонуса                           |
+        | bonusFix               | number  | Фиксированный бонус                    |
+        | equipmentId            | string  | УИД оборудования                       |
+        | equipmentName          | string  | Название оборудования                  |
+        | discountTypeId         | string  | УИД типа скидки                        |
+        | discountTypeName       | string  | Название типа скидки                   |
+        | bonusTypeId            | string  | УИД типа бонуса                        |
+        | bonusTypeName          | string  | Название типа бонуса                   |
+        | treatmentPlanStageId   | string  | УИД этапа плана лечения                |
 
-        ## Объект serviceCourses имеет следующие поля: 
+        ## Массив serviceCourses имеет следующие поля: 
 
         | Поле                         | Тип                | Описание                               |
         |------------------------------|--------------------|----------------------------------------|
-        | serviceCourseId              | string   |  УИД курсов услуг                |
-        | equipmentId                  | string   |  УИД оборудования                |
-        | serviceCourseRegistrationId  | string   |  УИД регистраций курсов услуг    |
-        | treatmentPlanStageId         | string   |  УИД этапов плана лечения        |
-
+        | serviceCourseId              | string  | УИД курса услуг                        |
+        | serviceCourseName            | string  | Название курса услуг                   |
+        | duration                     | number  | Продолжительность                      |
+        | sessionsLeft                 | number  | Осталось сессий                        |
+        | equipmentId                  | string  | УИД оборудования                       |
+        | equipmentName                | string  | Название оборудования                  |
+        | serviceCourseRegistrationId  | string  | УИД регистрации курса услуг            |
+        | treatmentPlanStageId         | string  | УИД этапа плана лечения                |
+         
          ## Объект order имеет следующие доступные к сортировке поля: 
 
         |Поле               | 
@@ -8381,8 +8644,6 @@ paths:
         |accrueBonuses     | boolean    | Начислять бонусы |
         |reappearance     | boolean    | Повторная явка |
         |divisionId     | array of strings    | Массив уникальных идентификаторов подразделений |
-        |redirectPercentageStart     | number    | Процент за перенаправление от |
-        |redirectPercentageEnd     | number    | Процент за перенаправление до |
         | specialistDiscountPercentageStart     | number   | Процент скидки специалиста от |
         |specialistDiscountPercentageEnd     | number    | Процент скидки специалиста до |
         |costPriceStart    | number    | Себестоимость от |
@@ -8399,28 +8660,28 @@ paths:
         |turnoutFromEnd    | string    | Явка с до |
         |turnoutForStart     | string    | Явка до от|
         |turnoutForEnd    | string    | Явка до до |
-        |onPayment     | boolean    | По оплате |
         | services                     | object             | Услуги                                 |
         | serviceCourses               | object             | Курсы услуг                            |
+        | fullText                     | object             | Включает поля servicesPerLine, clientPhone, clientName  |
         
-        ## Объект services имеет следующие поля: 
+         ## Объект services имеет следующие поля фильтрации: 
 
         | Поле                         | Тип                | Описание                               |
         |------------------------------|--------------------|----------------------------------------|
-        | serviceId                    | array of strings   | Массив УИД услуг                       |
-        | equipmentId                  | array of strings   | Массив УИД оборудования                |
-        | discountTypeId               | array of strings   | Массив УИД типов скидок                |
-        | bonusTypeId                  | array of strings   | Массив УИД типов бонусов               |
-        | treatmentPlanStageId         | array of strings   | Массив УИД этапов плана лечения        |
+        | serviceId              | string  | УИД услуги                             |
+        | equipmentId            | string  | УИД оборудования                       |
+        | discountTypeId         | string  | УИД типа скидки                        |
+        | bonusTypeId            | string  | УИД типа бонуса                        |
+        | treatmentPlanStageId   | string  | УИД этапа плана лечения                |
 
-        ## Объект serviceCourses имеет следующие поля: 
+         ## Объект serviceCourses имеет следующие поля фильтрации: 
         
         | Поле                         | Тип                | Описание                               |
         |------------------------------|--------------------|----------------------------------------|
-        | serviceCourseId              | array of strings   | Массив УИД курсов услуг                |
-        | equipmentId                  | array of strings   | Массив УИД оборудования                |
-        | serviceCourseRegistrationId  | array of strings   | Массив УИД регистраций курсов услуг    |
-        | treatmentPlanStageId         | array of strings   | Массив УИД этапов плана лечения        |
+        | serviceCourseId              | string  | УИД курса услуг                        |
+        | equipmentId                  | string  | УИД оборудования                       |
+        | serviceCourseRegistrationId  | string  | УИД регистрации курса услуг            |
+        | treatmentPlanStageId         | string  | УИД этапа плана лечения                |
 
       operationId: provisionServicesList
       requestBody:
@@ -8491,7 +8752,6 @@ paths:
         |divisionName     | string    | Наименование подразделения |
         |takingMedications     | string    | Прием препаратов |
         |conductedExaminationTreatment     | string    | Проведенное обследование и лечение |
-        |redirectPercentage     | number    | Процент за перенаправление |
         |specialistDiscountPercentage     | number    | Процент скидки специалиста |
         |previouslyPerformedProcedures     | string    | Ранее проведенные процедуры |
         |recommendations     | string    | Рекомендации |
@@ -8504,7 +8764,6 @@ paths:
         |specialistDiscountSum     | number    | Сумма скидки специалиста |
         |turnoutFrom     | string    | Явка на прием с |
         |turnoutFor     | string    | Явка на прием по |
-        |onPayment     | boolean    | По оплате |
         |warehouseId     | string    | УИД склада |
         |paidFor | boolean | Прием оплачен  | 
         |services     | array of objects    | 
@@ -8515,31 +8774,42 @@ paths:
 
         | Поле                         | Тип                | Описание                               |
         |------------------------------|--------------------|----------------------------------------|
-        | serviceId                    | string   |  УИД услуг                       |
-        | equipmentId                  | string   |  УИД оборудования                |
-        | discountTypeId               | string   |  УИД типов скидок                |
-        | bonusTypeId                  | string  |  УИД типов бонусов               |
-        | treatmentPlanStageId         | string   |  УИД этапов плана лечения        |
-        | originalDiscount         | number  | Первоначальная скидка                |
-        | originalPrice         | number  | Первоначальная цена                 |
+        | serviceId              | string  | УИД услуги                             |
+        | serviceName            | string  | Название услуги                        |
+        | count                  | number  | Количество                             |
+        | price                  | number  | Цена                                   |
+        | originalPrice          | number  | Первоначальная цена                    |
+        | sum                    | number  | Сумма                                  |
+        | discountSum            | number  | Сумма скидки                           |
+        | totalSum               | number  | Итоговая сумма                         |
+        | duration               | number  | Продолжительность                      |
+        | discount               | number  | Скидка                                 |
+        | discountFix            | number  | Фиксированная скидка                   |
+        | originalDiscount       | number  | Первоначальная скидка                  |
+        | bonus                  | number  | Бонус                                  |
+        | bonusSum               | number  | Сумма бонуса                           |
+        | bonusFix               | number  | Фиксированный бонус                    |
+        | equipmentId            | string  | УИД оборудования                       |
+        | equipmentName          | string  | Название оборудования                  |
+        | discountTypeId         | string  | УИД типа скидки                        |
+        | discountTypeName       | string  | Название типа скидки                   |
+        | bonusTypeId            | string  | УИД типа бонуса                        |
+        | bonusTypeName          | string  | Название типа бонуса                   |
+        | treatmentPlanStageId   | string  | УИД этапа плана лечения                |
 
-        ## Массив serviceCourses имеет следующие поля: 
+         ## Массив serviceCourses имеет следующие поля: 
 
         | Поле                         | Тип                | Описание                               |
         |------------------------------|--------------------|----------------------------------------|
-        | serviceCourseId              | string   |  УИД курсов услуг                |
-        | equipmentId                  | string  |  УИД оборудования                |
-        | serviceCourseRegistrationId  | string   |  УИД регистраций курсов услуг    |
-        | treatmentPlanStageId         | string  |  УИД этапов плана лечения        |
+        | serviceCourseId              | string  | УИД курса услуг                        |
+        | serviceCourseName            | string  | Название курса услуг                   |
+        | duration                     | number  | Продолжительность                      |
+        | sessionsLeft                 | number  | Осталось сессий                        |
+        | equipmentId                  | string  | УИД оборудования                       |
+        | equipmentName                | string  | Название оборудования                  |
+        | serviceCourseRegistrationId  | string  | УИД регистрации курса услуг            |
+        | treatmentPlanStageId         | string  | УИД этапа плана лечения                |
 
-        ## Массив materials имеет следующие поля: 
-
-        | Поле                         | Тип                | Описание                               |
-        |------------------------------|--------------------|----------------------------------------|
-        | materialId   | string  | УИД материала                 |
-        | materialName | string  | Название материала            |
-        | norm         | number  | Норма расхода                 |
-        | fact         | number  | Фактический расход            |
       operationId: provisionServicesById
       requestBody:
         content:
@@ -8610,7 +8880,6 @@ paths:
         |divisionName     | string    | Наименование подразделения |
         |takingMedications     | string    | Прием препаратов |
         |conductedExaminationTreatment     | string    | Проведенное обследование и лечение |
-        |redirectPercentage     | number    | Процент за перенаправление |
         |specialistDiscountPercentage     | number    | Процент скидки специалиста |
         |previouslyPerformedProcedures     | string    | Ранее проведенные процедуры |
         |recommendations     | string    | Рекомендации |
@@ -8623,7 +8892,6 @@ paths:
         |specialistDiscountSum     | number    | Сумма скидки специалиста |
         |turnoutFrom     | string    | Явка на прием с |
         |turnoutFor     | string    | Явка на прием по |
-        |onPayment     | boolean    | По оплате |
         |warehouseId     | string    | УИД склада |
         |services     | array of objects    |   |   |materials     | array of objects    |  | 
       operationId: provisionServicesUpdate
@@ -11374,13 +11642,25 @@ paths:
         |divisionId (required)     |  string      |УИД подразделения |
         |serviceId  (required)   | string    | УИД услуги | 
 
-         Типы скидок (discountType): 
+        ## Список выходных параметров: 
 
-         0- персональная скидка 
-
-         1- скидка сотрудника 
-
-         2- скидка по карте лояльности   
+        | Поле                   | Тип     | Описание                               |
+        |------------------------|---------|----------------------------------------|
+        | serviceId              | string  | УИД услуги                             |
+        | serviceName            | string  | Название услуги                        |
+        | duration               | number  | Продолжительность                      |
+        | price                  | number  | Цена                                   |
+        | discount               | number  | Скидка                                 |
+        | discountFix            | number  | Фиксированная скидка                   |
+        | bonus                  | number  | Бонус                                  |
+        | bonusFix               | number  | Фиксированный бонус                    |
+        | discountType           | integer | Тип скидки (0-процент, 1- фиксированная сумма)    |
+        | discountTypeId         | string  | УИД типа скидки                        |
+        | discountTypeName       | string  | Название типа скидки                   |
+        | bonusTypeId            | string  | УИД типа бонуса                        |
+        | bonusTypeName          | string  | Название типа бонуса                   |
+        | treatmentPlanStageId   | string  | УИД этапа плана лечения                |
+        | comment                | string  | Комментарий                            |
       operationId: serviceSelection
       requestBody:
         content:
@@ -12870,9 +13150,9 @@ paths:
 
         |Поле       | Тип               | Описание |
         | ------------- |:------------------:| :-----|
-        |allowChangingPriceInRecordings     | boolean    | Разрешить менять цену в записях |
-        | allowChangingPriceInAppointments     | boolean |  Разрешить менять цену в приемах |
-        | allowChangingPricesInRange      | integer    | Разрешить изменять цены в диапазоне |
+        |allowChangingPricesInRange     | integer    | Диапазон изменения цены в Записи на прием и Приеме специалиста |
+        | allowChangingPricesInCourseServicesRange     | integer |  Диапазон изменения цены в Оформлении курсов услуг |
+        | allowChangingPricesInGoodsRange      | integer    | Диапазон изменения цены в Продаже товаров |
         | maxDiscountAmount     | integer | Максимальный размер скидки |
         | maxSpecialistDiscount     | integer | Максимальная скидка специалиста |
         | bonusAccrualPeriod     | integer | Срок начисления бонусов |
@@ -12918,27 +13198,28 @@ paths:
         |clientId     | string    | УИД клиента  |да |
         |clientName     | string    | Наименование клиента |нет |
         | discountIncl     | boolean    | Скидка включена |да |
-        | actionId     | string    | УИД акции |да |
-        |actionName     | string    | Наименование акции |нет |
         |nomenclatureId     | string    | УИД номенклатуры |да |
         |nomenclatureName     | string    | Наименование номенклатуры |нет |
-        |bonus    | number   | Бонус |да |
+        | employeeId             | string  | УИД сотрудника                | да                  |
+        | employeeName           | string  | ФИО сотрудника                | нет                  |
+        | isPaid             | boolean  | Оплачено              | да                  |
+        | sessionWasUsed      | boolean  | Использован              | да                  |
         |price     | number    | Цена |да |
         |count     | number    |Количество |да |
         |discount    |number   | Процент скидки |да |
-        |sum     | number    | Стоимость |да |
-        | bonusSum    | number    | Сумма бонусов |да |
         | discountSum    | number    | Сумма скидки |да | 
+        |discountFix    |number   | Фиксированная скидка |да |
+        |sum     | number    | Стоимость |да |
+        |bonus    | number   | Бонус |да |
+        | bonusSum    | number    | Сумма бонусов |да |
+        |bonusFix    | number   | Фиксированный бонус |да |
         | documentSum    | number    | Сумма документа |да |
         | numberOfSessions    | number    | Количнство сеансов |да |
-        | discountType    | integer    | Тип скидки (0- персональная скидка, 1- скидка сотрудника, 2- скидка по карте лояльности) |да |
-        | employeeId             | string  | УИД сотрудника                | Нет                  |
-        | employeeName           | string  | ФИО сотрудника                | Нет                  |
-        | treatmentPlanStageId   | string  | УИД этапа плана лечения       | Нет                  |
-        | discountTypeId         | string  | УИД типа скидки              | Нет                  |
-        | bonusTypeId            | string  | УИД типа бонуса              | Нет                  |
-        | discountTypeName       | string  | Название типа скидки         | Нет                  |
-        | bonusTypeName          | string  | Название типа бонуса         | Нет                  |
+        | treatmentPlanStageId   | string  | УИД этапа плана лечения       | да                  |
+        | discountTypeId         | string  | УИД типа скидки              | да                  |
+        | bonusTypeId            | string  | УИД типа бонуса              | да                  |
+        | discountTypeName       | string  | Название типа скидки         | нет                  |
+        | bonusTypeName          | string  | Название типа бонуса         | нет                  |
       operationId: ServiceCourseById
       requestBody:
         content:
@@ -12949,7 +13230,7 @@ paths:
                 id:
                   type: string
                   format: uuid
-                  example: 6cb691b6-b3c9-11f0-afc8-309c23b27327
+                  example: 2f2544ec-0765-11f1-97a4-306893e16552
               required:
                 - id
       responses:
@@ -13042,13 +13323,14 @@ paths:
         |numberOfSessions     | number    |   Количество сеансов |
         |price     | number    |   Цена | 
         |discount     | number    |   Скидка | 
+        | discountFix            | number  | Фиксированная скидка                   |
         |bonus     | number    |   Бонус |  
-        |discountType     | integer    |   Тип скидки (0- персональная скидка, 1- скидка сотрудника, 2- скидка по карте лояльности) |
-        | discountTypeId         | string   | УИД типа скидки              | Да       |
-        | discountTypeName       | string   | Название типа скидки         | Да       |
-        | bonusTypeId            | string   | УИД типа бонуса              | Да       |
-        | bonusTypeName          | string   | Название типа бонуса         | Да       |
-        | treatmentPlanStageId   | string   | УИД этапа плана лечения      | Да       |
+        | bonusFix               | number  | Фиксированный бонус                    |
+        | discountTypeId         | string   | УИД типа скидки              | 
+        | discountTypeName       | string   | Название типа скидки         | 
+        | bonusTypeId            | string   | УИД типа бонуса              | 
+        | bonusTypeName          | string   | Название типа бонуса         | 
+        | treatmentPlanStageId   | string   | УИД этапа плана лечения      | 
       operationId: ServiceCourseDetails
       requestBody:
         content:
@@ -13345,6 +13627,7 @@ paths:
         | serviceId               | string  | УИД услуги                         | Да           |
         | serviceName             | string  | Наименование услуги                | Нет          |
         | numberOfConsumables     | number  | Количество расходников             | Да           |
+        | deletionMark     | boolean  | Удален            | Да           |
         | materials               | array of objects  | Массив объектов расходных материалов                     | Нет          |
 
         ## Структура materials:
@@ -13381,6 +13664,7 @@ paths:
                       - serviceName
                       - numberOfConsumables
                       - materials
+                      - deletionMark
                   example:
                     - id
                     - documentDate
@@ -13388,6 +13672,7 @@ paths:
                     - serviceName
                     - numberOfConsumables
                     - materials
+                    - deletionMark
               required:
                 - id
       responses:
@@ -13407,15 +13692,21 @@ paths:
     post:
       tags:
         - Настройки
-      summary: Техкарта. Отправить в архив
+      summary: Техкарта. Обновить данные по техкарте
       description: |2-
          ## Входные параметры: 
 
         |Поле       | Тип               | Описание |
         | ------------- |:------------------:| :-----|
         |id (required)     | string    | Уникальный идентификатор элемента |
-        |values     | object    | включает deletionMark |
-        |deletionMark     | boolean    | Отправить в архив | 
+        |values     | object    |  |
+
+         ## Объект values содержит следующие поля: 
+
+        |deletionMark     | boolean    | Отправить в архив |
+        |documentDate     | string    | Дата создания | 
+        |serviceId     | string    | УИД услуги | 
+        |materials     | array of objects    | Включает id, count |  
       operationId: TechnicalCardUpdate
       requestBody:
         content:
@@ -13435,6 +13726,89 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadIdTypeResp2'
+        '409':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Technical card for this service already exists
+                      code:
+                        type: string
+                        example: technicalCard_exists
+  /technicalCard/Create:
+    post:
+      tags:
+        - Настройки
+      summary: Техкарта. Создать техкарту
+      description: |-
+         ## Список входных параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |values   | object   |  |
+
+         ## Объект values содержит следующие поля: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |serviceId (required)    | string   | УИД услуги |
+        | materials (required)    | array of objects   | Массив расходников  |
+
+         ## Массив materials содержит следующие поля: 
+
+        | Поле               | Тип     | Описание                               |
+        |--------------------|---------|----------------------------------------|
+        | id                 | string  | УИД материала                          |
+        | count              | number  | Количество                             |
+      operationId: techCardCreate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TechCardCreateRequest'
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: c437272a-f789-11f0-97a4-306893e16552
+        '409':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Technical card for this service already exists
+                      code:
+                        type: string
+                        example: technicalCard_exists
+        '401':
+          description: unauthorized
   /priceListBonus/GetList:
     post:
       tags:
@@ -13672,27 +14046,6 @@ components:
         id:
           type: string
           format: uuid
-      example:
-        success: true
-        message: Registration successful
-        id: e8ce755b-25ab-11f0-afaa-309c23b27327
-    CreateClientKey:
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-          example: Registration successful
-        id:
-          type: string
-          format: uuid
-        accessToken:
-          type: string
-          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjQ5NDUwMGZiLTI1YzAtMTFmMC1hZmFhLTMwOWMyM2IyNzMyNyIsInN1YiI6InRva2VudXNlciIsImp0aSI6ImQ1ODNkNzQzLTQwZGEtNGI1Zi04MzNhLTllNmJhNzhhZWY5ZiIsImlhdCI6IjE3NDYwMTY4NTIiLCJleHAiOiIxNzQ2MDE3NzUyIiwidHlwZSI6ImFjY2Vzc1Rva2VuIiwiaXNzIjoic3NsIiwiYXVkIjoid2ViUG9yb3Rpa292YSJ9.z0y-Jq8i2AxBVQjAe9T0vUptcjk6Nq7eSae2_e26Lxs
-        refreshToken:
-          type: string
-          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjQ5NDUwMGZiLTI1YzAtMTFmMC1hZmFhLTMwOWMyM2IyNzMyNyIsInN1YiI6InRva2VudXNlciIsImp0aSI6ImQ1ODNkNzQzLTQwZGEtNGI1Zi04MzNhLTllNmJhNzhhZWY5ZiIsImlhdCI6IjE3NDYwMTY4NTIiLCJleHAiOiIxNzQ2ODgwODUyIiwidHlwZSI6InJlZnJlc2hUb2tlbiIsImlzcyI6InNzbCIsImF1ZCI6IndlYlBvcm90aWtvdmEifQ.hNo5986pmjO5pmCEhV4G0HDyFRWFhwSzYGWEGDFrKRw
       example:
         success: true
         message: Registration successful
@@ -19772,12 +20125,32 @@ components:
                   items:
                     type: string
                     format: uuid
+            documentDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            documentDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
             dateStart:
               type: object
               properties:
                 value:
                   type: string
             dateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            documentChangeDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            documentChangeDateEnd:
               type: object
               properties:
                 value:
@@ -19802,6 +20175,26 @@ components:
               properties:
                 value:
                   type: string
+            receptionTimeStartStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeStartEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeEndStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeEndEnd:
+              type: object
+              properties:
+                value:
+                  type: string
             divisionId:
               type: object
               properties:
@@ -19818,7 +20211,7 @@ components:
                   items:
                     type: string
                     format: uuid
-            employeetId:
+            employeeId:
               type: object
               properties:
                 value:
@@ -19826,6 +20219,11 @@ components:
                   items:
                     type: string
                     format: uuid
+            doesNotReceiveReception:
+              type: object
+              properties:
+                value:
+                  type: boolean
             documentSumStart:
               type: object
               properties:
@@ -19843,140 +20241,7 @@ components:
                   type: array
                   items:
                     type: integer
-            bonusesAccuredStart:
-              type: object
-              properties:
-                value:
-                  type: number
-            bonusesAccuredEnd:
-              type: object
-              properties:
-                value:
-                  type: number
-            accrueBonuses:
-              type: object
-              properties:
-                value:
-                  type: boolean
-                  default: false
-            specialistRedirectedId:
-              type: object
-              properties:
-                value:
-                  type: array
-                  items:
-                    type: string
-                    format: uuid
-            discountSumStart:
-              type: object
-              properties:
-                value:
-                  type: number
-            discountSumEnd:
-              type: object
-              properties:
-                value:
-                  type: number
-            employeePostId:
-              type: object
-              properties:
-                value:
-                  type: array
-                  items:
-                    type: string
-                    format: uuid
-          example:
-            status:
-              value:
-                - 4
-                - 5
-    RecordingFilterSuccess:
-      type: object
-      properties:
-        success:
-          type: boolean
-        filters:
-          type: object
-          properties:
-            id:
-              type: object
-              properties:
-                value:
-                  type: array
-                  items:
-                    type: string
-                    format: uuid
-            dateStart:
-              type: object
-              properties:
-                value:
-                  type: string
-                  format: datetime
-            dateEnd:
-              type: object
-              properties:
-                value:
-                  type: string
-                  format: datetime
-            timeStartStart:
-              type: object
-              properties:
-                value:
-                  type: string
-                  format: datetime
-            timeStartEnd:
-              type: object
-              properties:
-                value:
-                  type: string
-                  format: datetime
-            timeEndStart:
-              type: object
-              properties:
-                value:
-                  type: string
-                  format: datetime
-            timeEndEnd:
-              type: object
-              properties:
-                value:
-                  type: string
-                  format: datetime
-            divisionId:
-              type: object
-              properties:
-                value:
-                  type: array
-                  items:
-                    type: string
-                    format: uuid
-            clientId:
-              type: object
-              properties:
-                value:
-                  type: array
-                  items:
-                    type: string
-                    format: uuid
-            employeetId:
-              type: object
-              properties:
-                value:
-                  type: array
-                  items:
-                    type: string
-                    format: uuid
-            documentSumStart:
-              type: object
-              properties:
-                value:
-                  type: number
-            documentSumEnd:
-              type: object
-              properties:
-                value:
-                  type: number
-            status:
+            statusReason:
               type: object
               properties:
                 value:
@@ -19998,7 +20263,6 @@ components:
               properties:
                 value:
                   type: boolean
-                  default: false
             specialistRedirectedId:
               type: object
               properties:
@@ -20017,6 +20281,30 @@ components:
               properties:
                 value:
                   type: number
+            totalDurationStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalDurationEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            recordingSource:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            clientStatus:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
             employeePostId:
               type: object
               properties:
@@ -20025,36 +20313,491 @@ components:
                   items:
                     type: string
                     format: uuid
+            responsibleForCreationId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            responsibleForChangeId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            services:
+              type: object
+              properties:
+                serviceId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                equipmentId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                discountTypeId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                bonusTypeId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                treatmentPlanStageId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+            serviceCourses:
+              type: object
+              properties:
+                serviceCourseId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                equipmentId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                serviceCourseRegistrationId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                treatmentPlanStageId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+            materials:
+              type: object
+              properties:
+                materialId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+          example:
+            status:
+              value:
+                - 4
+                - 5
+    RecordingFilterSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        filters:
+          type: object
+          properties:
+            id:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            documentDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            documentDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            documentChangeDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            documentChangeDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            timeStartStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            timeStartEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            timeEndStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            timeEndEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeStartStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeStartEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeEndStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeEndEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            clientId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            employeeId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            doesNotReceiveReception:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            documentSumStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            documentSumEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            status:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            statusReason:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            bonusesAccruedStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            bonusesAccruedEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            accrueBonuses:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            specialistRedirectedId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            discountSumStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            discountSumEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalDurationStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalDurationEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            recordingSource:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            clientStatus:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            employeePostId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            responsibleForCreationId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            responsibleForChangeId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            services:
+              type: object
+              properties:
+                serviceId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                equipmentId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                discountTypeId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                bonusTypeId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                treatmentPlanStageId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+            serviceCourses:
+              type: object
+              properties:
+                serviceCourseId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                equipmentId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                serviceCourseRegistrationId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                treatmentPlanStageId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+            materials:
+              type: object
+              properties:
+                materialId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
         data:
           type: object
           properties:
+            documentDate:
+              type: object
+              properties:
+                min:
+                  type: string
+                  format: date-time
+                max:
+                  type: string
+                  format: date-time
             date:
               type: object
               properties:
                 min:
                   type: string
-                  format: datetime
+                  format: date-time
                 max:
                   type: string
-                  format: datetime
+                  format: date-time
+            documentChangeDate:
+              type: object
+              properties:
+                min:
+                  type: string
+                  format: date-time
+                max:
+                  type: string
+                  format: date-time
             timeStart:
               type: object
               properties:
                 min:
                   type: string
-                  format: datetime
+                  format: date-time
                 max:
                   type: string
-                  format: datetime
+                  format: date-time
             timeEnd:
               type: object
               properties:
                 min:
                   type: string
-                  format: datetime
+                  format: date-time
                 max:
                   type: string
-                  format: datetime
+                  format: date-time
+            receptionTimeStart:
+              type: object
+              properties:
+                min:
+                  type: string
+                  format: date-time
+                max:
+                  type: string
+                  format: date-time
+            receptionTimeEnd:
+              type: object
+              properties:
+                min:
+                  type: string
+                  format: date-time
+                max:
+                  type: string
+                  format: date-time
             documentSum:
               type: object
               properties:
@@ -20076,14 +20819,29 @@ components:
                   type: number
                 max:
                   type: number
+            totalDuration:
+              type: object
+              properties:
+                min:
+                  type: number
+                max:
+                  type: number
       example:
         success: true
         filters:
           id:
             value: null
+          documentDateStart:
+            value: null
+          documentDateEnd:
+            value: null
           dateStart:
             value: null
           dateEnd:
+            value: null
+          documentChangeDateStart:
+            value: null
+          documentChangeDateEnd:
             value: null
           timeStartStart:
             value: null
@@ -20093,20 +20851,32 @@ components:
             value: null
           timeEndEnd:
             value: null
+          receptionTimeStartStart:
+            value: null
+          receptionTimeStartEnd:
+            value: null
+          receptionTimeEndStart:
+            value: null
+          receptionTimeEndEnd:
+            value: null
           divisionId:
             value: null
           clientId:
             value: null
           employeeId:
             value: null
+          doesNotReceiveReception:
+            value: null
           documentSumStart:
             value: null
           documentSumEnd:
             value: null
           status:
-            value:
+            value: 
               - 4
               - 5
+          statusReason:
+            value: null
           bonusesAccruedStart:
             value: null
           bonusesAccruedEnd:
@@ -20119,27 +20889,817 @@ components:
             value: null
           discountSumEnd:
             value: null
+          totalDurationStart:
+            value: null
+          totalDurationEnd:
+            value: null
+          recordingSource:
+            value: null
+          clientStatus:
+            value: null
           employeePostId:
             value: null
+          responsibleForCreationId:
+            value: null
+          responsibleForChangeId:
+            value: null
+          services:
+            serviceId:
+              value: null
+            equipmentId:
+              value: null
+            discountTypeId:
+              value: null
+            bonusTypeId:
+              value: null
+            treatmentPlanStageId:
+              value: null
+          serviceCourses:
+            serviceCourseId:
+              value: null
+            equipmentId:
+              value: null
+            serviceCourseRegistrationId:
+              value: null
+            treatmentPlanStageId:
+              value: null
+          materials:
+            materialId:
+              value: null
         data:
+          documentDate:
+            min: "2023-03-30T15:25:23"
+            max: "2026-02-18T13:45:40"
           date:
-            min: '2023-03-24T00:00:00'
-            max: '2025-04-10T00:00:00'
+            min: "2023-03-24T00:00:00"
+            max: "2026-02-20T00:00:00"
+          documentChangeDate:
+            min: "0001-01-01T00:00:00"
+            max: "2026-02-18T11:00:39"
           timeStart:
-            min: '0001-01-01T08:30:00'
-            max: '0001-01-01T20:45:00'
+            min: "0001-01-01T08:30:00"
+            max: "0001-01-01T20:45:00"
           timeEnd:
-            min: '0001-01-01T00:10:00'
-            max: '0001-01-01T23:35:00'
+            min: "0001-01-01T00:00:00"
+            max: "0001-01-01T23:35:00"
+          receptionTimeStart:
+            min: "2023-03-24T10:45:00"
+            max: "2026-02-20T11:30:00"
+          receptionTimeEnd:
+            min: "2023-03-24T11:15:00"
+            max: "2026-02-20T12:55:00"
           documentSum:
             min: 0
-            max: 100000
+            max: 57994200
           bonusesAccrued:
             min: 0
-            max: 14698
+            max: 10878912
           discountSum:
             min: 0
-            max: 19803
+            max: 10998900
+          totalDuration:
+            min: 0
+            max: 920
+    RecordingTotalRequest:
+      type: object
+      properties:
+        filters:
+          type: object
+          properties:
+            id:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            documentDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            documentDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            documentChangeDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            documentChangeDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            timeStartStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            timeStartEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            timeEndStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            timeEndEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeStartStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeStartEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeEndStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeEndEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            clientId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            employeeId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            doesNotReceiveReception:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            documentSumStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            documentSumEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            status:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            statusReason:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            bonusesAccruedStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            bonusesAccruedEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            accrueBonuses:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            specialistRedirectedId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            discountSumStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            discountSumEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalDurationStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalDurationEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            recordingSource:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            clientStatus:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            employeePostId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            responsibleForCreationId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            responsibleForChangeId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            services:
+              type: object
+              properties:
+                serviceId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                equipmentId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                discountTypeId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                bonusTypeId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                treatmentPlanStageId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+            serviceCourses:
+              type: object
+              properties:
+                serviceCourseId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                equipmentId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                serviceCourseRegistrationId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                treatmentPlanStageId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+            materials:
+              type: object
+              properties:
+                materialId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+          example:
+            status:
+              value:
+                - 4
+                - 5
+    RecordingTotalSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+        filters:
+          type: object
+          properties:
+            id:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            documentDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            documentDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            dateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            documentChangeDateStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            documentChangeDateEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            timeStartStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            timeStartEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            timeEndStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            timeEndEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeStartStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeStartEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeEndStart:
+              type: object
+              properties:
+                value:
+                  type: string
+            receptionTimeEndEnd:
+              type: object
+              properties:
+                value:
+                  type: string
+            divisionId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            clientId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            employeeId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            doesNotReceiveReception:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            documentSumStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            documentSumEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            status:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            statusReason:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            bonusesAccruedStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            bonusesAccruedEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            accrueBonuses:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            specialistRedirectedId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            discountSumStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            discountSumEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalDurationStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            totalDurationEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            recordingSource:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            clientStatus:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            employeePostId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            responsibleForCreationId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            responsibleForChangeId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            services:
+              type: object
+              properties:
+                serviceId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                equipmentId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                discountTypeId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                bonusTypeId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                treatmentPlanStageId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+            serviceCourses:
+              type: object
+              properties:
+                serviceCourseId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                equipmentId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                serviceCourseRegistrationId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                treatmentPlanStageId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+            materials:
+              type: object
+              properties:
+                materialId:
+                  type: object
+                  properties:
+                    value:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+        data:
+          type: object
+          properties:
+            count:
+              type: number
+            documentSumTotal:
+              type: number
+            bonusesAccruedTotal:
+              type: number
+            discountSumTotal:
+              type: number
+            totalDurationTotal:
+              type: number
+      example:
+        success: true
+        filters:
+          id:
+            value: null
+          documentDateStart:
+            value: null
+          documentDateEnd:
+            value: null
+          dateStart:
+            value: null
+          dateEnd:
+            value: null
+          documentChangeDateStart:
+            value: null
+          documentChangeDateEnd:
+            value: null
+          timeStartStart:
+            value: null
+          timeStartEnd:
+            value: null
+          timeEndStart:
+            value: null
+          timeEndEnd:
+            value: null
+          receptionTimeStartStart:
+            value: null
+          receptionTimeStartEnd:
+            value: null
+          receptionTimeEndStart:
+            value: null
+          receptionTimeEndEnd:
+            value: null
+          divisionId:
+            value: null
+          clientId:
+            value: null
+          employeeId:
+            value: null
+          doesNotReceiveReception:
+            value: null
+          documentSumStart:
+            value: null
+          documentSumEnd:
+            value: null
+          status:
+            value: 
+              - 4
+              - 5
+          statusReason:
+            value: null
+          bonusesAccruedStart:
+            value: null
+          bonusesAccruedEnd:
+            value: null
+          accrueBonuses:
+            value: null
+          specialistRedirectedId:
+            value: null
+          discountSumStart:
+            value: null
+          discountSumEnd:
+            value: null
+          totalDurationStart:
+            value: null
+          totalDurationEnd:
+            value: null
+          recordingSource:
+            value: null
+          clientStatus:
+            value: null
+          employeePostId:
+            value: null
+          responsibleForCreationId:
+            value: null
+          responsibleForChangeId:
+            value: null
+          services:
+            serviceId:
+              value: null
+            equipmentId:
+              value: null
+            discountTypeId:
+              value: null
+            bonusTypeId:
+              value: null
+            treatmentPlanStageId:
+              value: null
+          serviceCourses:
+            serviceCourseId:
+              value: null
+            equipmentId:
+              value: null
+            serviceCourseRegistrationId:
+              value: null
+            treatmentPlanStageId:
+              value: null
+          materials:
+            materialId:
+              value: null
+        data:
+          count: 446
+          documentSumTotal: 9614772.9
+          bonusesAccruedTotal: 319523
+          discountSumTotal: 1782531.1
+          totalDurationTotal: 345445
     BadChangeStatus:
       type: object
       properties:
@@ -20499,6 +22059,38 @@ components:
             number: 7
           - name: "Отмена проведения"
             number: 8
+    RecordingRelatedDocs:
+      type: object
+      properties:
+        recordingId:
+          type: string
+          format: uuid
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              documentDate:
+                type: string
+                format: date-time
+              objectType:
+                type: string
+              sum:
+                type: number
+      example:
+        recordingId: f3330468-0cb6-11f1-97a4-306893e16552
+        data:
+          - id: 0e29fd6b-0cd3-11f1-97a4-306893e16552
+            documentDate: "2026-02-18T17:06:45"
+            objectType: "Документ.Оплата"
+            sum: 4250
+          - id: c6282822-0cba-11f1-97a4-306893e16552
+            documentDate: "2026-02-18T14:15:00"
+            objectType: "Документ.ОказаниеУслуг"
+            sum: 4250
     NomenclatureCheckSuccess:
       type: object
       properties:
@@ -35092,23 +36684,22 @@ components:
           type: number
         discount:
           type: number
+        discountFix:
+          type: number
         bonus:
           type: number
+        bonusFix:
+          type: number
         discountType:
-          type: string
-          nullable: true
+          type: integer
         discountTypeId:
           type: string
-          nullable: true
         discountTypeName:
           type: string
-          nullable: true
         bonusTypeId:
           type: string
-          nullable: true
         bonusTypeName:
           type: string
-          nullable: true
         treatmentPlanStageId:
           type: string
           format: uuid
@@ -35117,7 +36708,9 @@ components:
         goodName: Крем ночной для устранения сухости кожи GGG
         price: 1800
         discount: 0
+        discountFix: 0
         bonus: 0
+        bonusFix: 0
         discountType: null
         discountTypeId: null
         discountTypeName: null
@@ -36628,21 +38221,22 @@ components:
               - comment
               - addBonuses
               - responsibleId
+              - responsibleName
               - warehouseId
+              - warehouseName
               - clientId
+              - clientName
               - divisionId
+              - divisionName
               - connectedEquipmentId
               - documentSum
               - discountSum
               - costPrice
               - employeeId
+              - employeeName
               - deletionMark
               - isPaid
-              - treatmentPlanStageId
-              - discountTypeId
-              - bonusTypeId
-              - discountTypeName
-              - bonusTypeName
+              - goods
         exclude:
           type: array
           items:
@@ -36654,41 +38248,22 @@ components:
               - comment
               - addBonuses
               - responsibleId
+              - responsibleName
               - warehouseId
+              - warehouseName
               - clientId
+              - clientName
               - divisionId
+              - divisionName
               - connectedEquipmentId
               - documentSum
               - discountSum
               - costPrice
               - employeeId
+              - employeeName
               - deletionMark
               - isPaid
-              - treatmentPlanStageId
-              - discountTypeId
-              - bonusTypeId
-              - discountTypeName
-              - bonusTypeName
-        order:
-          type: object
-          properties:
-            field:
-              type: string
-            direction:
-              type: string
-              enum:
-                - ASC
-                - DESC
-              default: ASC
-        pagination:
-          type: object
-          properties:
-            paginate:
-              type: boolean
-              default: true
-            perPage:
-              type: integer
-              default: 10
+              - goods
       example:
         id: d3412864-ca23-11ed-af6f-309c23b27327
         fields:
@@ -36705,11 +38280,14 @@ components:
           - clientName
           - divisionId
           - divisionName
+          - connectedEquipmentId
           - documentSum
           - discountSum
           - costPrice
           - employeeId
           - employeeName
+          - deletionMark
+          - isPaid
           - goods
     SaleOfGoodsIdSuccess:
       type: object
@@ -36724,10 +38302,13 @@ components:
               format: uuid
             date:
               type: string
+              format: date-time
             bonusCalculated:
               type: number
             comment:
               type: string
+            addBonuses:
+              type: boolean
             responsibleId:
               type: string
               format: uuid
@@ -36738,6 +38319,7 @@ components:
               format: uuid
             warehouseName:
               type: string
+              nullable: true
             clientId:
               type: string
               format: uuid
@@ -36748,16 +38330,21 @@ components:
               format: uuid
             divisionName:
               type: string
+            connectedEquipmentId:
+              type: string
             documentSum:
               type: number
             discountSum:
               type: number
             costPrice:
-              type: number
+              type: boolean
             employeeId:
               type: string
+              format: uuid
             employeeName:
               type: string
+            isPaid:
+              type: boolean
             goods:
               type: array
               items:
@@ -36765,66 +38352,100 @@ components:
                 properties:
                   goodId:
                     type: string
+                    format: uuid
                   goodName:
                     type: string
                   expirationDate:
                     type: string
-                    format: datetime
+                    format: date-time
                   unitOfMeasurementId:
                     type: string
+                    format: uuid
                   unitOfMeasurementName:
                     type: string
                   count:
                     type: number
+                  costPrice:
+                    type: boolean
                   price:
                     type: number
                   sum:
                     type: number
-                  discount:
+                  totalSum:
                     type: number
-                  bonus:
+                  discount:
                     type: number
                   discountSum:
                     type: number
+                  discountFix:
+                    type: number
+                  bonus:
+                    type: number
                   bonusSum:
+                    type: number
+                  bonusFix:
                     type: number
                   availableBalance:
                     type: number
+                  treatmentPlanStageId:
+                    type: string
+                    format: uuid
+                  discountTypeId:
+                    type: string
+                    format: uuid
+                  bonusTypeId:
+                    type: string
+                    format: uuid
+                  discountTypeName:
+                    type: string
+                  bonusTypeName:
+                    type: string
       example:
         success: true
         data:
           id: d3412864-ca23-11ed-af6f-309c23b27327
-          date: '2023-03-24T12:11:19'
+          date: "2023-03-24T12:11:19"
           bonusCalculated: 0
-          comment: ''
+          comment: ""
           addBonuses: false
           responsibleId: 084b149e-b9cf-11ed-af6f-309c23b27327
-          responsibleName: Зайкин Павел Александрович
-          warehouseId: 00000000-0000-0000-0000-000000000000
+          responsibleName: "Зайкин Павел Александрович"
+          warehouseId: "00000000-0000-0000-0000-000000000000"
           warehouseName: null
           clientId: 19ad05a6-eea5-11ef-af9f-309c23b27327
-          clientName: Андреев Иван Михайлович
+          clientName: "Денисова Ольга Вячеславовна"
           divisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
-          divisionName: Кемерово_Д.Бедного
+          divisionName: "Кемерово_Д.Бедного"
+          connectedEquipmentId: "00000000-0000-0000-0000-000000000000"
           documentSum: 500
           discountSum: 0
           costPrice: false
-          employeeId: 00000000-0000-0000-0000-000000000000
+          employeeId: "00000000-0000-0000-0000-000000000000"
           employeeName: null
+          isPaid: true
           goods:
             - goodId: 959124ac-a831-11e8-ad4c-50e5493beef9
-              goodName: Огуречная маска
-              expirationDate: '0001-01-01T00:00:00'
+              goodName: "Огуречная маска"
+              expirationDate: "0001-01-01T00:00:00"
               unitOfMeasurementId: c923bd63-1663-11ee-af78-309c23b27327
-              unitOfMeasurementName: шт
+              unitOfMeasurementName: "шт"
               count: 1
+              costPrice: false
               price: 500
               sum: 500
+              totalSum: 500
               discount: 0
-              bonus: 0
               discountSum: 0
+              discountFix: 0
+              bonus: 0
               bonusSum: 0
+              bonusFix: 0
               availableBalance: 0
+              treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
+              discountTypeId: f31eac79-2489-11ee-af7a-309c23b27327
+              bonusTypeId: "00000000-0000-0000-0000-000000000000"
+              discountTypeName: "Общий порядок начисления бонусов"
+              bonusTypeName: ""
     BadIdTypeResp1:
       type: object
       properties:
@@ -45352,6 +46973,15 @@ components:
         filters:
           type: object
           properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
             id:
               type: object
               properties:
@@ -45462,16 +47092,6 @@ components:
                   items:
                     type: string
                     format: uuid
-            redirectPercentageStart:
-              type: object
-              properties:
-                value:
-                  type: number
-            redirectPercentageEnd:
-              type: object
-              properties:
-                value:
-                  type: number
             specialistDiscountPercentageStart:
               type: object
               properties:
@@ -45558,11 +47178,6 @@ components:
               properties:
                 value:
                   type: string
-            onPayment:
-              type: object
-              properties:
-                value:
-                  type: boolean
         fields:
           type: array
           items:
@@ -45595,7 +47210,6 @@ components:
               - divisionName
               - takingMedications
               - conductedExaminationTreatment
-              - redirectPercentage
               - specialistDiscountPercentage
               - previouslyPerformedProcedures
               - recommendations
@@ -45609,7 +47223,6 @@ components:
               - specialistDiscountSum
               - turnoutFrom
               - turnoutFor
-              - onPayment
               - warehouseId
               - services
         exclude:
@@ -45644,7 +47257,6 @@ components:
               - divisionName
               - takingMedications
               - conductedExaminationTreatment
-              - redirectPercentage
               - specialistDiscountPercentage
               - previouslyPerformedProcedures
               - recommendations
@@ -45658,7 +47270,6 @@ components:
               - specialistDiscountSum
               - turnoutFrom
               - turnoutFor
-              - onPayment
               - warehouseId
               - services
         order:
@@ -45696,6 +47307,15 @@ components:
         filters:
           type: object
           properties:
+            fullText:
+              type: object
+              properties:
+                value:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    type: string
             id:
               type: object
               properties:
@@ -45806,16 +47426,6 @@ components:
                   items:
                     type: integer
                     format: uuid
-            redirectPercentageStart:
-              type: object
-              properties:
-                value:
-                  type: number
-            redirectPercentageEnd:
-              type: object
-              properties:
-                value:
-                  type: number
             specialistDiscountPercentageStart:
               type: object
               properties:
@@ -45902,11 +47512,6 @@ components:
               properties:
                 value:
                   type: string
-            onPayment:
-              type: object
-              properties:
-                value:
-                  type: boolean
         order:
           type: object
           properties:
@@ -45992,8 +47597,6 @@ components:
                 type: string
               conductedExaminationTreatment:
                 type: string
-              redirectPercentage:
-                type: number
               specialistDiscountPercentage:
                 type: number
               previouslyPerformedProcedures:
@@ -46020,14 +47623,15 @@ components:
               turnoutFor:
                 type: string
                 format: datetime
-              onPayment:
-                type: boolean
               warehouseId:
                 type: string
                 format: uuid
       example:
         success: true
         filters:
+          fullText:
+            value: null
+            fields: null
           id:
             value: null
           documentDateStart:
@@ -46066,10 +47670,6 @@ components:
             value: null
           divisionId:
             value: null
-          redirectPercentageStart:
-            value: null
-          redirectPercentageEnd:
-            value: null
           specialistDiscountPercentageStart:
             value: null
           specialistDiscountPercentageEnd:
@@ -46101,8 +47701,6 @@ components:
           turnoutForStart:
             value: null
           turnoutForEnd:
-            value: null
-          onPayment:
             value: null
         order:
           field: documentDate
@@ -46138,7 +47736,6 @@ components:
             divisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
             takingMedications: ''
             conductedExaminationTreatment: ''
-            redirectPercentage: 1
             specialistDiscountPercentage: 0
             previouslyPerformedProcedures: ''
             recommendations: ''
@@ -46150,7 +47747,6 @@ components:
             specialistDiscountSum: 0
             turnoutFrom: '0001-01-01T00:00:00'
             turnoutFor: '0001-01-01T00:00:00'
-            onPayment: false
             warehouseId: 00000000-0000-0000-0000-000000000000
             services: ''
             paidFor: true
@@ -46178,7 +47774,6 @@ components:
             divisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
             takingMedications: ''
             conductedExaminationTreatment: ''
-            redirectPercentage: 1
             specialistDiscountPercentage: 0
             previouslyPerformedProcedures: ''
             recommendations: ''
@@ -46190,7 +47785,6 @@ components:
             specialistDiscountSum: 0
             turnoutFrom: '0001-01-01T00:00:00'
             turnoutFor: '0001-01-01T00:00:00'
-            onPayment: false
             warehouseId: 00000000-0000-0000-0000-000000000000
             services: ''
             paidFor: true
@@ -46284,8 +47878,6 @@ components:
                 type: string
               conductedExaminationTreatment:
                 type: string
-              redirectPercentage:
-                type: number
               specialistDiscountPercentage:
                 type: number
               previouslyPerformedProcedures:
@@ -46312,8 +47904,6 @@ components:
               turnoutFor:
                 type: string
                 format: datetime
-              onPayment:
-                type: boolean
               warehouseId:
                 type: string
                 format: uuid
@@ -46328,8 +47918,10 @@ components:
                     serviceName:
                       type: string
                     count:
-                      type: integer
+                      type: number
                     price:
+                      type: number
+                    originalPrice:
                       type: number
                     sum:
                       type: number
@@ -46338,32 +47930,60 @@ components:
                     totalSum:
                       type: number
                     duration:
-                      type: integer
+                      type: number
                     discount:
+                      type: number
+                    discountFix:
+                      type: number
+                    originalDiscount:
                       type: number
                     bonus:
                       type: number
-                    discountType:
-                      type: string
+                    bonusSum:
+                      type: number
+                    bonusFix:
+                      type: number
                     equipmentId:
                       type: string
                       format: uuid
                     equipmentName:
                       type: string
-              materials:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    materialId:
+                    discountTypeId:
                       type: string
                       format: uuid
-                    materialName:
+                    discountTypeName:
                       type: string
-                    norm:
-                      type: number
-                    fact:
-                      type: number
+                    bonusTypeId:
+                      type: string
+                      format: uuid
+                    bonusTypeName:
+                      type: string
+                    treatmentPlanStageId:
+                      type: string
+                      format: uuid
+              serviceCourses:
+                type: object
+                properties:
+                  serviceCourseId:
+                    type: string
+                    format: uuid
+                  serviceCourseName:
+                    type: string
+                  duration:
+                    type: number
+                  sessionsLeft:
+                    type: number
+                  equipmentId:
+                    type: string
+                    format: uuid
+                  equipmentName:
+                    type: string
+                  serviceCourseRegistrationId:
+                    type: string
+                    format: uuid
+                  treatmentPlanStageId:
+                    type: string
+                    format: uuid
       example:
         success: true
         data:
@@ -46391,7 +48011,6 @@ components:
             divisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
             takingMedications: ''
             conductedExaminationTreatment: ''
-            redirectPercentage: 1
             specialistDiscountPercentage: 0
             previouslyPerformedProcedures: ''
             recommendations: ''
@@ -46403,28 +48022,40 @@ components:
             specialistDiscountSum: 0
             turnoutFrom: '0001-01-01T00:00:00'
             turnoutFor: '0001-01-01T00:00:00'
-            onPayment: false
             warehouseId: 00000000-0000-0000-0000-000000000000
             paidFor: true
             services:
-              - serviceId: f39eb53e-7094-11ed-aab1-af160147ea99
-                serviceName: Лимфодренаж
+              - serviceId: 044c6357-cb22-11ee-af8d-309c23b27327
+                serviceName: Профессиональное обертывание
                 count: 1
-                price: 4000
-                sum: 4000
-                discountSum: 0
-                totalSum: 4000
-                duration: 0
-                discount: 0
-                bonus: 15
-                discountType: null
-                equipmentId: 00000000-0000-0000-0000-000000000000
-                equipmentName: ''
-            materials:
-              - materialId: 959124ab-a831-11e8-ad4c-50e5493beef9
-                materialName: Гель очищающий
-                norm: 1
-                fact: 1
+                price: 3800
+                originalPrice: 3800
+                sum: 3800
+                discountSum: 570
+                totalSum: 3230
+                duration: 40
+                discount: 15
+                discountFix: 0
+                originalDiscount: 0
+                bonus: 0
+                bonusSum: 0
+                bonusFix: 0
+                equipmentId: "00000000-0000-0000-0000-000000000000"
+                equipmentName: null
+                discountTypeId: "00000000-0000-0000-0000-000000000000"
+                discountTypeName: ""
+                bonusTypeId: "00000000-0000-0000-0000-000000000000"
+                bonusTypeName: ""
+                treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
+            serviceCourses:
+              - serviceCourseId: 76405ca4-983a-11ef-af9b-309c23b27327
+                serviceCourseName: Курс антицеллюлитного массажа с ароматическими маслами
+                duration: 40
+                sessionsLeft: 5
+                equipmentId: "00000000-0000-0000-0000-000000000000"
+                equipmentName: null
+                serviceCourseRegistrationId: 0d4518f4-0407-11f1-97a4-306893e16552
+                treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
     ProvisionServicesUpdateSuccess:
       type: object
       properties:
@@ -46492,8 +48123,6 @@ components:
                 type: string
               conductedExaminationTreatment:
                 type: string
-              redirectPercentage:
-                type: number
               specialistDiscountPercentage:
                 type: number
               previouslyPerformedProcedures:
@@ -46520,8 +48149,6 @@ components:
               turnoutFor:
                 type: string
                 format: datetime
-              onPayment:
-                type: boolean
               warehouseId:
                 type: string
                 format: uuid
@@ -46602,7 +48229,6 @@ components:
             divisionName: Кемерово_Д.Бедного
             takingMedications: ''
             conductedExaminationTreatment: ''
-            redirectPercentage: 0
             specialistDiscountPercentage: 0
             previouslyPerformedProcedures: ''
             recommendations: ''
@@ -46614,7 +48240,6 @@ components:
             specialistDiscountSum: 0
             turnoutFrom: '0001-01-01T00:00:00'
             turnoutFor: '0001-01-01T00:00:00'
-            onPayment: false
             warehouseId: 5850f1e5-83d7-11ef-af98-309c23b27327
             services:
               serviceId: b11a14b9-1501-11ee-af77-309c23b27327
@@ -56203,21 +57828,51 @@ components:
             serviceName:
               type: string
             duration:
-              type: integer
+              type: number
             price:
               type: number
             discount:
-              type: integer
+              type: number
+            discountFix:
+              type: number
+            bonus:
+              type: number
+            bonusFix:
+              type: number
             discountType:
               type: integer
+            discountTypeId:
+              type: string
+              format: uuid
+            discountTypeName:
+              type: string
+            bonusTypeId:
+              type: string
+              format: uuid
+            bonusTypeName:
+              type: string
+            treatmentPlanStageId:
+              type: string
+              format: uuid
+            comment:
+              type: string
       example:
         data:
           - serviceId: 185380f4-7112-11ef-af98-309c23b27327
             serviceName: Коррекция губ гиалуроновой кислотой
             duration: 50
             price: 9000
-            discount: 20
-            discountType: 1
+            discount: 0
+            discountFix: 0
+            bonus: 0
+            bonusFix: 0
+            discountType: null
+            discountTypeId: null
+            discountTypeName: null
+            bonusTypeId: null
+            bonusTypeName: null
+            treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
+            comment: ""
     ServictEquipmentRequest:
       type: object
       properties:
@@ -59870,10 +61525,23 @@ components:
           properties:
             deletionMark:
               type: boolean
+            documentDate:
+              type: string
+            serviceId:
+              type: string
+            materials:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  count: 
+                    type: number
       required:
         - id
       example:
-        id: 67928308-67fa-11ed-aab0-e4aaeadadf68
+        id: c6dd0ed0-fc40-11f0-97a4-306893e16552
         values:
           deletionMark: true
     TechnicalCardUpdateSuccess:
@@ -59884,12 +61552,64 @@ components:
         data:
           type: object
           properties:
+            documentDate:
+              type: string
+              format: date-time
             deletionMark:
               type: boolean
+            serviceId:
+              type: string
+              format: uuid
+            materials:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  count:
+                    type: number
       example:
         success: true
         data:
+          documentDate: "2026-01-28T14:59:20"
           deletionMark: true
+          serviceId: fad3659e-b2a0-11ed-af69-309c23b27327
+          materials:
+            - id: e4300d6e-9ba5-11f0-afc2-309c23b27327
+              count: 4444
+    TechCardCreateRequest:
+      type: object
+      properties:
+        values:
+          type: object
+          properties:
+            serviceId:
+              type: string
+              format: uuid
+            materials:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  count:
+                    type: number
+                required:
+                  - id
+                  - count
+        required:
+          - serviceId
+          - materials
+      example:
+        values:
+          serviceId: f9d521ae-a4f5-11f0-afc7-309c23b27327
+          materials:
+            - id: 67928305-67fa-11ed-aab0-e4aaeadadf68
+              count: 4
     RouteListRequest:
       type: object
       properties:
@@ -60918,79 +62638,114 @@ components:
               format: uuid
             documentDate:
               type: string
-              format: datetime
+              format: date-time
             cancelled:
               type: boolean
             divisionId:
               type: string
               format: uuid
+            divisionName:
+              type: string
             responsibleId:
               type: string
               format: uuid
+            responsibleName:
+              type: string
             validityPeriod:
               type: string
-              format: datetime
+              format: date-time
             paymentTerm:
               type: string
-              format: datetime
+              format: date-time
             deadlineHasExpired:
               type: boolean
             clientId:
               type: string
               format: uuid
+            clientName:
+              type: string
             discountIncl:
               type: boolean
-            actionId:
-              type: string
-              format: uuid
             nomenclatureId:
               type: string
               format: uuid
-            bonus:
-              type: number
+            nomenclatureName:
+              type: string
+            employeeId:
+              type: string
+              format: uuid
+            employeeName:
+              type: string
+            isPaid:
+              type: boolean
+            sessionWasUsed:
+              type: boolean
             price:
               type: number
             count:
               type: number
             discount:
               type: number
+            discountSum:
+              type: number
+            discountFix:
+              type: number
             sum:
+              type: number
+            bonus:
               type: number
             bonusSum:
               type: number
-            discountSum:
+            bonusFix:
               type: number
             documentSum:
               type: number
             numberOfSessions:
               type: number
-            discountType:
-              type: number
+            treatmentPlanStageId:
+              type: string
+              format: uuid
+            discountTypeId:
+              type: string
+              format: uuid
+            discountTypeName:
+              type: string
+            bonusTypeId:
+              type: string
+              format: uuid
+            bonusTypeName:
+              type: string
       example:
         success: true
         data:
-          - id: 6cb691b6-b3c9-11f0-afc8-309c23b27327
-            documentDate: '2025-10-28T09:42:26'
+          - id: 2f2544ec-0765-11f1-97a4-306893e16552
+            documentDate: "2026-02-11T00:00:00"
             cancelled: false
-            divisionId: a1cb30b4-98bf-11ed-af69-309c23b27327
+            divisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
             responsibleId: 682b0dae-76d2-11ed-af67-309c23b27327
-            validityPeriod: '2026-01-26T00:00:00'
-            paymentTerm: '2025-11-02T00:00:00'
+            validityPeriod: "0001-01-01T00:00:00"
+            paymentTerm: "0001-01-01T00:00:00"
             deadlineHasExpired: false
-            clientId: 39ea0968-b0d6-11f0-afc8-309c23b27327
-            discountIncl: true
-            actionId: f31eac79-2489-11ee-af7a-309c23b27327
-            nomenclatureId: ee0cc8e8-8a2f-11ef-af98-309c23b27327
-            bonus: 0
-            price: 36000
+            clientId: a50b43b9-9dcf-11f0-afc3-309c23b27327
+            discountIncl: false
+            nomenclatureId: 49977f50-f87a-11f0-97a4-306893e16552
+            employeeId: a204cdf6-1ed2-11ed-845d-902b344d515b
+            isPaid: false
+            sessionWasUsed: false
+            price: 27000
             count: 1
-            discount: 20
-            sum: 36000
-            bonusSum: 0
-            discountSum: 7200
-            documentSum: 28800
-            numberOfSessions: 6
-            discountType: null
+            discount: 0
+            discountSum: 10000
+            discountFix: 10000
+            sum: 27000
+            bonus: 15
+            bonusSum: 4050
+            bonusFix: 0
+            documentSum: 17000
+            numberOfSessions: 3
+            treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
+            discountTypeId: 4ad8941f-540a-11ef-af93-309c23b27327
+            bonusTypeId: ff85bc46-e57c-11f0-97a4-306893e16552
     ServiceCourseListRequest:
       type: object
       properties:
@@ -61206,10 +62961,25 @@ components:
               type: number
             discount:
               type: number
+            discountFix:
+              type: number
             bonus:
               type: number
-            discountType:
-              type: integer
+            bonusFix:
+              type: number
+            discountTypeId:
+              type: string
+              format: uuid
+            discountTypeName:
+              type: string
+            bonusTypeId:
+              type: string
+              format: uuid
+            bonusTypeName:
+              type: string
+            treatmentPlanStageId:
+              type: string
+              format: uuid
       example:
         data:
           - serviceCourseId: 1180dcde-1503-11ee-af77-309c23b27327
@@ -61217,8 +62987,14 @@ components:
             numberOfSessions: 6
             price: 10700
             discount: 0
+            discountFix: 0
             bonus: 0
-            discountType: null
+            bonusFix: 0
+            discountTypeId: null
+            discountTypeName: null
+            bonusTypeId: null
+            bonusTypeName: null
+            treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
     ServiceCourseRefreshRequest:
       type: object
       properties:
