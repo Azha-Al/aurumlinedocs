@@ -21892,51 +21892,80 @@ components:
     RecordingByIdSuccess:
       type: object
       properties:
+        success: 
+          type: boolean
         data:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                format: uuid
-              date:
-                type: string
-                format: datetime
-              timeStart:
-                type: string
-                format: datetime
-              timeEnd:
-                type: string
-                format: datetime
-              divisionId:
-                type: string
-                format: uuid
-              clientId:
-                type: string
-                format: uuid
-              employeeId:
-                type: string
-                format: uuid
-              documentSum:
-                type: number
-              status:
-                type: integer
-              bonusesAccrued:
-                type: number
-              complaints:
-                type: string
-              comment:
-                type: string
-              accrueBonuses:
-                type: boolean
-              specialistRedirectedId:
-                type: string
-                format: uuid
-              discountSum:
-                type: number
-              totalDuration:
-                type: number
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            documentDate:
+              type: string
+              format: date-time
+            date:
+              type: string
+              format: date-time
+            documentChangeDate:
+              type: string
+              format: date-time
+            timeStart:
+              type: string
+              format: date-time
+            timeEnd:
+              type: string
+              format: date-time
+            receptionTimeStart:
+              type: string
+              format: date-time
+            receptionTimeEnd:
+              type: string
+              format: date-time
+            divisionId:
+              type: string
+              format: uuid
+            clientId:
+              type: string
+              format: uuid
+            employeeId:
+              type: string
+              format: uuid
+            doesNotReceiveReception:
+              type: boolean
+            documentSum:
+              type: number
+            status:
+              type: integer
+            bonusesAccrued:
+              type: number
+            complaints:
+              type: string
+            comment:
+              type: string
+            accrueBonuses:
+              type: boolean
+            specialistRedirectedId:
+              type: string
+              format: uuid
+            discountSum:
+              type: number
+            servicesPerLine:
+              type: string
+            equipmentPerLine:
+              type: string
+            totalDuration:
+              type: number
+            recordingSource:
+              type: string
+              nullable: true
+            clientPhone:
+              type: string
+            responsibleForCreationId:
+              type: string
+              format: uuid
+            responsibleForChangeId:
+              type: string
+              format: uuid
               services:
                 type: array
                 items:
@@ -21951,6 +21980,8 @@ components:
                       type: number
                     price:
                       type: number
+                    originalPrice:
+                      type: number
                     sum:
                       type: number
                     discountSum:
@@ -21961,19 +21992,33 @@ components:
                       type: number
                     discount:
                       type: number
+                    discountFix:
+                      type: number
                     bonus:
                       type: number
-                    discountType:
-                      type: string
+                    bonusSum:
+                      type: number
+                    bonusFix:
+                      type: number
                     equipmentId:
                       type: string
                       format: uuid
                     equipmentName:
                       type: string
-              equipment:
-                type: string
-              clientPhone:
-                type: string
+                      nullable: true
+                    discountTypeId:
+                      type: string
+                      format: uuid
+                    discountTypeName:
+                      type: string
+                    bonusTypeId:
+                      type: string
+                      format: uuid
+                    bonusTypeName:
+                      type: string
+                    treatmentPlanStageId:
+                      type: string
+                      format: uuid
               serviceCourses:
                 type: array
                 items:
@@ -21986,47 +22031,97 @@ components:
                       type: string
                     duration:
                       type: number
-                    sessionLeft:
+                    sessionsLeft:
+                      type: number
+                    equipmentId:
+                      type: string
+                      format: uuid
+                    equipmentName:
+                      type: string
+                      nullable: true
+                    serviceCourseRegistrationId:
+                      type: string
+                      format: uuid
+                    treatmentPlanStageId:
+                      type: string
+                      format: uuid
+              materials:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    materialId:
+                      type: string
+                      format: uuid
+                    materialName:
+                      type: string
+                    norm:
                       type: number
       example:
+        success: true
         data:
-          - id: f181557c-6de6-11f0-afb1-309c23b27327
-            date: '2025-07-31T00:00:00'
-            timeStart: '0001-01-01T11:30:00'
-            timeEnd: '0001-01-01T11:50:00'
-            divisionId: 9457b499-7765-11e8-9b21-50e5493beef9
-            clientId: 126bc39c-4da9-11f0-afab-309c23b27327
-            employeeId: 590e0ac9-1134-11ef-af91-309c23b27327
-            documentSum: 10500
-            status: 1
-            bonusesAccrued: 0
-            complaints: ''
-            comment: ''
-            accrueBonuses: false
-            specialistRedirectedId: 00000000-0000-0000-0000-000000000000
-            discountSum: 4500
-            totalDuration: 20
-            services:
-              - serviceId: c18708bb-1658-11ee-af78-309c23b27327
-                serviceName: Лазерное омоложение
-                count: 1
-                price: 15000
-                sum: 15000
-                discountSum: 4500
-                totalSum: 10500
-                duration: 20
-                discount: 30
-                bonus: 0
-                discountType: null
-                equipmentId: 00000000-0000-0000-0000-000000000000
-                equipmentName: ''
-            equipment: ''
-            clientPhone: '+79779239349'
+          id: f181557c-6de6-11f0-afb1-309c23b27327
+          documentDate: "2025-07-31T00:00:00"
+          date: "2025-07-31T00:00:00"
+          documentChangeDate: "0001-01-01T00:00:00"
+          timeStart: "0001-01-01T11:30:00"
+          timeEnd: "0001-01-01T11:50:00"
+          receptionTimeStart: "2025-07-31T11:30:00"
+          receptionTimeEnd: "2025-07-31T11:50:00"
+          divisionId: 9457b499-7765-11e8-9b21-50e5493beef9
+          clientId: 126bc39c-4da9-11f0-afab-309c23b27327
+          employeeId: 590e0ac9-1134-11ef-af91-309c23b27327
+          doesNotReceiveReception: true
+          documentSum: 10500
+          status: 1
+          bonusesAccrued: 0
+          complaints: ""
+          comment: ""
+          accrueBonuses: false
+          specialistRedirectedId: "00000000-0000-0000-0000-000000000000"
+          discountSum: 4500
+          servicesPerLine: "Лазерное омоложение"
+          equipmentPerLine: ""
+          totalDuration: 20
+          recordingSource: null
+          clientPhone: "+79779239349"
+          responsibleForCreationId: 682b0dae-76d2-11ed-af67-309c23b27327
+          responsibleForChangeId: 682b0dae-76d2-11ed-af67-309c23b27327
+          services:
+            - serviceId: c18708bb-1658-11ee-af78-309c23b27327
+              serviceName: "Лазерное омоложение"
+              count: 1
+              price: 15000
+              originalPrice: 15000
+              sum: 15000
+              discountSum: 4500
+              totalSum: 10500
+              duration: 20
+              discount: 30
+              discountFix: 0
+              bonus: 0
+              bonusSum: 0
+              bonusFix: 0
+              equipmentId: "00000000-0000-0000-0000-000000000000"
+              equipmentName: null
+              discountTypeId: "00000000-0000-0000-0000-000000000000"
+              discountTypeName: ""
+              bonusTypeId: "00000000-0000-0000-0000-000000000000"
+              bonusTypeName: ""
+              treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
             serviceCourses:
-              - serviceCourseId: 185380f4-7112-11ef-af98-309c23b27327
-                serviceCourseName: Курс плазмолифтинга
-                duration: 50
-                sessionLeft: 5
+              - serviceCourseId: 76405ca4-983a-11ef-af9b-309c23b27327
+                serviceCourseName: Курс антицеллюлитного массажа с ароматическими маслами
+                duration: 40
+                sessionsLeft: 5
+                equipmentId: "00000000-0000-0000-0000-000000000000"
+                equipmentName: null
+                serviceCourseRegistrationId: 0d4518f4-0407-11f1-97a4-306893e16552
+                treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
+            materials:
+              - materialId: 67928306-67fa-11ed-aab0-e4aaeadadf68
+                materialName: "Простынь медицинская"
+                norm: 2
     RecordingCancelValues:
       type: object
       properties:
