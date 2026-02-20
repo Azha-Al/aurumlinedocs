@@ -11435,8 +11435,8 @@ paths:
                   type: string
                   format: uuid
                   example: c854e58b-1664-4a02-b729-df2b6d2b3513
-                required:
-                  - reportKey
+              required:
+                - reportKey
       responses:
         '200':
           description: successful operation
@@ -11444,12 +11444,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CashFlowStatementSuc'
-        '400':
-          description: bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadAnalytics'
         '401':
           description: unauthorized
   /typeOfCashFlow/GetValues:
