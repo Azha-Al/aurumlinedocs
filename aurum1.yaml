@@ -57633,33 +57633,33 @@ components:
                       type: number
             count:
               type: integer
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              financialCostCenterId:
-                type: string
-              financialCostCenterName:
-                type: string
-              lineOfBusiness:
-                type: integer
-              lineOfBusinessName:
-                type: string
-              typeOfCashFlow:
-                type: integer
-              typeOfCashFlowName:
-                type: string
-              directionOfActivityId:
-                type: string
-              directionOfActivityName:
-                type: string
-              cashItemId:
-                type: string
-              cashItemName:
-                type: string
-              total:
-                type: number
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  financialCostCenterId:
+                    type: string
+                  financialCostCenterName:
+                    type: string
+                  lineOfBusiness:
+                    type: integer
+                  lineOfBusinessName:
+                    type: string
+                  typeOfCashFlow:
+                    type: integer
+                  typeOfCashFlowName:
+                    type: string
+                  directionOfActivityId:
+                    type: string
+                  directionOfActivityName:
+                    type: string
+                  cashItemId:
+                    type: string
+                  cashItemName:
+                    type: string
+                  total:
+                    type: number
       example:
         data:
           success: true
