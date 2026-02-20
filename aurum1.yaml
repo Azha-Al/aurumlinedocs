@@ -2209,14 +2209,60 @@ paths:
 
         |Поле       | Тип               | Описание |
         | ------------- |:------------------:| :-----|
+        |values (required)   | object    |  |
+
+        ## Объект values содержит следующие поля:
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |clientId (required)   | string    | УИД клиента|
         |divisionId (required)    | string   | УИД подразделения |
         | employeeId (required)    | string   |УИД сотрудника |
         |periodStart (required)     | string    | Начало записи |
-        |services (required)    | array of objects   | Массив услуг|
+        |periodEnd (required)     | string    | Конец записи |
+        |services     | array of objects   | Массив услуг|
+        |serviceCourses     | array of objects   | Массив курсов услуг|
         | comment   | string   |Комментарий записи |
-        |clientName (required)    | string    | ФИО клиента |
-        | clientPhone (required)   | string   |Телефон клиента |
+        |clientName   | string    | ФИО клиента |
+        | clientPhone   | string   |Телефон клиента |
         |clientEmail     | string    | Почта  клиента |
+   
+        ## Массив services имеет следующие поля: 
+
+        | Поле                         | Тип                | Описание                               |
+        |------------------------------|--------------------|----------------------------------------|
+        | serviceId              | string  | УИД услуги                             |
+        | count                  | number  | Количество                             |
+        | price                  | number  | Цена                                   |
+        | originalPrice          | number  | Первоначальная цена                    |
+        | sum                    | number  | Сумма                                  |
+        | discountSum            | number  | Сумма скидки                           |
+        | totalSum               | number  | Итоговая сумма                         |
+        | duration               | number  | Продолжительность                      |
+        | discount               | number  | Скидка                                 |
+        | discountFix            | number  | Фиксированная скидка                   |
+        | bonus                  | number  | Бонус                                  |
+        | bonusSum               | number  | Сумма бонуса                           |
+        | bonusFix               | number  | Фиксированный бонус                    |
+        | equipmentId            | string  | УИД оборудования                       |
+        | discountTypeId         | string  | УИД типа скидки                        |
+        | bonusTypeId            | string  | УИД типа бонуса                        |
+        | treatmentPlanStageId   | string  | УИД этапа плана лечения                |
+
+        Если массив объектов services передается в теле запроса, то все поля внутри объекта являются обязательными к передаче.
+
+         ## Массив serviceCourses имеет следующие поля: 
+        
+        | Поле                         | Тип                | Описание                               |
+        |------------------------------|--------------------|----------------------------------------|
+        | serviceCourseId              | string  | УИД курса услуг                        |
+        | duration                     | number  | Продолжительность                      |
+        | sessionsLeft                 | number  | Осталось сессий                        |
+        | equipmentId                  | string  | УИД оборудования                       |
+        | serviceCourseRegistrationId  | string  | УИД регистрации курса услуг            |
+        | treatmentPlanStageId         | string  | УИД этапа плана лечения                |
+
+        Если массив объектов serviceCourses передается в теле запроса, то все поля внутри объекта являются обязательными к передаче.
       operationId: recordCreate
       requestBody:
         content:
@@ -2254,14 +2300,58 @@ paths:
         |Поле       | Тип               | Описание |
         | ------------- |:------------------:| :-----|
         |id  (required)    | string   | УИД записи |
+        |values (required)   | object    |  |
+
+        ## Объект values содержит следующие поля:
+
         |divisionId   | string    | УИД подразделения |
         |employeeId    | string   | УИД сотрудника |
-        | periodStart   | string   |Период начало |
-        |periodEnd     | string    | Период окончание |
-        | comment   | string   |Комментарий |
+        |clientId   | string    | УИД клиента|
+        |periodStart   | string   |Начало записи |
+        |periodEnd     | string    | Конец записи |
+        |comment   | string   |Комментарий |
         |complaints     | string    | Жалобы |
-        | specialistRedirectedId   | string   |УИД специалиста, который перенаправил |
+        |specialistRedirectedId   | string   |УИД специалиста, который перенаправил |
         |accrueBonuses     | boolean    | Начислять бонусы |
+        |services     | array of objects   | Массив услуг|
+        |serviceCourses     | array of objects   | Массив курсов услуг|
+
+        ## Массив services имеет следующие поля: 
+
+        | Поле                         | Тип                | Описание                               |
+        |------------------------------|--------------------|----------------------------------------|
+        | serviceId              | string  | УИД услуги                             |
+        | count                  | number  | Количество                             |
+        | price                  | number  | Цена                                   |
+        | originalPrice          | number  | Первоначальная цена                    |
+        | sum                    | number  | Сумма                                  |
+        | discountSum            | number  | Сумма скидки                           |
+        | totalSum               | number  | Итоговая сумма                         |
+        | duration               | number  | Продолжительность                      |
+        | discount               | number  | Скидка                                 |
+        | discountFix            | number  | Фиксированная скидка                   |
+        | bonus                  | number  | Бонус                                  |
+        | bonusSum               | number  | Сумма бонуса                           |
+        | bonusFix               | number  | Фиксированный бонус                    |
+        | equipmentId            | string  | УИД оборудования                       |
+        | discountTypeId         | string  | УИД типа скидки                        |
+        | bonusTypeId            | string  | УИД типа бонуса                        |
+        | treatmentPlanStageId   | string  | УИД этапа плана лечения                |
+
+        Если массив объектов services передается в теле запроса, то все поля внутри объекта являются обязательными к передаче.
+
+         ## Массив serviceCourses имеет следующие поля: 
+        
+        | Поле                         | Тип                | Описание                               |
+        |------------------------------|--------------------|----------------------------------------|
+        | serviceCourseId              | string  | УИД курса услуг                        |
+        | duration                     | number  | Продолжительность                      |
+        | sessionsLeft                 | number  | Осталось сессий                        |
+        | equipmentId                  | string  | УИД оборудования                       |
+        | serviceCourseRegistrationId  | string  | УИД регистрации курса услуг            |
+        | treatmentPlanStageId         | string  | УИД этапа плана лечения                |
+
+        Если массив объектов serviceCourses передается в теле запроса, то все поля внутри объекта являются обязательными к передаче.
       operationId: recordUpdate
       requestBody:
         content:
@@ -11234,7 +11324,55 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequiredInt'
-  /cashFlowStatement/GetList:
+  /cashFlowStatement/CreateReport:
+    post:
+      tags:
+        - Аналитика
+      summary: Пункт Отчет. Получить ключ отчета БДДС
+      description: |-
+        ## Входные параметры: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        | dateStart    | string  | Дата начала периода             |
+        | dateEnd      | string  | Дата окончания периода          |
+        | periodicity  | integer | Периодичность: 0 - месяц, 1 - квартал, 2 - полугодие, 3 - год |
+
+         ## Список выходных параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        | reportKey    | string  | Ключ отчета       |
+      operationId: cashFlowKeyReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dateStart:
+                  type: string
+                  example: '2025-01-01T00:00:00'
+                dateEnd:
+                  type: string
+                  example: '2025-12-31T00:00:00'
+                periodicity:
+                  type: string
+                  example: 1
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+              properties:
+                reportKey:
+                  type: string
+                  example: "c854e58b-1664-4a02-b729-df2b6d2b3513"
+        '401':
+          description: unauthorized
+  /cashFlowStatement/GetReport:
     post:
       tags:
         - Аналитика
@@ -11244,33 +11382,32 @@ paths:
 
         |Поле       | Тип               | Описание |
         | ------------- |:------------------:| :-----|
-        | dataStart (required)  | string  | Дата начала периода         |
-        | dataEnd (required)    | string  | Дата окончания периода      |
-        | periodicity (required)| integer | Периодичность (0 - месяц, 1 - квартал, 2 - полугодие, 3 - год)      |
+        | reportKey (required)    | string  | Ключ отчета       |
          
          ## Список выходных параметров: 
+
+        | Поле      | Тип     | Описание                                           |
+        |-----------|---------|----------------------------------------------------|
+        | data      | object  | JSON-данные отчета                                 |
+        | status    | string  | Статус отчета: processing / processed / error      |
+        | error     | string  | Ошибка, если есть (опционально)                    |
+
+        ## Массив data содержит следующие поля:         
 
         |Поле       | Тип               | Описание | По умолчанию в fields |
         | ------------- |:------------------:| :-----:| :-----|
         | financialCostCenterId       | string  | УИД ЦФЗ (центр финансовых зачетов)                | Да|
         | financialCostCenterName     | string  | Наименование ЦФЗ         | Да|
         | lineOfBusiness             | integer | Вид деятельности (0- Операционная деятельность, 1- Финансовая деятельность, 2- Инвестиционная деятельность, 3- Транзит )  | Да|
+        | lineOfBusinessName         | string  | Наименование вида деятельности        | Да|
         | typeOfCashFlow             | integer | Вид движения  (0- Потсупления, 1- Выплаты, 2- Транзит)                     |Да |
+        | typeOfCashFlowName         | string  | Наименование вида движения        | Да|
         | directionOfActivityId      | string  | УИД группы номенклатуры               | Да|
         | directionOfActivityName    | string  | Наименование группы номенклатуры          | Да|
         | cashItemId                 | string  | УИД статьи движения денежных средств                 | Да|
         | cashItemName               | string  | Название статьи движения денежных средств           | Да|
         | total                      | number  | Общая сумма                                | Да|
-        | {periodicity}_{year}               | number  | Сумма за выбранный periodicity по указанному периоду (dateStart- dateEnd)        | Да|
-
-          ## Объект order имеет следующие доступные к сортировке поля: 
-
-        |Поле               | 
-        | -------------| 
-        |lineOfBusiness|
-        |typeOfCashFlow|
-        |financialCostCenterId|
-        |directionOfActivityId|
+        | {periodicity}_{year}       | number  | Сумма за выбранный periodicity по указанному периоду (dateStart- dateEnd)        | Да|
 
          ## Объект filters имеет следующие доступные к фильтрации поля: 
 
@@ -11278,22 +11415,28 @@ paths:
         | ------------- |:----------------:|:-----|
         | financialCostCenterId      | array of strings  | УИД ЦФЗ (центр финансовых зачетов)          |
         | financialCostCenterName    | string  | Наименование ЦФЗ                            |
-        | lineOfBusinessStart        | integer | Вид деятельности от                         |
-        | lineOfBusinessEnd          | integer  | Вид деятельности до                         |
-        | typeOfCashFlowStart        | integer  | Тип денежного потока от                     |
-        | typeOfCashFlowEnd          | integer  | Тип денежного потока до                     |
-        | directionOfActivityId      | array of strings  | УИД группы номенклатуры                     |
+        | lineOfBusiness       | array of integers | Массив значений Вид деятельности                         |
+        | typeOfCashFlow       | array of integers  | Массив значений Тип денежного потока                     |
+        | directionOfActivityId      | array of strings  | Массив УИД группы номенклатуры                     |
         | directionOfActivityName    | string  | Наименование группы номенклатуры            |
-        | cashItemId                 | array of strings  | УИД статьи движения денежных средств        |
+        | cashItemId                 | array of strings  | Массив УИД статьи движения денежных средств        |
         | cashItemName               | string  | Название статьи движения денежных средств   |
         | totalStart                 | number  | Общая сумма от                              |
         | totalEnd                   | number  | Общая сумма до                              |
+        | fullText                   | object  | Поиск по                             |
       operationId: cashFlowStatement
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CashFlowStatementReq'
+              type: object
+              properties:
+                reportKey:
+                  type: string
+                  format: uuid
+                  example: c854e58b-1664-4a02-b729-df2b6d2b3513
+                required:
+                  - reportKey
       responses:
         '200':
           description: successful operation
@@ -21726,6 +21869,9 @@ components:
         values:
           type: object
           properties:
+            clientId:
+              type: string
+              format: uuid
             divisionId:
               type: string
               format: uuid
@@ -21734,7 +21880,10 @@ components:
               format: uuid
             periodStart:
               type: string
-              format: datetime
+              format: date-time
+            periodEnd:
+              type: string
+              format: date-time
             services:
               type: array
               items:
@@ -21744,7 +21893,87 @@ components:
                     type: string
                     format: uuid
                   count:
-                    type: integer
+                    type: number
+                  price:
+                    type: number
+                  originalPrice:
+                    type: number
+                  sum:
+                    type: number
+                  discountSum:
+                    type: number
+                  totalSum:
+                    type: number
+                  duration:
+                    type: number
+                  discount:
+                    type: number
+                  discountFix:
+                    type: number
+                  bonus:
+                    type: number
+                  bonusSum:
+                    type: number
+                  bonusFix:
+                    type: number
+                  equipmentId:
+                    type: string
+                    format: uuid
+                  discountTypeId:
+                    type: string
+                    format: uuid
+                  bonusTypeId:
+                    type: string
+                    format: uuid
+                  treatmentPlanStageId:
+                    type: string
+                    format: uuid
+                required:
+                  - serviceId
+                  - count
+                  - price
+                  - originalPrice
+                  - sum
+                  - discountSum
+                  - totalSum
+                  - duration
+                  - discount
+                  - discountFix
+                  - bonus
+                  - bonusSum
+                  - bonusFix
+                  - equipmentId
+                  - discountTypeId
+                  - bonusTypeId
+                  - treatmentPlanStageId
+            serviceCourses:
+              type: array
+              items:
+                type: object
+                properties:
+                  serviceCourseId:
+                    type: string
+                    format: uuid
+                  duration:
+                    type: number
+                  sessionsLeft:
+                    type: number
+                  equipmentId:
+                    type: string
+                    format: uuid
+                  serviceCourseRegistrationId:
+                    type: string
+                    format: uuid
+                  treatmentPlanStageId:
+                    type: string
+                    format: uuid
+                required:
+                  - serviceCourseId
+                  - duration
+                  - sessionsLeft
+                  - equipmentId
+                  - serviceCourseRegistrationId
+                  - treatmentPlanStageId
             comment:
               type: string
             clientName:
@@ -21753,18 +21982,39 @@ components:
               type: string
             clientEmail:
               type: string
+          required:
+            - clientId
+            - divisionId
+            - employeeId
+            - periodStart
+            - periodEnd
       required:
         - values
       example:
         values:
-          divisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
-          employeeId: dca2d5b6-4159-11f0-afab-309c23b27327
-          clientName: Поротикова Вероника
-          clientPhone: '+79999999999'
-          periodStart: '2025-06-23T18:00:00'
+          divisionId: 9457b499-7765-11e8-9b21-50e5493beef9
+          employeeId: 590e0ac9-1134-11ef-af91-309c23b27327
+          clientId: 126bc39c-4da9-11f0-afab-309c23b27327
+          periodStart: '2025-07-31T11:30:00'
+          periodEnd: '2025-07-31T11:50:00'
           services:
-            - serviceId: 2ea69562-22e9-11e8-81f7-50e5493beef9
+            - serviceId: c18708bb-1658-11ee-af78-309c23b27327
               count: 1
+              price: 15000
+              originalPrice: 15000
+              sum: 15000
+              discountSum: 4500
+              totalSum: 10500
+              duration: 20
+              discount: 30
+              discountFix: 0
+              bonus: 0
+              bonusSum: 0
+              bonusFix: 0
+              equipmentId: "00000000-0000-0000-0000-000000000000"
+              discountTypeId: "00000000-0000-0000-0000-000000000000"
+              bonusTypeId: "00000000-0000-0000-0000-000000000000"
+              treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
     BadRecord:
       type: object
       properties:
@@ -21803,12 +22053,15 @@ components:
             employeeId:
               type: string
               format: uuid
+            clientId:
+              type: string
+              format: uuid
             periodStart:
               type: string
-              format: datetime
+              format: date-time
             periodEnd:
               type: string
-              format: datetime
+              format: date-time
             comment:
               type: string
             complaints:
@@ -21818,17 +22071,132 @@ components:
               format: uuid
             accrueBonuses:
               type: boolean
+            services:
+              type: array
+              items:
+                type: object
+                properties:
+                  serviceId:
+                    type: string
+                    format: uuid
+                  count:
+                    type: number
+                  price:
+                    type: number
+                  originalPrice:
+                    type: number
+                  sum:
+                    type: number
+                  discountSum:
+                    type: number
+                  totalSum:
+                    type: number
+                  duration:
+                    type: number
+                  discount:
+                    type: number
+                  discountFix:
+                    type: number
+                  bonus:
+                    type: number
+                  bonusSum:
+                    type: number
+                  bonusFix:
+                    type: number
+                  equipmentId:
+                    type: string
+                    format: uuid
+                  discountTypeId:
+                    type: string
+                    format: uuid
+                  bonusTypeId:
+                    type: string
+                    format: uuid
+                  treatmentPlanStageId:
+                    type: string
+                    format: uuid
+                required:
+                  - serviceId
+                  - count
+                  - price
+                  - originalPrice
+                  - sum
+                  - discountSum
+                  - totalSum
+                  - duration
+                  - discount
+                  - discountFix
+                  - bonus
+                  - bonusSum
+                  - bonusFix
+                  - equipmentId
+                  - discountTypeId
+                  - bonusTypeId
+                  - treatmentPlanStageId
+            serviceCourses:
+              type: array
+              items:
+                type: object
+                properties:
+                  serviceCourseId:
+                    type: string
+                    format: uuid
+                  duration:
+                    type: number
+                  sessionsLeft:
+                    type: number
+                  equipmentId:
+                    type: string
+                    format: uuid
+                  serviceCourseRegistrationId:
+                    type: string
+                    format: uuid
+                  treatmentPlanStageId:
+                    type: string
+                    format: uuid
+                required:
+                  - serviceCourseId
+                  - duration
+                  - sessionsLeft
+                  - equipmentId
+                  - serviceCourseRegistrationId
+                  - treatmentPlanStageId
+          required:
+            - divisionId
+            - employeeId
+            - clientId
+            - periodStart
+            - periodEnd
       required:
         - id
         - values
       example:
-        id: b34a521a-58e7-11f0-afae-309c23b27327
+        id: f181557c-6de6-11f0-afb1-309c23b27327
         values:
-          divisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
-          employeeId: b65c2bf2-8548-11ee-af8a-309c23b27327
-          periodStart: '2025-07-05T14:00:00'
-          periodEnd: '2025-07-05T16:00:00'
-          comment: '11'
+          divisionId: 9457b499-7765-11e8-9b21-50e5493beef9
+          employeeId: 590e0ac9-1134-11ef-af91-309c23b27327
+          clientId: 126bc39c-4da9-11f0-afab-309c23b27327
+          periodStart: '2025-07-31T11:30:00'
+          periodEnd: '2025-07-31T11:50:00'
+          comment: 'опаздывает'
+          services:
+            - serviceId: c18708bb-1658-11ee-af78-309c23b27327
+              count: 1
+              price: 13000
+              originalPrice: 15000
+              sum: 15000
+              discountSum: 4500
+              totalSum: 10500
+              duration: 20
+              discount: 30
+              discountFix: 0
+              bonus: 0
+              bonusSum: 0
+              bonusFix: 0
+              equipmentId: "00000000-0000-0000-0000-000000000000"
+              discountTypeId: "00000000-0000-0000-0000-000000000000"
+              bonusTypeId: "00000000-0000-0000-0000-000000000000"
+              treatmentPlanStageId: "00000000-0000-0000-0000-000000000000"
     RecordingUpdateSuccess:
       type: object
       properties:
@@ -57191,255 +57559,80 @@ components:
                   items:
                     type: string
                     example: The required parameter 'interval' is not specified
-    CashFlowStatementReq:
-      type: object
-      properties:
-        dataStart:
-          type: string
-          format: date-time
-        dataEnd:
-          type: string
-          format: date-time
-        periodicity:
-          type: integer
-          enum:
-            - 0
-            - 1
-            - 2
-            - 3
-        filters:
-          type: object
-          properties:
-            financialCostCenterId:
-              type: object
-              properties:
-                value:
-                  type: array
-                  items:
-                    type: string
-            financialCostCenterName:
-              type: object
-              properties:
-                value:
-                  type: string
-            lineOfBusinessStart:
-              type: object
-              properties:
-                value:
-                  type: integer
-            lineOfBusinessEnd:
-              type: object
-              properties:
-                value:
-                  type: integer
-            typeOfCashFlowStart:
-              type: object
-              properties:
-                value:
-                  type: integer
-            typeOfCashFlowEnd:
-              type: object
-              properties:
-                value:
-                  type: integer
-            directionOfActivityId:
-              type: object
-              properties:
-                value:
-                  type: array
-                  items:
-                    type: string
-            directionOfActivityName:
-              type: object
-              properties:
-                value:
-                  type: string
-            cashItemId:
-              type: object
-              properties:
-                value:
-                  type: array
-                  items:
-                    type: string
-            cashItemName:
-              type: object
-              properties:
-                value:
-                  type: string
-            totalStart:
-              type: object
-              properties:
-                value:
-                  type: number
-            totalEnd:
-              type: object
-              properties:
-                value:
-                  type: number
-        fields:
-          type: array
-          items:
-            type: string
-            enum:
-              - financialCostCenterId
-              - financialCostCenterName
-              - lineOfBusiness
-              - typeOfCashFlow
-              - directionOfActivityId
-              - directionOfActivityName
-              - cashItemId
-              - cashItemName
-              - total
-        exclude:
-          type: array
-          items:
-            type: string
-            enum:
-              - financialCostCenterId
-              - financialCostCenterName
-              - lineOfBusiness
-              - typeOfCashFlow
-              - directionOfActivityId
-              - directionOfActivityName
-              - cashItemId
-              - cashItemName
-              - total
-        order:
-          type: object
-          properties:
-            field:
-              type: string
-              enum:
-                - lineOfBusiness
-                - typeOfCashFlow
-                - financialCostCenterId
-                - directionOfActivityId
-            direction:
-              type: string
-              enum:
-                - ASC
-                - DESC
-        pagination:
-          type: object
-          properties:
-            paginate:
-              type: boolean
-              default: true
-            perPage:
-              type: integer
-              default: 10
-      example:
-        dataStart: '2021-01-01T00:00:00'
-        dataEnd: '2025-12-31T00:00:00'
-        periodicity: 0
     CashFlowStatementSuc:
       type: object
       properties:
-        success:
-          type: boolean
-        filters:
+        data:
           type: object
           properties:
-            fullText:
-              type: object
-              properties:
-                value:
-                  type: string
-                fields:
-                  type: array
-                  items:
-                    type: string
-            financialCostCenterId:
-              type: object
-              properties:
-                value:
-                  type: array
-                  items:
-                    type: string
-            financialCostCenterName:
-              type: object
-              properties:
-                value:
-                  type: string
-            lineOfBusinessStart:
-              type: object
-              properties:
-                value:
-                  type: integer
-            lineOfBusinessEnd:
-              type: object
-              properties:
-                value:
-                  type: integer
-            typeOfCashFlowStart:
-              type: object
-              properties:
-                value:
-                  type: integer
-            typeOfCashFlowEnd:
-              type: object
-              properties:
-                value:
-                  type: integer
-            directionOfActivityId:
-              type: object
-              properties:
-                value:
-                  type: array
-                  items:
-                    type: string
-            directionOfActivityName:
-              type: object
-              properties:
-                value:
-                  type: string
-            cashItemId:
-              type: object
-              properties:
-                value:
-                  type: array
-                  items:
-                    type: string
-            cashItemName:
-              type: object
-              properties:
-                value:
-                  type: string
-            totalStart:
-              type: object
-              properties:
-                value:
-                  type: number
-            totalEnd:
-              type: object
-              properties:
-                value:
-                  type: number
-        order:
-          type: object
-          properties:
-            field:
-              type: string
-            direction:
-              type: string
-              example: ASC
-        pagination:
-          type: object
-          properties:
-            firstUuid:
-              type: string
-              format: uuid
-            lastUuid:
-              type: string
-              format: uuid
-            isPrev:
+            success:
               type: boolean
-            isNext:
-              type: boolean
-            perPage:
+            filters:
+              type: object
+              properties:
+                fullText:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                    fields:
+                      type: array
+                      items:
+                        type: string
+                financialCostCenterId:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                financialCostCenterName:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                lineOfBusiness:
+                  type: object
+                  properties:
+                    value:
+                      type: integer
+                typeOfCashFlow:
+                  type: object
+                  properties:
+                    value:
+                      type: integer
+                directionOfActivityId:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                      format: uuid
+                directionOfActivityName:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                cashItemId:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                      format: uuid
+                cashItemName:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                totalStart:
+                  type: object
+                  properties:
+                    value:
+                      type: number
+                totalEnd:
+                  type: object
+                  properties:
+                    value:
+                      type: number
+            count:
               type: integer
-        count:
-          type: integer
         data:
           type: array
           items:
@@ -57451,8 +57644,12 @@ components:
                 type: string
               lineOfBusiness:
                 type: integer
+              lineOfBusinessName:
+                type: string
               typeOfCashFlow:
                 type: integer
+              typeOfCashFlowName:
+                type: string
               directionOfActivityId:
                 type: string
               directionOfActivityName:
@@ -57464,83 +57661,153 @@ components:
               total:
                 type: number
       example:
-        success: true
-        filters:
-          fullText:
-            value: null
-            fields: null
-          financialCostCenterId:
-            value: null
-          financialCostCenterName:
-            value: null
-          lineOfBusinessStart:
-            value: null
-          lineOfBusinessEnd:
-            value: null
-          typeOfCashFlowStart:
-            value: null
-          typeOfCashFlowEnd:
-            value: null
-          directionOfActivityId:
-            value: null
-          directionOfActivityName:
-            value: null
-          cashItemId:
-            value: null
-          cashItemName:
-            value: null
-          totalStart:
-            value: null
-          totalEnd:
-            value: null
-        count: 60
         data:
-          - financialCostCenterId: 9db448e1-bf5a-11ee-af8c-309c23b27327
-            financialCostCenterName: "'К-СОФТ. Эмулятор для работы контрольно-кассовой техники 54 ФЗ.'"
-            lineOfBusiness: 0
-            typeOfCashFlow: 0
-            directionOfActivityId: "00000000-0000-0000-0000-000000000000"
-            directionOfActivityName: ""
-            cashItemId: cb218ba7-ddcc-11ed-af73-309c23b27327
-            cashItemName: Лазерная эпиляция
-            total: 10279.5
-            May_2023: 0
-            October_2023: 0
-            August_2023: 0
-            February_2024: 10279.5
-            May_2024: 0
-            December_2023: 0
-            September_2023: 0
-            July_2024: 0
-            November_2023: 0
-            January_2024: 0
-            March_2024: 0
-            October_2024: 0
-            December_2024: 0
-            December_2025: 0
-          - financialCostCenterId: 9db448e1-bf5a-11ee-af8c-309c23b27327
-            financialCostCenterName: "'К-СОФТ. Эмулятор для работы контрольно-кассовой техники 54 ФЗ.'"
-            lineOfBusiness: 0
-            typeOfCashFlow: 0
-            directionOfActivityId: 4dfc9285-ddf5-11ed-af73-309c23b27327
-            directionOfActivityName: АВАНСЫ ПОЛУЧЕННЫЕ
-            cashItemId: 5db4773c-ddc9-11ed-af73-309c23b27327
-            cashItemName: Авансы полученные
-            total: 11856
-            May_2023: 0
-            October_2023: 0
-            August_2023: 0
-            February_2024: 11856
-            May_2024: 0
-            December_2023: 0
-            September_2023: 0
-            July_2024: 0
-            November_2023: 0
-            January_2024: 0
-            March_2024: 0
-            October_2024: 0
-            December_2024: 0
-            December_2025: 0
+          success: true
+          filters:
+            fullText:
+              value: null
+              fields: null
+            financialCostCenterId:
+              value: null
+            financialCostCenterName:
+              value: null
+            lineOfBusiness:
+              value: null
+            typeOfCashFlow:
+              value: null
+            directionOfActivityId:
+              value: null
+            directionOfActivityName:
+              value: null
+            cashItemId:
+              value: null
+            cashItemName:
+              value: null
+            totalStart:
+              value: null
+            totalEnd:
+              value: null
+          count: 36
+          data:
+            - financialCostCenterId: 5a488916-201f-11ef-af93-309c23b27327
+              financialCostCenterName: "1"
+              lineOfBusiness: 0
+              lineOfBusinessName: "Операционная деятельность"
+              typeOfCashFlow: 0
+              typeOfCashFlowName: "Поступления"
+              directionOfActivityId: bd1b1619-a85a-11f0-afc8-309c23b27327
+              directionOfActivityName: "УСЛУГИ УЗКИХ СПЕЦИАЛИСТОВ (МЕДИЦИНСКИЕ)"
+              cashItemId: b6854fee-ddcd-11ed-af73-309c23b27327
+              cashItemName: "Услуги подолога"
+              total: 100
+              January_2026: 100
+              October_2025: 0
+            - financialCostCenterId: 86bab059-0287-11f1-97a4-306893e16552
+              financialCostCenterName: "ажа3"
+              lineOfBusiness: 0
+              lineOfBusinessName: "Операционная деятельность"
+              typeOfCashFlow: 0
+              typeOfCashFlowName: "Поступления"
+              directionOfActivityId: fe81f12d-a85d-11f0-afc8-309c23b27327
+              directionOfActivityName: "ПРОДАЖА КОСМЕТИЧЕСКИХ (НЕМЕДИЦИНСКИХ) ТОВАРОВ"
+              cashItemId: 37af4b29-ddcc-11ed-af73-309c23b27327
+              cashItemName: "Активный уход за телом"
+              total: 2047.5
+              January_2026: 2047.5
+              October_2025: 0
+            - financialCostCenterId: 54136ff7-f804-11ef-afa2-309c23b27327
+              financialCostCenterName: "Жестокая касса"
+              lineOfBusiness: 0
+              lineOfBusinessName: "Операционная деятельность"
+              typeOfCashFlow: 1
+              typeOfCashFlowName: "Выплаты"
+              directionOfActivityId: 0dde05b9-ddf5-11ed-af73-309c23b27327
+              directionOfActivityName: "04.ТЕКУЩИЕ ЗАТРАТЫ"
+              cashItemId: 744ef17e-ddd1-11ed-af73-309c23b27327
+              cashItemName: "Косметика Академи"
+              total: 66942
+              January_2026: 66942
+              October_2025: 0
+            - financialCostCenterId: 54136ff7-f804-11ef-afa2-309c23b27327
+              financialCostCenterName: "Жестокая касса"
+              lineOfBusiness: 0
+              lineOfBusinessName: "Операционная деятельность"
+              typeOfCashFlow: 0
+              typeOfCashFlowName: "Поступления"
+              directionOfActivityId: 4dfc9285-ddf5-11ed-af73-309c23b27327
+              directionOfActivityName: "АВАНСЫ ПОЛУЧЕННЫЕ"
+              cashItemId: 5db4773c-ddc9-11ed-af73-309c23b27327
+              cashItemName: "Авансы полученные"
+              total: 14205
+              January_2026: 14205
+              October_2025: 0
+            - financialCostCenterId: 54136ff7-f804-11ef-afa2-309c23b27327
+              financialCostCenterName: "Жестокая касса"
+              lineOfBusiness: 0
+              lineOfBusinessName: "Операционная деятельность"
+              typeOfCashFlow: 0
+              typeOfCashFlowName: "Поступления"
+              directionOfActivityId: b2a248f1-a852-11f0-afc8-309c23b27327
+              directionOfActivityName: "КОСМЕТИЧЕСКИЕ УСЛУГИ (НЕМЕД)"
+              cashItemId: d758dc3e-ddcd-11ed-af73-309c23b27327
+              cashItemName: "Ламинирование бровей и ресниц"
+              total: 2975
+              January_2026: 2975
+              October_2025: 0
+          summary:
+            - - typeOfCashFlow: 1
+                typeOfCashFlowName: "Выплаты"
+              - total: 751485.13
+                January_2026: 378103.13
+                October_2025: 373382
+            - - typeOfCashFlow: 1
+                typeOfCashFlowName: "Выплаты"
+                lineOfBusiness: 0
+                lineOfBusinessName: "Операционная деятельность"
+              - total: 751485.13
+                January_2026: 378103.13
+                October_2025: 373382
+            - - typeOfCashFlow: 1
+                typeOfCashFlowName: "Выплаты"
+                lineOfBusiness: 0
+                lineOfBusinessName: "Операционная деятельность"
+                directionOfActivityId: 0dde05b9-ddf5-11ed-af73-309c23b27327
+                directionOfActivityName: "04.ТЕКУЩИЕ ЗАТРАТЫ"
+              - total: 751485.13
+                January_2026: 378103.13
+                October_2025: 373382
+            - - typeOfCashFlow: 0
+                typeOfCashFlowName: "Поступления"
+              - total: 1622853.4
+                January_2026: 1302204.75
+                October_2025: 320648.65
+            - - typeOfCashFlow: 0
+                typeOfCashFlowName: "Поступления"
+                lineOfBusiness: 0
+                lineOfBusinessName: "Операционная деятельность"
+              - total: 1622853.4
+                January_2026: 1302204.75
+                October_2025: 320648.65
+            - - typeOfCashFlow: 0
+                typeOfCashFlowName: "Поступления"
+                lineOfBusiness: 0
+                lineOfBusinessName: "Операционная деятельность"
+                directionOfActivityId: 4dfc9285-ddf5-11ed-af73-309c23b27327
+                directionOfActivityName: "АВАНСЫ ПОЛУЧЕННЫЕ"
+              - total: 88882.22
+                January_2026: -31322.78
+                October_2025: 120205
+            - - typeOfCashFlow: 0
+                typeOfCashFlowName: "Поступления"
+                lineOfBusiness: 0
+                lineOfBusinessName: "Операционная деятельность"
+                directionOfActivityId: b2a248f1-a852-11f0-afc8-309c23b27327
+                directionOfActivityName: "КОСМЕТИЧЕСКИЕ УСЛУГИ (НЕМЕД)"
+              - total: 9799.67
+                January_2026: 6824.67
+                October_2025: 2975
+        status: "processed"
+        error: ""
     TypeOfCashFlowValues:
       type: object
       properties:
