@@ -11408,6 +11408,7 @@ paths:
         | cashItemName               | string  | Название статьи движения денежных средств           | Да|
         | total                      | number  | Общая сумма                                | Да|
         | {periodicity}_{year}       | number  | Сумма за выбранный periodicity по указанному периоду (dateStart- dateEnd)        | Да|
+        | summary                    | array   | Данные по итоговым значениям для lineOfBusiness, typeOfCashFlow, directionOfActivityId, cashItemId | Да|
 
          ## Объект filters имеет следующие доступные к фильтрации поля: 
 
