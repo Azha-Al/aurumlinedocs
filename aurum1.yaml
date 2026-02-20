@@ -11366,10 +11366,10 @@ paths:
             application/json:
               schema:
                 type: object
-              properties:
-                reportKey:
-                  type: string
-                  example: "c854e58b-1664-4a02-b729-df2b6d2b3513"
+                properties:
+                  reportKey:
+                    type: string
+                    example: c854e58b-1664-4a02-b729-df2b6d2b3513
         '401':
           description: unauthorized
   /cashFlowStatement/GetReport:
