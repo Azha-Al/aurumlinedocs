@@ -57562,7 +57562,7 @@ components:
     CashFlowStatementSuc:
       type: object
       properties:
-        data:
+        datа:
           type: object
           properties:
             success:
