@@ -50094,7 +50094,7 @@ components:
               properties:
                 value:
                   type: number
-            amountInWriteOffUnitStart:
+            amountInWriteOffUnitEnd:
               type: object
               properties:
                 value:
