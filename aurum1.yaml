@@ -3503,7 +3503,12 @@ paths:
         |onlineRegistrationAllowed     | boolean    | Доступно для онлайн записи |
         |daysLeftUntilExpirationDate     | number    | Дни для конца срока годности |
         |expirationDateControl     | boolean    | Истек срок годности |
+        |writeOffUnitId     | string    | УИД единицы списания |
+        |writeOffUnitName     | string    | Наименование единицы списания |
+        |writeOffRatio     | number    | Коэффициент списания |
         |balanceControl     | boolean    | Есть контроль остатков |
+        |balance    | number    | Остаток |
+        |balanceInWriteOffUnit     | number    | Остаток в ед списания |
         |areaOfActivityId     | string    | УИД направления деятельности |
         |areaOfActivityName     | string    | Наименование направления деятельности |
         |generalPurposeMaterial    |boolean   | Материал общего назначения|
@@ -3534,7 +3539,7 @@ paths:
         |coursePaymentTermInDaysStart     | number   | Cрок оплаты курса в днях от |
         |coursePaymentTermInDaysStart     | number   | Cрок оплаты курса в днях до |
         |methodOfConsumption     | integer    | Способ расхода (0- на услугу, 1- на прием) |
-        |unitOfMeasurementId    | string    | Массив УИД единицы измерения |
+        |unitOfMeasurementId    | array of strings    | Массив УИД единицы измерения |
         |courseValidityPeriodInDaysStart    | number   | Срок действия курса в днях от | 
         |courseValidityPeriodInDaysEnd     | number    | Срок действия курса в днях до |
         |equipmentUsed     | boolean    | Используется оборудование |
@@ -3542,7 +3547,14 @@ paths:
         |daysLeftUntilExpirationDateStart     | number    | Дни для конца срока годности от |
         |daysLeftUntilExpirationDateEnd     | number    | Дни для конца срока годности до |
         |expirationDateControl     | boolean    | Истек срок годности |
+        | writeOffUnitId             | array of strings  | УИД единицы списания                   |
+        | writeOffRatioStart         | number  | Коэффициент списания от                |
+        | writeOffRatioEnd           | number  | Коэффициент списания до |
         |balanceControl     | boolean    | Есть контроль остатков |
+        | balanceStart               | number  | Остаток от                             |
+        | balanceEnd                 | number  | Остаток до                             |
+        | balanceInWriteOffUnitStart | number  | Остаток в единицах списания от         |
+        | balanceInWriteOffUnitEnd   | number  | Остаток в единицах списания до         |
         |areaOfActivityId     | string    |Массив УИД направления деятельности |
         |generalPurposeMaterial    |boolean   | Материал общего назначения|
         |fullText     | string   | Поиск по полям name, article | 
@@ -9370,9 +9382,15 @@ paths:
         |nomenclatureGroupName     | string    | Наименование группы номенклатуры |
         |expirationDate     | string    | Срок годности |
         |amount     | number    | Количество остаток |
+        |amountInWriteOffUnit     | number    | Количество в единице списания | 
         |sum     | number    | Сумма остаток | 
         |cost     | number    | Себестоимость |
-        |nomenclatureType     | integer    |  Тип номенклатуры (0- Курс услуг, 1- Материал, 2- Товар, 3- Услуга, 4- Все) |  
+        |nomenclatureType     | integer    |  Тип номенклатуры (0- Курс услуг, 1- Материал, 2- Товар, 3- Услуга, 4- Все) |
+        |unitOfMeasurementId     | string    | УИД единицы измерения |
+        |unitOfMeasurementName     | string    | Наименование единицы измерения |
+        |writeOffUnitId     | string    | УИД единицы списания |
+        |writeOffUnitName     | string    | Наименование единицы списания |
+        |writeOffRatio     | number    | Коэффициент списанного | 
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -9397,6 +9415,12 @@ paths:
         |sumStart     | number    | Сумма остатков от |
         |sumEnd     | number    | Сумма остатков до |
         |nomenclatureType     | array of integers    |  Тип номенклатуры (0- Курс услуг, 1- Материал, 2- Товар, 3- Услуга, 4- Все) |
+        | unitOfMeasurementId             | array of strings  | Массив УИД единицы измерения  |
+        | writeOffUnitId             | array of strings  | Массив УИД единицы списания  |
+        | writeOffRatioStart         | number  | Коэффициент списания от                |
+        | writeOffRatioEnd           | number  | Коэффициент списания до |
+        | amountInWriteOffUnit               | number  | Количество в единице списания        |
+        | amountInWriteOffUnit                 | number  | Количество в единице списания              |
         |fullText     | object    | Поиск по полям divisionName, nomenclatureName, warehouseName |
       operationId: balanceList
       requestBody:
@@ -12931,7 +12955,17 @@ paths:
         |id     | string    | Уникальный идентификатор  |
         | name     | string |  Наименование  |
         |isGroup      | boolean    | Это группа |
+        |groupId      | string    | Уникальный идентификатор группы  | 
+        |groupName      | string    | Наименование группы  | 
         | type     | integer  | Вид номенклатуры (0- Курс услуг, 1- Материал, 2- Товар, 3- Услуга, 4- Все) | 
+        |deletionMark     | boolean    | Пометка на удаления|
+        |unitOfMeasurementId     | string    | УИД единицы измерения |
+        |unitOfMeasurementName     | string    | Наименование единицы измерения |
+        |writeOffUnitId     | string    | УИД единицы списания |
+        |writeOffUnitName     | string    | Наименование единицы списания |
+        |writeOffRatio     | number    | Коэффциент списанного |
+        |balance    | number    | Остаток |
+        |balanceInWriteOffUnit     | number    | Остаток в ед списания |
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -12946,7 +12980,17 @@ paths:
         | ------------- |:----------------:|:-----|
         |id     | array of strings    | Массив уникальных идентификаторов  |
         | isGroup     | boolean | Это группа |
+        |groupId      | array of strings    | Массив уникальных идентификаторов групп  | 
+        |groupName      | string    | Наименование группы  | 
         | type     | array of integers | Массив видов номенклатуры |
+        |deletionMark     | boolean    | Пометка на удаления|
+        | writeOffUnitId             | array of strings  | Массив УИД единицы списания  |
+        | writeOffRatioStart         | number  | Коэффициент списания от                |
+        | writeOffRatioEnd           | number  | Коэффициент списания до |
+        | balanceStart               | number  | Остаток от                             |
+        | balanceEnd                 | number  | Остаток до                             |
+        | balanceInWriteOffUnitStart | number  | Остаток в единицах списания от         |
+        | balanceInWriteOffUnitEnd   | number  | Остаток в единицах списания до         |
         |fullText     | string   | Поиск по полю name | 
       operationId: NomenclatureTreeList
       requestBody:
@@ -13766,7 +13810,7 @@ paths:
         | serviceName             | string  | Наименование услуги                | Нет          |
         | numberOfConsumables     | number  | Количество расходников             | Да           |
         | deletionMark     | boolean  | Удален            | Да           |
-        | materials               | array of objects  | Массив объектов расходных материалов                     | Нет          |
+        | materials               | array of objects  | Массив объектов расходных материалов  | Нет          |
 
         ## Структура materials:
         
@@ -13780,6 +13824,9 @@ paths:
         | unitOfMeasurementId    | string  | УИД ед. изм. материала             |
         | unitOfMeasurementName  | string  | Наименование ед. изм. материала    |
         | costPrice              | number  | Себестоимость материала            |
+        |writeOffUnitId     | string    | УИД единицы списания | 
+        |writeOffUnitName     | string    | Наименование единицы списания | 
+        |writeOffRatio     | number    | Коэффициент списания| 
       operationId: TechnicalCardById
       requestBody:
         content:
@@ -26328,7 +26375,9 @@ components:
               type: object
               properties:
                 value:
-                  type: integer
+                  type: array
+                  items:
+                    type: integer
             timeStart:
               type: object
               properties:
@@ -26388,7 +26437,9 @@ components:
               type: object
               properties:
                 value:
-                  type: string
+                  type: array
+                  items:
+                    type: string
             courseValidityPeriodInDaysStart:
               type: object
               properties:
@@ -26419,6 +26470,28 @@ components:
               properties:
                 value:
                   type: number
+            expirationDateControl:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            writeOffUnitId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+            writeOffRatioStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            writeOffRatioEnd:
+              type: object
+              properties:
+                value:
+                  type: number
             balanceControl:
               type: object
               properties:
@@ -26428,12 +26501,34 @@ components:
               type: object
               properties:
                 value:
-                  type: string
+                  type: array
+                  items:
+                    type: string
             generalPurposeMaterial:
               type: object
               properties:
                 value:
                   type: boolean
+            balanceStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            balanceEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            balanceInWriteOffUnitStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            balanceInWriteOffUnitEnd:
+              type: object
+              properties:
+                value:
+                  type: number
             fullText:
               type: object
               properties:
@@ -26565,11 +26660,27 @@ components:
             value: null
           daysLeftUntilExpirationDateEnd:
             value: null
+          expirationDateControl:
+            value: null
+          writeOffUnitId:
+            value: null
+          writeOffRatioStart:
+            value: null
+          writeOffRatioEnd:
+            value: null  
           balanceControl:
             value: null
           areaOfActivityId:
             value: null
           generalPurposeMaterial:
+            value: null
+          balanceStart:
+            value: null
+          balanceEnd:
+            value: null
+          balanceInWriteOffUnitStart:
+            value: null
+          balanceInWriteOffUnitEnd:
             value: null
         order:
           field: name
@@ -26600,8 +26711,11 @@ components:
             equipmentUsed: false
             onlineRegistrationAllowed: true
             daysLeftUntilExpirationDate: 0
+            expirationDateControl: false
+            writeOffUnitId: 00000000-0000-0000-0000-000000000000
+            writeOffRatio: 0
             balanceControl: false
-            areaOfActivityId: d9f327ab-9d0a-11ef-af9b-309c23b27327
+            areaOfActivityId: d9f327ac-9d0a-11ef-af9b-309c23b27327
             generalPurposeMaterial: false
     GenderValues:
       type: object
@@ -49975,12 +50089,55 @@ components:
               properties:
                 value:
                   type: number
+            amountInWriteOffUnitStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            amountInWriteOffUnitStart:
+              type: object
+              properties:
+                value:
+                  type: number
             sumStart:
               type: object
               properties:
                 value:
                   type: number
             sumEnd:
+              type: object
+              properties:
+                value:
+                  type: number
+            nomenclatureType:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: integer
+            unitOfMeasurementId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            writeOffUnitId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            writeOffRatioStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            writeOffRatioEnd:
               type: object
               properties:
                 value:
@@ -50070,9 +50227,23 @@ components:
             value: null
           amountEnd:
             value: null
+          amountInWriteOffUnitStart:
+            value: null
+          amountInWriteOffUnitEnd:
+            value: null
           sumStart:
             value: null
           sumEnd:
+            value: null
+          nomenclatureType:
+            value: null
+          unitOfMeasurementId:
+            value: null
+          writeOffUnitId:
+            value: null
+          writeOffRatioStart:
+            value: null
+          writeOffRatioEnd:
             value: null
         pagination:
           firstUuid: 8e4d5c90-cef6-11ed-af70-309c23b27327
@@ -50085,24 +50256,25 @@ components:
           isNext: true
           perPage: 2
         data:
-          - divisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
-            divisionName: Кемерово_Демьяна Бедного
-            warehouseId: d853bee3-a830-11e8-ad4c-50e5493beef9
-            warehouseName: Клиника "Золотая линия" Демьяна Бедного
-            nomenclatureId: 959124ab-a831-11e8-ad4c-50e5493beef9
-            nomenclatureName: Эликсир молодости
-            expirationDate: '2024-12-31T00:00:00'
-            amount: 27
-            sum: 25497
-          - divisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
-            divisionName: Кемерово_Демьяна Бедного
-            warehouseId: d853bee3-a830-11e8-ad4c-50e5493beef9
-            warehouseName: Клиника "Золотая линия" Демьяна Бедного
-            nomenclatureId: 959124ac-a831-11e8-ad4c-50e5493beef9
-            nomenclatureName: Огуречная маска
-            expirationDate: '2024-09-20T00:00:00'
-            amount: 46
-            sum: 4570385.92
+          - divisionId: 1578a086-6429-11ee-af85-309c23b27327
+            divisionName: СПБ_Гл.Зеленина
+            warehouseId: 20c6ffb8-75a6-11ef-af98-309c23b27327
+            warehouseName: СПБ_доп
+            nomenclatureId: bcbc6bbb-6d25-11ef-af98-309c23b27327
+            nomenclatureName: Игла для нитей одноразовая
+            nomenclatureGroupId: fb828a6c-9080-11ef-af9b-309c23b27327
+            nomenclatureGroupName: Инструменты
+            amount: 1
+            amountInWriteOffUnit: 1
+            sum: 200
+            nomenclatureType: 1
+            cost: 27108.162087954545
+            unitOfMeasurementId: c923bd63-1663-11ee-af78-309c23b27327
+            unitOfMeasurementName: шт
+            writeOffUnitId": c923bd63-1663-11ee-af78-309c23b27327
+            writeOffUnitName: шт
+            writeOffRatio: 1
+            expirationDate: 2025-08-28T00:00:00
     WarehouseBalanceFiltersRequest:
       type: object
       properties:
@@ -61752,6 +61924,50 @@ components:
                   type: array
                   items:
                     type: integer
+            groupId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            groupName:
+              type: object
+              properties:
+                value:
+                  type: string
+            deletionMark:
+              type: object
+              properties:
+                value:
+                  type: boolean
+            unitOfMeasurementId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            writeOffUnitId:
+              type: object
+              properties:
+                value:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+            writeOffRatioStart:
+              type: object
+              properties:
+                value:
+                  type: number
+            writeOffRatioEnd:
+              type: object
+              properties:
+                value:
+                  type: number
         order:
           type: object
           properties:
@@ -61791,8 +62007,23 @@ components:
                 type: string
               isGroup:
                 type: boolean
+              groupId:
+                type: string
+                format: uuid
+              groupName:
+                type: string
               type:
-                type: integer
+                type: string
+              deletionMark:
+                type: boolean
+              unitOfMeasurementId:
+                type: string
+                format: uuid
+              writeOffUnitId:
+                type: string
+                format: uuid
+              writeOffRatio:
+                type: number
       example:
         success: true
         filters:
@@ -61804,6 +62035,20 @@ components:
           isGroup:
             value: null
           type:
+            value: null
+          groupId:
+            value: null
+          groupName:
+            value: null
+          deletionMark:
+            value: null
+          unitOfMeasurementId:
+            value: null
+          writeOffUnitId:
+            value: null
+          writeOffRatioStart:
+            value: null
+          writeOffRatioEnd:
             value: null
         order:
           field: id
@@ -61817,14 +62062,16 @@ components:
           isNext: true
           perPage: 2
         data:
-          - id: 6640bbcf-7c27-11f0-afb2-309c23b27327
-            name: Пилинги
+          - id: 601bc91b-7c27-11f0-afb2-309c23b27327
+            name: Расходные материалы
             isGroup: true
+            groupId: 7c7110c5-99d8-11ef-af9b-309c23b27327
+            groupName: "Косметологические услуги (медицинские)"
             type: null
-          - id: 6640bbce-7c27-11f0-afb2-309c23b27327
-            name: Нитевой лифтинг
-            isGroup: true
-            type: null
+            deletionMark: false
+            unitOfMeasurementId: null
+            writeOffUnitId: null
+            writeOffRatio: null
     NomenclatureUpdateRequest:
       type: object
       properties:
@@ -64046,6 +64293,13 @@ components:
                       type: string
                     costPrice:
                       type: number
+                    writeOffUnitId:
+                      type: string
+                      format: uuid
+                    writeOffUnitName:
+                      type: string
+                    writeOffRatio:
+                      type: number
       example:
         success: true
         count: 1
@@ -64063,6 +64317,9 @@ components:
                 groupName: Стерильные материалы
                 unitOfMeasurementId: c923bd63-1663-11ee-af78-309c23b27327
                 unitOfMeasurementName: шт
+                writeOffUnitId": c923bd63-1663-11ee-af78-309c23b27327
+                writeOffUnitName: шт
+                writeOffRatio: 1
                 costPrice: 5.79530201
               - id: 67928305-67fa-11ed-aab0-e4aaeadadf68
                 name: Бахилы желтые (100 шт./упак)
@@ -64071,6 +64328,9 @@ components:
                 groupName: Товары
                 unitOfMeasurementId: c923bd63-1663-11ee-af78-309c23b27327
                 unitOfMeasurementName: шт
+                writeOffUnitId": c923bd63-1663-11ee-af78-309c23b27327
+                writeOffUnitName: шт
+                writeOffRatio: 1
                 costPrice: 10.14095358
               - id: 0d30165f-097c-11ee-af75-309c23b27327
                 name: Шприц 10 мл одноразовый
@@ -64079,6 +64339,9 @@ components:
                 groupName: Стерильные материалы
                 unitOfMeasurementId: c923bd63-1663-11ee-af78-309c23b27327
                 unitOfMeasurementName: шт
+                writeOffUnitId": c923bd63-1663-11ee-af78-309c23b27327
+                writeOffUnitName: шт
+                writeOffRatio: 1
                 costPrice: 50
     PriceListBonusRequest:
       type: object
