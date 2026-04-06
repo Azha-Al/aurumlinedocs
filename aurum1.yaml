@@ -22196,7 +22196,8 @@ components:
       properties:
         available:
           type: boolean
-      example: true
+      example: 
+        available: true
     RecordingCheckService:
       type: object
       properties:
