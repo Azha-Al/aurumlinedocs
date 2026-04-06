@@ -2326,11 +2326,12 @@ paths:
           description: created
           content:
             application/json:
-              type: object
-              properties:
-                available:
-                  type: boolean
-                  example: true
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/RecordingCheckSuccess'
+                  - $ref: '#/components/schemas/RecordingCheckService'
+                  - $ref: '#/components/schemas/RecordingCheckServiceCourses'
+                  - $ref: '#/components/schemas/RecordingCheckPrice'
         '400':
           description: bad request
           content:
@@ -22190,6 +22191,105 @@ components:
           clientId: a938ed03-00fe-11f1-97a4-306893e16552
           services:
             - serviceId: c18708bb-1658-11ee-af78-309c23b27327
+    RecordingCheckSuccess:
+      type: object
+      properties:
+        available:
+          type: boolean
+      example: true
+    RecordingCheckService:
+      type: object
+      properties:
+        available:
+          type: boolean
+        message:
+          type: string
+        errorHeader:
+          type: string
+        errorText:
+          type: string
+        services:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              name:
+                type: string
+        success:
+          type: boolean
+      example:
+        available: false
+        message: "Специалист не оказывает такие услуги"
+        errorHeader: "Специалист не оказывает такие услуги"
+        errorText: "Услугу можно добавить в карточке специалиста"
+        services:
+          - id: c18708bb-1658-11ee-af78-309c23b27327
+            name: "Лазерное омоложение"
+        success: false
+    RecordingCheckServiceCourses:
+      type: object
+      properties:
+        available:
+          type: boolean
+        message:
+          type: string
+        errorHeader:
+          type: string
+        errorText:
+          type: string
+        serviceCourses:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              name:
+                type: string
+        success:
+          type: boolean
+      example:
+        available: false
+        message: "Специалист не оказывает такие услуги"
+        errorHeader: "Специалист не оказывает такие услуги"
+        errorText: "Курс услуг можно добавить в карточке специалиста"
+        serviceCourses:
+          - id: 49977f50-f87a-11f0-97a4-306893e16552
+            name: "Курс ботулинотерапии (3 посещения)"
+        success: false
+    RecordingCheckPrice:
+      type: object
+      properties:
+        available:
+          type: boolean
+        message:
+          type: string
+        errorHeader:
+          type: string
+        services:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              name:
+                type: string
+        success:
+          type: boolean
+      example:
+        available: false
+        message: "В филиале не установлены цены"
+        errorHeader: "В филиале не установлены цены"
+        services:
+          - id: c18708bb-1658-11ee-af78-309c23b27327
+            name: "Лазерное омоложение"
+        success: false
     RecordingUpdateRequest:
       type: object
       properties:
