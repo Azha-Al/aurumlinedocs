@@ -1853,15 +1853,19 @@ paths:
         |clientName     | string    | Наименование клиента |
         |clientNameAbbr     | string    | Фамилия И. О. клиента |
         |clientPhone     | string    | Телефон клиента |
+        |clientPhoneForSearch     | string    | Список номеров клиентов |
         |clientStatus     | integer    | Статус клиента (0- Новый; 1- Обычный; 2- Постоянный; 3- Бартер; 4- Сложный; 5- VIP; 6- Сотрудник; 7- Не записываем ) |
         |clientStatusImageRef     | string    |URL картинки статуса клиента |
+        |colorsPerLine     | string    | Цвет оборудования строкой |
         |employeePostId     | string    | УИД должности сотрудника |
-        |employeePostName     | string    | наименование должности сотрудника | 
+        |employeePostName     | string    | Наименование должности сотрудника | 
+        |onlinePostName     | string    | Наименование онлайн-должности сотрудника | 
         |totalDuration     | number    | Длительность записи | 
         | responsibleForCreationId     | string  | УИД ответственного за создание          |
         | responsibleForCreationName   | string  | Наименование ответственного за создание          |
         | responsibleForChangeId       | string  | УИД ответственного за изменение         |
         | responsibleForChangeName     | string  | ФИО ответственного за изменение         |
+        | personalDiscount     | number  | Персональная скидка        |
         |services     |  array of object   |  |
         |serviceCourses     | array of object    |  |
         |materials     | array of object    |  | 
@@ -2289,6 +2293,50 @@ paths:
                 $ref: '#/components/schemas/BadRecord'
         '401':
           description: unauthorized
+  /recording/CheckAvailability:
+    post:
+      tags:
+        - Записи
+      summary: Обновить запись
+      description: |-
+        ## Список входных параметров: 
+
+        |Поле       | Тип               | Описание |
+        | ------------- |:------------------:| :-----|
+        |values (required)   | object    |  |
+
+        ## Объект values содержит следующие поля:
+
+        |divisionId (required)   | string    | УИД подразделения |
+        |employeeId (required)   | string   | УИД сотрудника |
+        |clientId   | string    | УИД клиента|
+        |periodStart   | string   |Начало записи |
+        |services     | array of strings   | Массив УИД услуг|
+        |serviceCourses     | array of strings   | Массив УИД курсов услуг|
+      operationId: recordCheckAvailability
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordingCheckRequest'
+      responses:
+        '200':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingCheckSuccess'
+        '400':
+          description: bad request
+          content:
+            application/json:
+              type: object
+              properties:
+                available:
+                  type: boolean
+                  example: true
+        '401':
+          description: unauthorized
   /recording/Update:
     post:
       tags:
@@ -2413,15 +2461,19 @@ paths:
         |clientName     | string    | Наименование клиента |
         |clientNameAbbr     | string    | Фамилия И. О. клиента |
         |clientPhone     | string    | Телефон клиента |
+        |clientPhoneForSearch     | string    | Список номеров клиентов |
         |clientStatus     | integer    | Статус клиента (0- Новый; 1- Обычный; 2- Постоянный; 3- Бартер; 4- Сложный; 5- VIP; 6- Сотрудник; 7- Не записываем ) |
         |clientStatusImageRef     | string    |URL картинки статуса клиента |
+        |colorsPerLine     | string    | Цвет оборудования строкой |
         |employeePostId     | string    | УИД должности сотрудника |
         |employeePostName     | string    | наименование должности сотрудника | 
+        |onlinePostName     | string    | наименование онлайн-должности сотрудника | 
         |totalDuration     | number    | Длительность записи | 
         | responsibleForCreationId     | string  | УИД ответственного за создание          |
         | responsibleForCreationName   | string  | Наименование ответственного за создание          |
         | responsibleForChangeId       | string  | УИД ответственного за изменение         |
         | responsibleForChangeName     | string  | ФИО ответственного за изменение         |
+        | personalDiscount     | number  | Персональная скидка        |
         |services     |  array of object   |  |
         |serviceCourses     | array of object    |  |
         |materials     | array of object    |  | 
@@ -2667,6 +2719,7 @@ paths:
         |callStatus     | integer    | Статус по звонкам (0- На линии, 1- Не беспокоить, 2- Перерыв, 3- Оффлайн) |
         |postId     | string    | УИД должности |
         |postName     | string    | Наименование должности |
+        |onlinePostName     | string    | Наименование онлайн-должности |
         |divisionId    |string   | УИД подразделения|
         |divisionName     | string   | Наименование подразделения |
         |scheduleId     | string    | УИД графика работы |
@@ -2846,6 +2899,8 @@ paths:
         |doesNotReceiveReception     | boolean    | Не ведет прием |
         |callStatus     | integer    | Статус по звонкам (0- На линии, 1- Не беспокоить, 2- Перерыв, 3- Оффлайн) |
         |postId     | string    | УИД должности |
+        |postName     | string    | Наименование должности |
+        |onlinePostName     | string    | Наименование онлайн-должности |
         |divisionId    |string   | УИД подразделения|
         |scheduleId     | string    | УИД графика работы |
         |averageRating     | number    |Средняя оценка сотрудника |
@@ -2953,7 +3008,8 @@ paths:
         |id     | string    | Уникальный идентификатор должности |
         | name     | string |  Наименование должности |
         | postInTheShedule  |  boolean         |    Отражать в расписании |
-        |onlineRegistrationAllowed     | boolean   | Доступно для онлайн- записи |  
+        |onlineRegistrationAllowed     | boolean   | Доступно для онлайн- записи | 
+        | onlinePostName     | string |  Наименование онлайн-должности | 
 
          ## Объект filters имеет следующие доступные к фильтрации поля: 
 
@@ -5276,6 +5332,7 @@ paths:
         | ------------- |:------------------:| :-----:| :-----|
         |id     | string    | Уникальный идентификатор оборудования |да|
         | name     | string |  Наименование оборудования |да|
+        | color     | string |  Цвет оборудования |да|
         | inventoryNumber  | string         |    Инвентарный номер |да|
         | groupId  | string         |    УИД группы (родителя) оборудования |да|
         |groupName     | string   | Наименование группы (родителя) оборудования |нет|
@@ -7342,6 +7399,7 @@ paths:
         |cardAmount     | number    | Сумма по карте |
         |amountInAnotherWay     | number    | Сумма другим способом |
         |divisionId     | string    | УИД подразделения | 
+        |receipt     | boolean    | Пробит чек | 
 
          ## Объект order имеет следующие доступные к сортировке поля: 
 
@@ -14670,6 +14728,7 @@ components:
             employeeName: Папанова Серафима Ильинична
             employeePostId: 6abb09e5-0c24-11e8-b055-50e5493beef9
             employeePostName: Косметолог
+            onlinePostName: Косметолог
             photoRef: null
             slots:
               - periodStart: '2025-06-25T10:30:00'
@@ -22080,39 +22139,24 @@ components:
                       items:
                         type: object
                         example: Failed to find the 'Справочник.Сотрудники' with the provided identifier
-    RecordingUpdateRequest:
+    RecordingCheckRequest:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
         values:
           type: object
           properties:
-            divisionId:
-              type: string
-              format: uuid
             employeeId:
               type: string
               format: uuid
-            clientId:
+            divisionId:
               type: string
               format: uuid
             periodStart:
               type: string
               format: date-time
-            periodEnd:
-              type: string
-              format: date-time
-            comment:
-              type: string
-            complaints:
-              type: string
-            specialistRedirectedId:
+            clientId:
               type: string
               format: uuid
-            accrueBonuses:
-              type: boolean
             services:
               type: array
               items:
@@ -22121,60 +22165,6 @@ components:
                   serviceId:
                     type: string
                     format: uuid
-                  count:
-                    type: number
-                  price:
-                    type: number
-                  originalPrice:
-                    type: number
-                  sum:
-                    type: number
-                  discountSum:
-                    type: number
-                  totalSum:
-                    type: number
-                  duration:
-                    type: number
-                  discount:
-                    type: number
-                  discountFix:
-                    type: number
-                  bonus:
-                    type: number
-                  bonusSum:
-                    type: number
-                  bonusFix:
-                    type: number
-                  equipmentId:
-                    type: string
-                    format: uuid
-                  discountTypeId:
-                    type: string
-                    format: uuid
-                  bonusTypeId:
-                    type: string
-                    format: uuid
-                  treatmentPlanStageId:
-                    type: string
-                    format: uuid
-                required:
-                  - serviceId
-                  - count
-                  - price
-                  - originalPrice
-                  - sum
-                  - discountSum
-                  - totalSum
-                  - duration
-                  - discount
-                  - discountFix
-                  - bonus
-                  - bonusSum
-                  - bonusFix
-                  - equipmentId
-                  - discountTypeId
-                  - bonusTypeId
-                  - treatmentPlanStageId
             serviceCourses:
               type: array
               items:
@@ -22183,26 +22173,67 @@ components:
                   serviceCourseId:
                     type: string
                     format: uuid
-                  duration:
-                    type: number
-                  sessionsLeft:
-                    type: number
-                  equipmentId:
+          required:
+            - employeeId
+            - divisionId
+            - services
+            - serviceCoursesсссс
+      example:
+        values:
+          employeeId: fe1b2ee5-05bd-11f1-97a4-306893e16552
+          divisionId: 66b6a3b8-7769-11e8-9b21-50e5493beef9
+          periodStart: "2026-04-03T10:15:00"
+          clientId: a938ed03-00fe-11f1-97a4-306893e16552
+          services:
+            - serviceId: c18708bb-1658-11ee-af78-309c23b27327
+    RecordingUpdateRequest:
+      type: object
+      properties:
+        values:
+          type: object
+          properties:
+            employeeId:
+              type: string
+              format: uuid
+            divisionId:
+              type: string
+              format: uuid
+            periodStart:
+              type: string
+              format: date-time
+            clientId:
+              type: string
+              format: uuid
+            serviceId:
+              type: array
+              items:
+                type: string
+                format: uuid
+            services:
+              type: array
+              items:
+                type: object
+                properties:
+                  serviceId:
                     type: string
                     format: uuid
-                  serviceCourseRegistrationId:
-                    type: string
-                    format: uuid
-                  treatmentPlanStageId:
+                required:
+                  - serviceId
+            serviceCourseId:
+              type: array
+              items:
+                type: string
+                format: uuid
+            serviceCourses:
+              type: array
+              items:
+                type: object
+                properties:
+                  serviceCourseId:
                     type: string
                     format: uuid
                 required:
                   - serviceCourseId
-                  - duration
-                  - sessionsLeft
-                  - equipmentId
-                  - serviceCourseRegistrationId
-                  - treatmentPlanStageId
           required:
             - divisionId
             - employeeId
@@ -63188,12 +63219,31 @@ components:
               type: string
             priceListUrl:
               type: string
+            fullName:
+              type: string
+            shortName:
+              type: string
+            INN:
+              type: string
+            OGRN:
+              type: string
+            phone:
+              type: string
+            additionalPhone:
+              type: string
+            legalAddress:
+              type: string
       example:
         data:
-          websiteUrl: https://zl42.ru/prices.html
-          priceListUrl: https://zl42.ru/prices.html
-          phone: +7 (989) 595 - 95 - 95
-          additionalPhone": +7 (989) 595 - 95 - 95
+          websiteUrl: "zl42.ru"
+          priceListUrl: "www.price.ru"
+          fullName: "Общество с ограниченной ответственностью \"Золотая линия\""
+          shortName: "ООО \"Золотая линия\""
+          INN: "5404468499"
+          OGRN: "1125476140888"
+          phone: "+7 (989) 595 - 95 - 95"
+          additionalPhone: "+7 (989) 595 - 95 - 94"
+          legalAddress: "109153, Москва г, вн.тер.г. муниципальный округ Выхино-Жулебино, пр-кт Лермонтовский, д. 240, кв. 12"
     LoyaltyConstantsSuccess:
       type: object
       properties:
